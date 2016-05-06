@@ -5,6 +5,7 @@ class CreateDevices < ActiveRecord::Migration
       t.text 'pub_key'
       t.integer 'owner_id'
       t.integer 'model_id'
+      t.text 'notes'
 
       t.timestamps null: false
     end
