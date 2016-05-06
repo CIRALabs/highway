@@ -12,6 +12,10 @@ class HighwayKeys
     'secp384r1'
   end
 
+  def devicedir
+    @devdir  ||= Rails.root.join('db').join('devices')
+  end
+
   def certdir
     @certdir ||= Rails.root.join('db').join('cert')
   end
