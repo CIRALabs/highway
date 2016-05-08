@@ -18,6 +18,13 @@ RSpec.describe Device, type: :model do
       almec.gen_priv_key
       almec.store_priv_key(HighwayKeys.ca.devicedir)
     end
+
+    it "should generate a new private key, and sign it" do
+      almec = devices(:almec)
+
+      almec.gen_and_store_key
+      almec.sign_eui64
+    end
   end
 
   describe "eui64 strings" do

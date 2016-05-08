@@ -33,7 +33,7 @@ class HighwayKeys
   end
 
   def load_pub_key
-    File.open(certdir.join("vendor_#{curve}.crt"),'w') do |f|
+    File.open(certdir.join("vendor_#{curve}.crt"),'r') do |f|
       OpenSSL::X509::Certificate.new(f)
     end
   end

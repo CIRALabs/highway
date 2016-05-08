@@ -1,11 +1,5 @@
 # -*- ruby -*-
 
-class OpenSSL::PKey::EC
-  def private?
-    private_key?
-  end
-end
-
 namespace :highway do
 
   desc "Create initial self-signed certificate"
@@ -14,7 +8,7 @@ namespace :highway do
     # X25519 is for key-agreement only.
     #curve='X25519'
     #curve='secp384r1'
-    curve = HighwaysKeys.ca.curve
+    curve = HighwayKeys.ca.curve
 
     certdir = Rails.root.join('db').join('cert')
     FileUtils.mkpath(certdir)
