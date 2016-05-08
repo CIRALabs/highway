@@ -1,0 +1,83 @@
+one:
+  id:       1
+  variable: bar
+  value:    34
+
+two:
+  id:       2
+  variable: baz
+  value:    0
+
+ipv4:
+  id:       3
+  variable: ipv4
+  number:   0xAC170701
+
+user1:
+  id:       4
+  variable: 'email_confirmation'
+  number:   1
+
+user2:
+  id:       5
+  variable: 'email_sender'
+  value:    "support@simtonecdu.com"
+
+defloc:
+  id:       6
+  variable: 'DefaultLocation'
+  number:   14
+
+stagingloc:
+  id:       7
+  variable: 'StagingLocation'
+  number:   17
+
+closedbeta:
+  id:       8
+  variable: 'ClosedBeta'
+  number:   1
+
+# Location id for North America (set this to the id for DefaultLocation above)
+locationnorthamerica:
+  id:       9
+  variable: 'LocationNorthAmerica'
+  number:   14
+
+# Location id for Atlantis (a location that has zero vacancies)
+locationatlantis:
+  id:       10
+  variable: 'LocationAtlantis'
+  number:   6
+
+# Location id for OrangeSlice
+locationxenlogicalhostnorthamerica:
+  variable: 'LocationXenLogicalHostNorthAmerica'
+  number:   1
+
+
+bluereleasenotes:
+  value: test/fixtures/account_created/release-notes.txt
+  variable: BluesliceReleaseNotes
+
+orangereleasenotes:
+  value: insert text here
+  variable: OrangesliceReleaseNotes
+
+emailsender:
+  value: support@simtonecdu.com
+  variable: email_sender
+
+websnapguide:
+  value: WebSNAP-Users-Guide-20071207.pdf
+  variable: WebSnapGuide
+
+snaponeguide:
+  value: SNAP-One-Users-Guide-20071207.pdf
+  variable: SnapOneGuide
+
+softsnapguide:
+  value: SoftSNAP-Users-Guide-20071207.pdf
+  variable: SoftSnapGuide
+
+
