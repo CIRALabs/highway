@@ -3,7 +3,7 @@ class SystemVariable < ActiveRecord::Base
   @@cache = Hash.new
 
   def self.lookup(thing)
-    self.find(:first, :conditions => [ "variable = ?", thing.to_s])
+    self.find_by_variable(thing.to_s)
   end
 
   def self.findormake(thing)

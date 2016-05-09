@@ -24,8 +24,9 @@ ActiveRecord::Schema.define(version: 20160508191034) do
   end
 
   create_table "system_variables", force: :cascade do |t|
-    t.string "variable"
-    t.string "value"
+    t.string  "variable"
+    t.string  "value"
+    t.integer "number"
   end
 
 end

@@ -3,6 +3,7 @@ class CreateSystemVariables < ActiveRecord::Migration
     create_table :system_variables do |t|
       t.column :variable, :string
       t.column :value,    :string
+      t.column :number,   :integer
     end
   end
 
