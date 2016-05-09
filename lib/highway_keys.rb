@@ -4,8 +4,8 @@ class HighwayKeys
     @rootkey ||= load_pub_key
   end
 
-  def sign
-    rootkey.sign
+  def rootprivkey
+    @rootprivkey ||= load_priv_key
   end
 
   def curve
