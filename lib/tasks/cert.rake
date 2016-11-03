@@ -53,7 +53,7 @@ namespace :highway do
     end
   end
 
-  desc "Create initial self-signed certificate"
+  desc "Sign a IDevID certificate for a new device"
   task :signmic => :environment do
     key = OpenSSL::PKey::RSA.new 2048
     cert = OpenSSL::X509::Certificate.new
