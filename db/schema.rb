@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170316190436) do
+ActiveRecord::Schema.define(version: 20170324154804) do
 
   create_table "devices", force: :cascade do |t|
     t.text     "eui64"
@@ -37,6 +37,8 @@ ActiveRecord::Schema.define(version: 20170316190436) do
     t.text     "requesting_ip"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.text     "nonce"
+    t.text     "as_issued"
   end
 
 end
