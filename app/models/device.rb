@@ -1,4 +1,5 @@
 class Device < ActiveRecord::Base
+  has_many :vouchers
 
   attr_accessor :idevid
 

@@ -1,0 +1,8 @@
+almec_v1:
+  device: almec
+  issuer: "Frank Auto Body Supply"
+  expires_on: '2099-12-31'
+  requesting_ip: '2001:db8::dead:beef:01'
+  created_at: '2017-01-01'
+  owner_id: 9999
+  

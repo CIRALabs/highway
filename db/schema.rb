@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160508191034) do
+ActiveRecord::Schema.define(version: 20170316190436) do
 
   create_table "devices", force: :cascade do |t|
     t.text     "eui64"
@@ -27,6 +27,16 @@ ActiveRecord::Schema.define(version: 20160508191034) do
     t.string  "variable"
     t.string  "value"
     t.integer "number"
+  end
+
+  create_table "vouchers", force: :cascade do |t|
+    t.text     "issuer"
+    t.integer  "device_id"
+    t.datetime "expires_on"
+    t.integer  "owner_id"
+    t.text     "requesting_ip"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
 end

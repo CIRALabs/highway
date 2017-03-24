@@ -3,6 +3,13 @@ require 'rails_helper'
 RSpec.describe Device, type: :model do
   fixtures :all
 
+  describe "relations" do
+    it "should have many vouchers" do
+      almec = devices(:almec)
+      expect(almec.vouchers.count).to be >= 0
+    end
+  end
+
   describe "key generation" do
     it "should generate a new public/private key pair, and sign it" do
       almec = devices(:almec)
@@ -37,6 +44,13 @@ RSpec.describe Device, type: :model do
       vizsla.store_priv_key(HighwayKeys.ca.devicedir)
       vizsla.sign_eui64
       expect(vizsla.idevid.serial).to eq(2)
+
+    end
+  end
+
+  describe "ownership voucher" do
+    it "should create an ownership voucher and sign it with MASA key" do
+      almec = devices(:almec)
 
     end
   end
