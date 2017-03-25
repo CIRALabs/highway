@@ -1,5 +1,6 @@
 class Voucher < ActiveRecord::Base
   belongs_to :device
+  belongs_to :owner
 
   def jsonhash(today = DateTime.utc.now)
     h2 = Hash.new
