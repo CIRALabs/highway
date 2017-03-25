@@ -15,4 +15,13 @@ class Voucher < ActiveRecord::Base
     h1["ietf-voucher:voucher"] = h2
     h1
   end
+
+  def signed_voucher(today = DateTime.utc.now)
+    serialized_json = jsonhash(today).to_json
+
+    signed = OpenSSL::PKCS7.sign(HighwayKeys.ca.rootkey,
+                                 HighwayKeys.ca.rootprivkey,
+                                 serialized_json)
+    signed
+  end
 end

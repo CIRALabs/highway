@@ -37,6 +37,20 @@ RSpec.describe Voucher, type: :model do
       owner = OpenSSL::X509::Certificate.new(owner_der)
       expect(owner.subject.to_s).to eq("/C=CA/ST=Ontario/L=Ottawa/O=Owner Example One/OU=Not Very/CN=owner1.example.com/emailAddress=owner1@example.com")
     end
+
+    it "should create signed json representation" do
+      v1 = vouchers(:almec_v1)
+
+      today  = '2017-01-01'.to_date
+
+      pkcs7 = v1.signed_voucher(today)
+      expect(pkcs7.class).to be(OpenSSL::PKCS7)
+      expect(pkcs7.to_pem).to_not be_nil
+
+      tmpdir=Rails.root.join('tmp')
+      FileUtils::mkdir_p(tmpdir)
+      File.open(File.join(tmpdir, 'almec_voucher.smime'), 'wb') do |f| f.write OpenSSL::PKCS7.write_smime(pkcs7); end
+    end
   end
 
 end
