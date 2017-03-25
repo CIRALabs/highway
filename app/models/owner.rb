@@ -4,4 +4,5 @@ class Owner < ActiveRecord::Base
   def certder
     @cert ||= OpenSSL::X509::Certificate.new(self.certificate)
   end
+
 end
