@@ -1,6 +1,6 @@
 class DevicesController < ApplicationController
   active_scaffold :device do |config|
-    config.columns = [ :hostid, :customer, :hostname ]
+    #config.columns = [ :eui64, :customer, :hostname ]
   end
 
 end
