@@ -36,7 +36,7 @@ class Device < ActiveRecord::Base
 
   def sign_eui64
     @idevid  = OpenSSL::X509::Certificate.new
-    @idevid.version = 3
+    @idevid.version = 2
     @idevid.serial = SystemVariable.nextval(:serialnumber)
     @idevid.issuer = HighwayKeys.ca.rootkey.issuer
     #idevid.public_key = @dev_key.public_key
