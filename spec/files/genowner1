@@ -1,0 +1,16 @@
+#!/bin/sh
+
+HOSTNAME=owner1.example.com
+openssl genrsa -out $HOSTNAME.pem 2048
+#openssl req -new -sha256 -key $HOSTNAME.pem -out $HOSTNAME.req
+openssl req -x509 -in $HOSTNAME.req -key $HOSTNAME.pem -out $HOSTNAME.crt <<EOF
+CA
+Ontario
+Ottawa
+Owner Example One
+Not Very
+owner1.example.coma
+owner1@example.com
+EOF
+
+
