@@ -8,6 +8,8 @@ RSpec.describe Voucher, type: :model do
   end
 
   describe "relations" do
+    it { should belong_to(:device) }
+
     it "should refer to a device" do
       v1 = vouchers(:almec_v1)
 
