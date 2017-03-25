@@ -55,6 +55,14 @@ namespace :highway do
 
   desc "Sign a IDevID certificate for a new device"
   task :signmic => :environment do
+
+    eui64 = ENV['EUI64']
+
+    dev = Device.create(eui64: eui64)
+    dev.gen_and_store_key
+  end
+
+  def foo_one
     key = OpenSSL::PKey::RSA.new 2048
     cert = OpenSSL::X509::Certificate.new
     cert.version = 2
