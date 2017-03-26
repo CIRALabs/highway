@@ -8,7 +8,7 @@ class Voucher < ActiveRecord::Base
     h2["created-on"] = created_at
     h2["device-identifier"] = device.eui64
     h2["assertion"]         = "logged"
-    h2["owner"]             = Base64.encode64(self.owner.certder.to_der)
+    h2["owner"]             = Base64.strict_encode64(self.owner.certder.to_der)
 
     # return it all.
     h1 = Hash.new
