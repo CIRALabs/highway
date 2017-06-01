@@ -53,6 +53,52 @@ namespace :highway do
     end
   end
 
+  desc "Create a certificate for the MASA to sign vouchers with"
+  task :bootstrap_masa => :environment do
+
+    curve = HighwayKeys.ca.curve
+
+    certdir = Rails.root.join('db').join('cert')
+    FileUtils.mkpath(certdir)
+
+    masaprivkey=certdir.join("masa_#{curve}.key")
+    if File.exists?(masaprivkey)
+      masa_key = OpenSSL::PKey.read(File.open(masaprivkey))
+    else
+      # the MASA's public/private key - 3*1024 + 8
+      masa_key = OpenSSL::PKey::EC.new(curve)
+      masa_key.generate_key
+      File.open(masaprivkey, "w") do |f| f.write masa_key.to_pem end
+    end
+
+    masa_crt  = OpenSSL::X509::Certificate.new
+    # cf. RFC 5280 - to make it a "v3" certificate
+    masa_crt.version = 2
+    masa_crt.serial = 1
+    masa_crt.subject = OpenSSL::X509::Name.parse "/DC=ca/DC=sandelman/CN=Unstrung MASA"
+
+    root_ca = HighwayKeys.ca.rootkey
+    # masa is signed by root_ca
+    masa_crt.issuer = root_ca.subject
+    #root_ca.public_key = root_key.public_key
+    masa_crt.public_key = masa_key
+    masa_crt.not_before = Time.now
+
+    # 2 years validity
+    masa_crt.not_after = masa_crt.not_before + 2 * 365 * 24 * 60 * 60
+
+    # Extension Factory
+    ef = OpenSSL::X509::ExtensionFactory.new
+    ef.subject_certificate = masa_crt
+    ef.issuer_certificate  = root_ca
+    masa_crt.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
+    masa_crt.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
+
+    File.open(certdir.join("masa_#{curve}.crt"),'w') do |f|
+      f.write masa_crt.to_pem
+    end
+  end
+
   desc "Sign a IDevID certificate for a new device"
   task :signmic => :environment do
 
