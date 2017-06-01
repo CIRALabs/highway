@@ -2,8 +2,8 @@
 
 namespace :highway do
 
-  desc "Create initial self-signed certificate"
-  task :selfsigned => :environment do
+  desc "Create initial self-signed CA certificate"
+  task :bootstrap_ca => :environment do
 
     # X25519 is for key-agreement only.
     #curve='X25519'
