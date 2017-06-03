@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.5'
+gem 'rails', '~> 5.0.0'
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.15'
@@ -31,7 +31,7 @@ gem 'chariwt', :path => '../chariwt'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-gem 'active_scaffold'
+gem 'active_scaffold', :git => 'https://github.com/activescaffold/active_scaffold.git'
 gem 'therubyracer'
 
 group :development, :test do

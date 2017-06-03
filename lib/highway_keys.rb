@@ -1,11 +1,11 @@
 class HighwayKeys
 
   def rootkey
-    @rootkey ||= load_pub_key
+    @rootkey ||= load_root_pub_key
   end
 
   def rootprivkey
-    @rootprivkey ||= load_priv_key
+    @rootprivkey ||= load_root_priv_key
   end
 
   def curve
@@ -25,14 +25,14 @@ class HighwayKeys
   end
 
   protected
-  def load_priv_key
+  def load_root_priv_key
     vendorprivkey=certdir.join("vendor_#{curve}.key")
     File.open(vendorprivkey) do |f|
       OpenSSL::PKey.read(f)
     end
   end
 
-  def load_pub_key
+  def load_root_pub_key
     File.open(certdir.join("vendor_#{curve}.crt"),'r') do |f|
       OpenSSL::X509::Certificate.new(f)
     end
