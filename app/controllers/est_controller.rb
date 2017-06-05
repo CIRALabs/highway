@@ -1,0 +1,2 @@
+class EstController < ApiController
+end
