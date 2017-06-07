@@ -3,6 +3,6 @@ Rails.application.routes.draw do
   resources :vouchers, :active_scaffold => true
   resources :devices,  :active_scaffold => true
 
-  post '/requestvoucher', to: 'authentication#authenticate'
+  post '/requestvoucher', to: 'est#requestvoucher'
 
 end

@@ -18,7 +18,7 @@ RSpec.describe 'BRSKI EST API', type: :request do
                       }
                     }
 
-      post '/requestvoucher', voucherreq, {
+      post '/requestvoucher', params: voucherreq, headers: {
              'CONTENT_TYPE' => 'application/voucherrequest+cms',
              'ACCEPT'       => 'application/json'
            }
