@@ -23,7 +23,7 @@ RSpec.describe 'BRSKI EST API', type: :request do
              'ACCEPT'       => 'application/json'
            }
 
-      expect(response).to have_http_status(201)
+      expect(response).to have_http_status(200)
     end
 
   end
