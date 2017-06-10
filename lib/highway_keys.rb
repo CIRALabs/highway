@@ -12,6 +12,20 @@ class HighwayKeys
     'secp384r1'
   end
 
+  def client_curve
+    'secp256k1'
+  end
+
+  def serial
+    @serial ||= 2
+    @serial += 1
+    @serial
+  end
+
+  def digest
+    OpenSSL::Digest::SHA384.new
+  end
+
   def devicedir
     @devdir  ||= Rails.root.join('db').join('devices')
   end
