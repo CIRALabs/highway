@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/activescaffold/active_scaffold.git
-  revision: 3c73a12aa957e131685f75019acac07517b5c7f7
+  revision: 0c28cd84443a08cf584187c6d4a33d45b30e418e
   specs:
     active_scaffold (3.4.99)
       ice_nine (~> 0.11)
@@ -64,8 +64,8 @@ GEM
       activesupport (>= 4.2.0)
     i18n (0.8.4)
     ice_nine (0.11.2)
-    jbuilder (2.6.4)
-      activesupport (>= 3.0.0)
+    jbuilder (2.7.0)
+      activesupport (>= 4.2.0)
       multi_json (>= 1.2)
     jquery-rails (4.3.1)
       rails-dom-testing (>= 1, < 3)
@@ -75,18 +75,18 @@ GEM
     libv8 (3.16.14.19)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
-    mail (2.6.5)
+    mail (2.6.6)
       mime-types (>= 1.16, < 4)
     method_source (0.8.2)
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
-    mini_portile2 (2.1.0)
+    mini_portile2 (2.2.0)
     minitest (5.10.2)
     multi_json (1.12.1)
     nio4r (2.1.0)
-    nokogiri (1.7.2)
-      mini_portile2 (~> 2.1.0)
+    nokogiri (1.8.0)
+      mini_portile2 (~> 2.2.0)
     pg (0.20.0)
     rack (2.0.3)
     rack-test (0.6.3)
@@ -134,6 +134,13 @@ GEM
       rspec-mocks (~> 3.6.0)
       rspec-support (~> 3.6.0)
     rspec-support (3.6.0)
+    sass (3.4.24)
+    sass-rails (5.0.6)
+      railties (>= 4.0.0, < 6)
+      sass (~> 3.1)
+      sprockets (>= 2.8, < 4.0)
+      sprockets-rails (>= 2.0, < 4.0)
+      tilt (>= 1.1, < 3)
     sdoc (0.4.2)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
@@ -158,6 +165,7 @@ GEM
       ref
     thor (0.19.4)
     thread_safe (0.3.6)
+    tilt (2.0.7)
     turbolinks (5.0.1)
       turbolinks-source (~> 5)
     turbolinks-source (5.0.3)
@@ -184,6 +192,8 @@ DEPENDENCIES
   pg (~> 0.15)
   rails (~> 5.0.0)
   rspec-rails
+  sass
+  sass-rails
   sdoc (~> 0.4.0)
   shoulda
   spring

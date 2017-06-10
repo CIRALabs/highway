@@ -33,6 +33,8 @@ gem 'chariwt', :path => '../chariwt'
 
 gem 'active_scaffold', :git => 'https://github.com/activescaffold/active_scaffold.git'
 gem 'therubyracer'
+gem 'sass'
+gem 'sass-rails'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
