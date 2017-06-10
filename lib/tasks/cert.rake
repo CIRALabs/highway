@@ -121,7 +121,7 @@ namespace :highway do
     # cf. RFC 5280 - to make it a "v3" certificate
     server_crt.version = 2
     server_crt.serial  = HighwayKeys.ca.serial
-    server_crt.subject = OpenSSL::X509::Name.parse "/DC=ca/DC=sandelman/CN=Unstrung MASA Server"
+    server_crt.subject = OpenSSL::X509::Name.parse "/DC=ca/DC=sandelman/CN=localhost"
 
     root_ca = HighwayKeys.ca.rootkey
     # masa is signed by root_ca
