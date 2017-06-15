@@ -2,15 +2,14 @@ class EstController < ApiController
 
   def requestvoucher
     @vreq = JSON.parse(request.body.read)
-    @voucher = Voucher.new(@vreq)
+    @voucherreq = VoucherRequest.from_json(@vreq)
 
-    @servcert   = OpenSSL::X509::Certificate.new request.env["SSL_SERVER_CERT"]
-    @clientcert = OpenSSL::X509::Certificate.new request.env["SSL_CLIENT_CERT"]
-    File.open("log/n1.log", "w") do |f|
-      f.puts @clientcert.public_key
-      f.puts "body2:"
-      f.puts @vreq.to_s
+    clientcert_pem = request.env["SSL_CLIENT_CERT"]
+    if clientcert_pem
+      @voucherreq.tls_clientcert = clientcert_pem
     end
+    @voucherreq.save!
+    @voucher = @voucherreq.issue_voucher
     json_response(@voucher, :ok)
   end
 end

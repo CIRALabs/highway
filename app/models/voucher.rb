@@ -27,10 +27,10 @@ class Voucher < ActiveRecord::Base
     signed
   end
 
-  def initialize(json = {})
+  def self.from_json(json)
     raise Voucher::InvalidVoucher unless json["ietf-voucher:voucher"]
 
-    vdetails = @vreq["ietf-voucher:voucher"]
+    vdetails = json["ietf-voucher:voucher"]
     self.nonce = vdetails["nonce"]
   end
 

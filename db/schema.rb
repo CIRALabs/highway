@@ -45,9 +45,12 @@ ActiveRecord::Schema.define(version: 20170610221154) do
     t.json     "details"
     t.integer  "owner_id"
     t.integer  "voucher_id"
+    t.integer  "device_id"
     t.text     "originating_ip"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.text     "nonce"
+    t.text     "device_identifier"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
   create_table "vouchers", force: :cascade do |t|
