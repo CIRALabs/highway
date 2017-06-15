@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170325005941) do
+ActiveRecord::Schema.define(version: 20170610221154) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,15 @@ ActiveRecord::Schema.define(version: 20170325005941) do
     t.string  "variable"
     t.string  "value"
     t.integer "number"
+  end
+
+  create_table "voucher_requests", force: :cascade do |t|
+    t.json     "details"
+    t.integer  "owner_id"
+    t.integer  "voucher_id"
+    t.text     "originating_ip"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
   create_table "vouchers", force: :cascade do |t|
