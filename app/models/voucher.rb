@@ -2,6 +2,8 @@ class Voucher < ActiveRecord::Base
   belongs_to :device
   belongs_to :owner
 
+  class InvalidVoucher < Exception; end
+
   def jsonhash(today = DateTime.utc.now)
     h2 = Hash.new
     h2["nonce"]      = nonce
@@ -24,4 +26,12 @@ class Voucher < ActiveRecord::Base
                                  serialized_json)
     signed
   end
+
+  def initialize(json = {})
+    raise Voucher::InvalidVoucher unless json["ietf-voucher:voucher"]
+
+    vdetails = @vreq["ietf-voucher:voucher"]
+    self.nonce = vdetails["nonce"]
+  end
+
 end
