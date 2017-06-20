@@ -28,9 +28,6 @@ gem 'chariwt', :path => '../chariwt'
 # Use Unicorn as the app server
 # gem 'unicorn'
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
 gem 'active_scaffold', :git => 'https://github.com/activescaffold/active_scaffold.git'
 gem 'therubyracer'
 
@@ -42,10 +39,13 @@ group :development, :test do
 end
 
 group :development do
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
+  # Deploy with Capistrano
+  gem 'capistrano'
+  gem 'capistrano-rails'
+  gem 'capistrano-rvm'
 
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  # Spring speeds up development by keeping your application running
+  #  in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
 
