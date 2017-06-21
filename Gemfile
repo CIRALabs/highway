@@ -6,7 +6,7 @@ gem 'rails', '~> 5.0.0'
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.15'
-gem 'sqlite3'
+#gem 'sqlite3'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -19,6 +19,8 @@ gem 'jbuilder', '~> 2.0'
 
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
+
+gem 'uglifier'
 
 
 # Use ActiveModel has_secure_password
