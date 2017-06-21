@@ -31,16 +31,14 @@ gem 'active_scaffold', :git => 'https://github.com/activescaffold/active_scaffol
 gem 'therubyracer'
 gem 'devise', git: 'https://github.com/plataformatec/devise.git', branch: 'master'
 
+# gem 'chariwt', :path => '../chariwt'
+gem 'chariwt', :git => 'https://github.com/mcr/ChariWTs.git'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
   gem "rspec-rails"
   gem "shoulda"
-  gem 'chariwt', :path => '../chariwt'
-end
-
-group :production do
-  gem 'chariwt', :git => 'https://github.com/mcr/ChariWTs.git'
 end
 
 group :development do

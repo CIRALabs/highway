@@ -7,6 +7,12 @@ GIT
       rails (>= 4.0.5)
 
 GIT
+  remote: https://github.com/mcr/ChariWTs.git
+  revision: 3a3921b40c49e1ff599922f75bb5a99f34c8cdad
+  specs:
+    chariwt (0.0.1)
+
+GIT
   remote: https://github.com/plataformatec/devise.git
   revision: ad8547dedeb60bd4e9fcabc2811c109221f69256
   branch: master
@@ -17,11 +23,6 @@ GIT
       railties (>= 4.1.0, < 5.2)
       responders
       warden (~> 1.2.3)
-
-PATH
-  remote: ../chariwt
-  specs:
-    chariwt (0.0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -232,4 +233,4 @@ DEPENDENCIES
   turbolinks
 
 BUNDLED WITH
-   1.15.0
+   1.15.1
