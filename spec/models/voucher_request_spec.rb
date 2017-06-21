@@ -21,11 +21,7 @@ RSpec.describe VoucherRequest, type: :model do
       File.open("spec/files/jada_abcd.jwt","r") do |f|
         token = f.read
 
-        decoded_token = JWT.decode token, nil, false
-
-        json = decoded_token[0]
-        vr2 = VoucherRequest.create(details: json)
-        vr2.populate_explicit_fields
+        vr2 = VoucherRequest.from_json_jose(token)
         expect(vr2.device_identifier).to eq("JADA123456789")
         expect(vr2.nonce).to eq("abcd12345")
       end

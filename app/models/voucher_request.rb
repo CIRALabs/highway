@@ -5,18 +5,16 @@ class VoucherRequest < ApplicationRecord
 
   class InvalidVoucherRequest < Exception; end
 
-  def self.from_json(json)
-    vr = self.new
-    raise VoucherRequest::InvalidVoucherRequest unless json["ietf-voucher:voucher"]
-    vr.from_json(json)
+  def self.from_json_jose(token)
+    decoded_token = JWT.decode token, nil, false
+    json = decoded_token[0]
+    vr = create(details: json)
+    vr.populate_explicit_fields
+    vr
   end
 
-  def from_json(json)
-    vdetails = json["ietf-voucher:voucher"]
-    populate_explicit_fields
-    self
-  end
   def vdetails
+    raise VoucherRequest::InvalidVoucherRequest unless details["ietf-voucher:voucher"]
     @vdetails ||= details["ietf-voucher:voucher"]
   end
 
