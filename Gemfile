@@ -37,6 +37,7 @@ gem 'devise', git: 'https://github.com/plataformatec/devise.git', branch: 'maste
 
 # gem 'chariwt', :path => '../chariwt'
 gem 'chariwt', :git => 'https://github.com/mcr/ChariWTs.git'
+gem 'jwt'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
