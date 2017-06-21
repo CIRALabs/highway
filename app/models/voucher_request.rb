@@ -19,7 +19,12 @@ class VoucherRequest < ApplicationRecord
   end
 
   def name
-    "voucher\##{self.id}"
+    "voucherreq_#{self.id}"
+  end
+  def savefixturefw(fw)
+    voucher.savefixturefw(fw) if voucher
+    owner.savefixturefw(fw)   if owner
+    save_self_tofixture(fw)
   end
 
   def populate_explicit_fields

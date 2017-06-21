@@ -1,4 +1,5 @@
 class Voucher < ActiveRecord::Base
+  include FixtureSave
   belongs_to :device
   belongs_to :owner
 
@@ -33,5 +34,15 @@ class Voucher < ActiveRecord::Base
     vdetails = json["ietf-voucher:voucher"]
     self.nonce = vdetails["nonce"]
   end
+
+  def name
+    "voucher_#{self.id}"
+  end
+  def savefixturefw(fw)
+    device.savefixturefw(fw) if device
+    owner.savefixturefw(fw)  if owner
+    save_self_tofixture(fw)
+  end
+
 
 end

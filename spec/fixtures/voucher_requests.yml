@@ -1,0 +1,35 @@
+sample_request1:
+  originating_ip: "127.0.0.1:9984"
+  nonce: "Y2hhaDJlamVpejdhZUgxVGhhaWthdGVpNVNpaTdqb2gK"
+  device_identifier: "abcd12345"
+  details:
+    ietf-voucher:voucher:
+      assertion: ''
+      created-on: '2016-10-07T19:31:42+00:00'
+      expires-on: '2017-10-01T00:00:00+00:00'
+      serial-number: JADA123456789
+      pinned-domain-cert:
+      - '3939303031313232333334343535'
+      nonce: "abcd12345"
+
+voucher13:
+  id: 13
+  details:
+    ietf-voucher:voucher:
+      assertion: ''
+      created-on: '2016-10-07T19:31:42+00:00'
+      expires-on: '2017-10-01T00:00:00+00:00'
+      serial-number: JADA123456789
+      pinned-domain-cert: MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEZQ1CYWhxrI_MGtpkCu2c9coGiZA5o_QGQHIn0-z132mOq2XfuWz6L4fpABUciyXBSKRAGt5ngAqHTPOs3IfC1A==
+      nonce: abcd12345
+  owner_id: 446739020
+  voucher_id:
+  device_id:
+  originating_ip: "127.0.0.1:9984"
+  nonce: abcd12345
+  device_identifier: JADA123456789
+  created_at: "2017-06-21T21:15:31"
+  updated_at: "2017-06-21T21:15:31"
+
+
+  

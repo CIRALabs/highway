@@ -1,4 +1,5 @@
 class Device < ActiveRecord::Base
+  include FixtureSave
   has_many :vouchers
 
   attr_accessor :idevid
@@ -65,5 +66,15 @@ class Device < ActiveRecord::Base
     self.pub_key = idevid.to_pem
     save!
   end
+
+  def name
+    "device_#{self.id}"
+  end
+  def savefixturefw(fw)
+    device.savefixturefw(fw) if device
+    vouchers.each { |voucher| voucher.savefixturefw(fw)}
+    save_self_tofixture(fw)
+  end
+
 
 end
