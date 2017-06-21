@@ -61,4 +61,11 @@ RSpec.describe Device, type: :model do
       expect(t1.sanitized_eui64).to eq("BBB11-22-44-55-22-55-88-22")
     end
   end
+
+  describe "searching" do
+    it "should find a device by eui64 or serialnumber" do
+      b1 = Device.find_by_number('JADA123456789')
+      expect(b1).to_not be_nil
+    end
+  end
 end

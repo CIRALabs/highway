@@ -4,6 +4,10 @@ class Device < ActiveRecord::Base
 
   attr_accessor :idevid
 
+  def self.find_by_number(number)
+    where(serial_number: number).take || where(eui64: number).take
+  end
+
   def gen_priv_key(curve = 'secp256k1')
     @dev_key = OpenSSL::PKey::EC.new(curve)
     @dev_key.generate_key
@@ -75,6 +79,5 @@ class Device < ActiveRecord::Base
     vouchers.each { |voucher| voucher.savefixturefw(fw)}
     save_self_tofixture(fw)
   end
-
 
 end
