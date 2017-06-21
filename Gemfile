@@ -6,7 +6,7 @@ gem 'rails', '~> 5.0.0'
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.15'
-gem 'sqlite3'
+#gem 'sqlite3'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -20,7 +20,8 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
-gem 'chariwt', :path => '../chariwt'
+gem 'uglifier'
+
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -28,13 +29,14 @@ gem 'chariwt', :path => '../chariwt'
 # Use Unicorn as the app server
 # gem 'unicorn'
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
 gem 'active_scaffold', :git => 'https://github.com/activescaffold/active_scaffold.git'
 gem 'therubyracer'
 gem 'sass'
 gem 'sass-rails'
+gem 'devise', git: 'https://github.com/plataformatec/devise.git', branch: 'master'
+
+# gem 'chariwt', :path => '../chariwt'
+gem 'chariwt', :git => 'https://github.com/mcr/ChariWTs.git'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -44,10 +46,14 @@ group :development, :test do
 end
 
 group :development do
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
+  # Deploy with Capistrano
+  gem 'capistrano'
+  gem 'capistrano-rails'
+  gem 'capistrano-passenger'
+  gem 'capistrano-rvm'
 
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  # Spring speeds up development by keeping your application running
+  #  in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
 
