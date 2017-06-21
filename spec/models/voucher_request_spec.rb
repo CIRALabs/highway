@@ -24,6 +24,7 @@ RSpec.describe VoucherRequest, type: :model do
         vr2 = VoucherRequest.from_json_jose(token)
         expect(vr2.device_identifier).to eq("JADA123456789")
         expect(vr2.nonce).to eq("abcd12345")
+        expect(vr2.owner).to_not be_nil
       end
     end
   end
