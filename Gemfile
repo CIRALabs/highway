@@ -20,7 +20,6 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
-gem 'chariwt', :path => '../chariwt'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -30,18 +29,25 @@ gem 'chariwt', :path => '../chariwt'
 
 gem 'active_scaffold', :git => 'https://github.com/activescaffold/active_scaffold.git'
 gem 'therubyracer'
+gem 'devise', git: 'https://github.com/plataformatec/devise.git', branch: 'master'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
   gem "rspec-rails"
   gem "shoulda"
+  gem 'chariwt', :path => '../chariwt'
+end
+
+group :production do
+  gem 'chariwt', :git => 'https://github.com/mcr/ChariWTs.git'
 end
 
 group :development do
   # Deploy with Capistrano
   gem 'capistrano'
   gem 'capistrano-rails'
+  gem 'capistrano-passenger'
   gem 'capistrano-rvm'
 
   # Spring speeds up development by keeping your application running
