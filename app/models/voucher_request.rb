@@ -1,6 +1,7 @@
 class VoucherRequest < ApplicationRecord
   belongs_to :voucher
   belongs_to :owner
+  belongs_to :device
   include FixtureSave
 
   class InvalidVoucherRequest < Exception; end
@@ -45,6 +46,7 @@ class VoucherRequest < ApplicationRecord
 
   def populate_explicit_fields
     self.device_identifier = vdetails["serial-number"]
+    self.device            = Device.find_by_number(device_identifier)
     self.nonce             = vdetails["nonce"]
   end
 
