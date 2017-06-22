@@ -8,8 +8,24 @@ class MasaKeys < HighwayKeys
     @masaprivkey ||= load_masa_priv_key
   end
 
+  def curve
+    'secp384r1'
+  end
+  def algorithm
+    'ES384'
+  end
+
   def self.masa
     @masa ||= self.new
+  end
+
+  # return the PublicKeyInfo structure for the issuer
+  def masa_pki
+    masakey.public_key.to_der
+  end
+
+  def jwt_encode(jv)
+    JWT.encode jv, masaprivkey, algorithm
   end
 
   protected

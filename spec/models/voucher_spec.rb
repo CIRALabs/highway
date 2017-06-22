@@ -43,7 +43,7 @@ RSpec.describe Voucher, type: :model do
 
       today  = '2017-01-01'.to_date
 
-      pkcs7 = v1.signed_voucher(today)
+      pkcs7 = v1.pkcs7_signed_voucher(today)
       expect(pkcs7.class).to be(OpenSSL::PKCS7)
       expect(pkcs7.to_pem).to_not be_nil
 

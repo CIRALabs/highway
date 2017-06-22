@@ -50,4 +50,22 @@ class VoucherRequest < ApplicationRecord
     self.nonce             = vdetails["nonce"]
   end
 
+  def issue_voucher
+    # at a minimum, this must be before a device that belongs to us!
+    return nil unless device
+
+    # if there is another valid voucher for this device, it must be for
+    # the same owner.
+
+    ## do some kind of validation here!
+    voucher = Voucher.create(owner: owner,
+                             device: device,
+                             nonce: nonce)
+    unless nonce
+      voucher.expires_on = Time.now + 14.days
+    end
+    voucher.jose_sign!
+
+  end
+
 end

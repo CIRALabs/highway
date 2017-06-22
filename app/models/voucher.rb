@@ -1,3 +1,5 @@
+require 'chariwt'
+
 class Voucher < ActiveRecord::Base
   include FixtureSave
   belongs_to :device
@@ -11,7 +13,10 @@ class Voucher < ActiveRecord::Base
     h2["created-on"] = created_at
     h2["device-identifier"] = device.eui64
     h2["assertion"]         = "logged"
-    h2["owner"]             = Base64.strict_encode64(self.owner.certder.to_der)
+
+    if(owner.try(:certder))
+      h2["owner"]           = Base64.strict_encode64(self.owner.certder.to_der)
+    end
 
     # return it all.
     h1 = Hash.new
@@ -19,13 +24,36 @@ class Voucher < ActiveRecord::Base
     h1
   end
 
-  def signed_voucher(today = DateTime.utc.now)
+  def pkcs7_signed_voucher(today = DateTime.now.utc)
     serialized_json = jsonhash(today).to_json
 
     signed = OpenSSL::PKCS7.sign(HighwayKeys.ca.rootkey,
                                  HighwayKeys.ca.rootprivkey,
                                  serialized_json)
     signed
+  end
+
+  def serial_number
+    device.serial_number
+  end
+
+  def jose_sign!(today = DateTime.now.utc)
+    serialized_json = jsonhash(today).to_json
+
+    cv = Chariwt::Voucher.new
+    cv.assertion    = 'logged'
+    cv.serialNumber = serial_number
+    cv.voucherType  = :time_based
+    cv.nonce        = nonce
+    cv.createdOn    = created_at
+    cv.expiresOn    = expires_on
+    cv.idevidIssuer = MasaKeys.ca.masa_pki
+    cv.pinnedDomainCert = owner.try(:certder)
+
+    jv = cv.json_voucher
+    self.as_issued = MasaKeys.ca.jwt_encode(jv)
+    save!
+    self
   end
 
   def self.from_json(json)
