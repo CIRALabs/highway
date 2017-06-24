@@ -4,7 +4,8 @@ class Owner < ActiveRecord::Base
   has_many :voucher_requests
 
   def certder
-    @cert ||= OpenSSL::X509::Certificate.new(self.certificate)
+    pkey_der = Base64.urlsafe_decode64(self.certificate)
+    @cert ||= OpenSSL::PKey.read(pkey_der)
   end
 
   def self.find_by_public_key(base64key)

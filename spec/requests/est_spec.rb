@@ -15,7 +15,8 @@ RSpec.describe 'BRSKI EST API', type: :request do
 
       expect(response).to have_http_status(200)
 
-      jsonreply = JSON.parse(response.body)
+      (part1,part2,part3) = response.body.split('.')
+      jsonreply = JSON.parse(Base64.urlsafe_decode64(part2))
       expect(jsonreply['ietf-voucher:voucher']).to_not be_nil
     end
 
