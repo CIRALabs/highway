@@ -54,10 +54,14 @@ class VoucherRequest < ApplicationRecord
     # at a minimum, this must be before a device that belongs to us!
     return nil unless device
 
-    # if there is another valid voucher for this device, it must be for
+    # must have an owner!
+    return nil unless owner
+
+    # XXX if there is another valid voucher for this device, it must be for
     # the same owner.
 
-    ## do some kind of validation here!
+    ## XXX what other kinds of validation belongs here?
+
     voucher = Voucher.create(owner: owner,
                              device: device,
                              nonce: nonce)
@@ -65,7 +69,6 @@ class VoucherRequest < ApplicationRecord
       voucher.expires_on = Time.now + 14.days
     end
     voucher.jose_sign!
-
   end
 
 end

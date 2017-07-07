@@ -22,7 +22,7 @@ voucher13:
       serial-number: JADA123456789
       pinned-domain-cert: MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEZQ1CYWhxrI_MGtpkCu2c9coGiZA5o_QGQHIn0-z132mOq2XfuWz6L4fpABUciyXBSKRAGt5ngAqHTPOs3IfC1A==
       nonce: abcd12345
-  owner_id: 446739020
+  owner_id: 446739022
   device: vizsla
   originating_ip: "127.0.0.1:9984"
   nonce: abcd12345
