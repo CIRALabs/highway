@@ -20,7 +20,6 @@ RSpec.describe VoucherRequest, type: :model do
 
     it "should process a voucher request into a voucher for a valid device" do
       req13 = voucher_requests(:voucher13)
-
       voucher = req13.issue_voucher
       expect(voucher.nonce).to   eq(req13.nonce)
       expect(voucher.device).to  eq(req13.device)

@@ -46,7 +46,11 @@ class Voucher < ActiveRecord::Base
     cv.createdOn    = created_at
     cv.expiresOn    = expires_on
     cv.idevidIssuer = MasaKeys.ca.masa_pki
-    cv.pinnedDomainCert = owner.certder
+    if owner.certder
+      cv.pinnedDomainCert = owner.certder
+    else
+      cv.pinnedPublicKey  = owner.pubkey
+    end
 
     jv = cv.json_voucher
     self.as_issued = MasaKeys.ca.jwt_encode(jv)

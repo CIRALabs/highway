@@ -22,7 +22,11 @@ class Owner < ActiveRecord::Base
   end
 
   def certder
-    @cert ||= OpenSSL::X509::Certificate.new(decode_pem(self.certificate))
+    if self.certificate
+      @cert ||= OpenSSL::X509::Certificate.new(decode_pem(self.certificate))
+    else
+      @cert = ""
+    end
   end
 
   def pubkey_from_cert
@@ -39,7 +43,7 @@ class Owner < ActiveRecord::Base
 
   def self.find_by_public_key(base64key)
     # must canonicalize the key by decode and then der.
-    pkey = OpenSSL::PKey.new(decode_pem(base64key))
+    pkey = OpenSSL::PKey.read(decode_pem(base64key))
 
     # use explicit base64 encoding to avoid BEGIN/END construct of to_pem.
     pkey_pem = Base64.urlsafe_encode64(pkey.to_der)
