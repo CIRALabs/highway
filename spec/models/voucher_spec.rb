@@ -33,7 +33,7 @@ RSpec.describe Voucher, type: :model do
       expect(json1["assertion"]).to                 eq("logged")
 
       owner_base64 = json1["owner"]
-      owner_der    = Base64.decode64(owner_base64)
+      owner_der    = Base64.urlsafe_decode64(owner_base64)
       owner = OpenSSL::X509::Certificate.new(owner_der)
       expect(owner.subject.to_s).to eq("/C=CA/ST=Ontario/L=Ottawa/O=Owner Example One/OU=Not Very/CN=owner1.example.com/emailAddress=owner1@example.com")
     end
