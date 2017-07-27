@@ -22,3 +22,7 @@ This will create a CA into db/cert/vendor_*
     rake highway:bootstrap_masa
 
 This will create a signed certificate in db/cert/masa_*
+
+This is necessary for rake spec as well.  A future effort will generate
+all certificates needed for the tests.
+
