@@ -1,0 +1,30 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  color: #666;
+  background-color: #fff;
+}
+
+div.main {
+    background: #dddddd url(../images/background-100dpi.png) 0 0 repeat-x;
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border: 2px solid green;
+}
+
+img#highway {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+span.welcome {
+    font-size: 40pt;
+}
+
+div.welcome {
+    width: 40%;
+    height: 1000px;
+    font-size: 250%;
+}

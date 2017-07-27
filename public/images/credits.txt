@@ -1,0 +1,6 @@
+wget http://www.clker.com/cliparts/d/a/5/8/1236269084174009339Silveira_Neto_Robot_with_a_claw.svg
+wget http://www.electronicsandyou.com/blog/wp-content/uploads/2013/06/Printed-Circuit-Board-Assembly.jpg
+wget http://www.ourpcbte.com/wp-content/uploads/2015/01/PCBA-SMT-DIP.jpg
+wget https://ae01.alicdn.com/kf/HTB1boTJJVXXXXaPXFXXq6xXFXXXE.jpg_220x220.jpg
+wget http://www.robotshop.com/media/files/images2/pioneer600-raspberry-pi-expansion-board-desc2.jpg
+wget http://www.clker.com/cliparts/p/D/2/d/Y/i/circuit-board.svg
