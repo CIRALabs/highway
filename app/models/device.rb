@@ -65,6 +65,13 @@ class Device < ActiveRecord::Base
                                    self.sanitized_eui64),
                            false))
 
+    # include the official HardwareModule OID:  1.3.6.1.5.5.7.8.4
+    @idevid.add_extension(ef.create_extension(
+                           "subjectAltName",
+                           sprintf("otherName:1.3.6.1.5.5.7.8.4;UTF8:%s",
+                                   self.sanitized_eui64),
+                           false))
+
     @idevid.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
 
     self.pub_key = idevid.to_pem
