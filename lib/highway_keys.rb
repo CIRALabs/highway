@@ -13,7 +13,7 @@ class HighwayKeys
   end
 
   def client_curve
-    'secp256k1'
+    'prime256v1'
   end
 
   def serial

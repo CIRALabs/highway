@@ -145,7 +145,7 @@ namespace :highway do
     end
   end
 
-  desc "Sign a IDevID certificate for a new device"
+  desc "Sign a IDevID certificate for a new device, EUI64=xx"
   task :signmic => :environment do
 
     eui64 = ENV['EUI64']

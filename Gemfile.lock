@@ -7,10 +7,10 @@ GIT
       rails (>= 4.0.5)
 
 GIT
-  remote: https://github.com/mcr/ChariWTs.git
-  revision: 73579b9fb321c51c86c19266c0c3b1fee5f138a4
+  remote: https://github.com/mcr/openssl.git
+  revision: 7c18417e2e24a9c6c407f5114c58b7f161e16d34
   specs:
-    chariwt (0.0.1)
+    openssl (2.1.0)
 
 GIT
   remote: https://github.com/plataformatec/devise.git
@@ -242,6 +242,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   jwt
+  openssl!
   pg (~> 0.15)
   rails (~> 5.0.0)
   rspec-rails
@@ -255,4 +256,4 @@ DEPENDENCIES
   uglifier
 
 BUNDLED WITH
-   1.15.1
+   1.15.4

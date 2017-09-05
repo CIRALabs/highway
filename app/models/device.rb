@@ -8,7 +8,8 @@ class Device < ActiveRecord::Base
     where(serial_number: number).take || where(eui64: number).take
   end
 
-  def gen_priv_key(curve = 'secp256k1')
+  # JWT wants prime256v1 (aka secp256r1), so default to that.
+  def gen_priv_key(curve = 'prime256v1')
     @dev_key = OpenSSL::PKey::EC.new(curve)
     @dev_key.generate_key
   end
@@ -52,10 +53,11 @@ class Device < ActiveRecord::Base
     @idevid.not_after  = Time.gm(2999,12,31)
 
     ef = OpenSSL::X509::ExtensionFactory.new
-    ef.subject_certificate = idevid
+    ef.subject_certificate = @idevid
     ef.issuer_certificate  = HighwayKeys.ca.rootkey
     @idevid.add_extension(ef.create_extension("subjectKeyIdentifier","hash",false))
     @idevid.add_extension(ef.create_extension("basicConstraints","CA:FALSE",false))
+
     # the OID: 1.3.6.1.4.1.46930.1 is a Private Enterprise Number OID:
     #    iso.org.dod.internet.private.enterprise . SANDELMAN=46930 . 1
     # subjectAltName=otherName:1.2.3.4;UTF8:some other identifier
@@ -65,13 +67,17 @@ class Device < ActiveRecord::Base
                                    self.sanitized_eui64),
                            false))
 
-    # include the official HardwareModule OID:  1.3.6.1.5.5.7.8.4
+    # the OID: 1.3.6.1.4.1.46930.2 is a Private Enterprise Number OID:
+    #    iso.org.dod.internet.private.enterprise . SANDELMAN=46930 . 2
+    # this is used for the BRSKI MASAURLExtnModule-2016 until allocated
+    # depends upon a patch to ruby-openssl, at:
+    #  https://github.com/mcr/openssl/commit/a59c5e049b8b4b7313c6532692fa67ba84d1707c
     @idevid.add_extension(ef.create_extension(
-                           "subjectAltName",
-                           sprintf("otherName:1.3.6.1.5.5.7.8.4;UTF8:%s",
-                                   self.sanitized_eui64),
+                           "1.3.6.1.4.1.46930.2",
+                           "ASN1:UTF8String:http://www.sandelman.ca",
                            false))
 
+    # include the official HardwareModule OID:  1.3.6.1.5.5.7.8.4
     @idevid.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
 
     self.pub_key = idevid.to_pem
