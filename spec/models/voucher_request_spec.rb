@@ -11,10 +11,10 @@ RSpec.describe VoucherRequest, type: :model do
 
   describe "voucher input request" do
     it "should read a voucher request from disk" do
-      token = File.read("spec/files/jada_abcd.jwt")
-      vr2 = VoucherRequest.from_json_jose(token)
+      token = Base64.decode64(IO::read("spec/files/vr_JADA123456789.pkcs"))
+      vr2 = VoucherRequest.from_pkcs7(token)
       expect(vr2.device_identifier).to eq("JADA123456789")
-      expect(vr2.nonce).to eq("abcd12345")
+      expect(vr2.nonce).to eq("abcd1234")
       expect(vr2.owner).to_not be_nil
     end
 

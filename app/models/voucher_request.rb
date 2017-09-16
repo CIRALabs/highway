@@ -7,17 +7,27 @@ class VoucherRequest < ApplicationRecord
   class InvalidVoucherRequest < Exception; end
   class MissingPublicKey < Exception; end
 
-  def self.from_json_jose(token)
-    json = Chariwt::VoucherRequest.from_json_jose(token)
-    vr = create(details: json)
+  def self.from_json(json, token)
+    vr = create(details: json, raw_request: token)
     vr.populate_explicit_fields
-    vr.owner      = Owner.find_by_public_key(vr.vdetails["pinned-domain-cert"])
     vr
   end
 
-  def vdetails
-    raise VoucherRequest::InvalidVoucherRequest unless details["ietf-voucher:voucher"]
-    @vdetails ||= details["ietf-voucher:voucher"]
+  def self.from_json_jose(token, json = nil)
+    jsonresult = Chariwt::VoucherRequest.from_json_jose(token)
+    unless jsonresult
+      raise InvalidVoucherRequest
+    end
+    return from_json(jsonresult.inner_attributes, token)
+  end
+
+  def self.from_pkcs7(token, json = nil)
+    jsonresult = Chariwt::VoucherRequest.from_pkcs7(token)
+    # on MASA, voucher requests MUST always be signed
+    unless jsonresult
+      raise InvalidVoucherRequest
+    end
+    return from_json(jsonresult.inner_attributes, true)
   end
 
   def name
@@ -30,9 +40,10 @@ class VoucherRequest < ApplicationRecord
   end
 
   def populate_explicit_fields
-    self.device_identifier = vdetails["serial-number"]
+    self.device_identifier = details["serial-number"]
     self.device            = Device.find_by_number(device_identifier)
-    self.nonce             = vdetails["nonce"]
+    self.nonce             = details["nonce"]
+    self.owner = Owner.find_by_public_key(details["pinned-domain-cert"])
   end
 
   def issue_voucher

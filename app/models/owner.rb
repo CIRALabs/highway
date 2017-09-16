@@ -42,8 +42,15 @@ class Owner < ActiveRecord::Base
   end
 
   def self.find_by_public_key(base64key)
+    decoded = decode_pem(base64key)
     # must canonicalize the key by decode and then der.
-    pkey = OpenSSL::PKey.read(decode_pem(base64key))
+    begin
+      # try decoding it as a public key
+      pkey = OpenSSL::PKey.read(decoded)
+    rescue OpenSSL::PKey::PKeyError
+      cert = OpenSSL::X509::Certificate.new(decoded)
+      pkey = cert.public_key
+    end
 
     # use explicit base64 encoding to avoid BEGIN/END construct of to_pem.
     pkey_pem = Base64.urlsafe_encode64(pkey.to_der)
