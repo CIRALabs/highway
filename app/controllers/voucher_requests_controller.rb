@@ -1,4 +1,5 @@
 class VoucherRequestsController < ApplicationController
+  before_action :require_admin
   before_action :set_voucher_request, only: [:show, :edit, :update, :destroy]
 
   # GET /voucher_requests
