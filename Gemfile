@@ -44,6 +44,7 @@ group :development, :test do
   gem 'byebug'
   gem "rspec-rails"
   gem "shoulda"
+  gem 'rails-controller-testing'
 end
 
 group :development do

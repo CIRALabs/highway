@@ -14,7 +14,7 @@ class VoucherRequest < ApplicationRecord
   end
 
   def self.from_json_jose(token, json = nil)
-    jsonresult = Chariwt::VoucherRequest.from_json_jose(token)
+    jsonresult = Chariwt::VoucherRequest.from_jose_json(token)
     unless jsonresult
       raise InvalidVoucherRequest
     end

@@ -7,17 +7,15 @@ RSpec.describe 'BRSKI EST API', type: :request do
     it "POST /requestvoucher" do
       # make an HTTPS request for a new voucher
       # this is section 3.3 of RFCXXXX/draft-ietf-anima-dtbootstrap-anima-keyinfra
-      token = File.read("spec/files/jada_abcd.jwt")
+      token = File.read("spec/files/vr_JADA123456789.pkcs")
       post '/requestvoucher', params: token, headers: {
-             'CONTENT_TYPE' => 'application/voucherrequest+cms',
-             'ACCEPT'       => 'application/json'
+             'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
+             'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
            }
 
       expect(response).to have_http_status(200)
-
-      (part1,part2,part3) = response.body.split('.')
-      jsonreply = JSON.parse(Base64.urlsafe_decode64(part2))
-      expect(jsonreply['ietf-voucher:voucher']).to_not be_nil
+      expect(assigns(:voucherreq).device_identifier).to eq('JADA123456789')
+      expect(assigns(:voucher).owner).to_not be_nil
     end
 
   end

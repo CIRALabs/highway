@@ -1,7 +1,8 @@
 class EstController < ApiController
 
   def requestvoucher
-    @voucherreq = VoucherRequest.from_json_jose(request.body.read)
+    binary_pkcs = Base64.decode64(request.body.read)
+    @voucherreq = VoucherRequest.from_pkcs7(binary_pkcs)
 
     clientcert_pem = request.env["SSL_CLIENT_CERT"]
     if clientcert_pem
