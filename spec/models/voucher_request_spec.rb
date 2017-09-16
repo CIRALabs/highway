@@ -19,6 +19,24 @@ RSpec.describe VoucherRequest, type: :model do
       expect(vr2.device_identifier).to eq("JADA123456789")
       expect(vr2.nonce).to eq("abcd1234")
       expect(vr2.owner).to_not be_nil
+
+      voucher = vr2.issue_voucher
+      expect(voucher.nonce).to eq(vr2.nonce)
+      expect(voucher.device_identifier).to eq(vr2.device_identifier)
+
+      voucher.jose_sign!('2017-09-15'.to_date)
+      expect(voucher.as_issued).to_not be_nil
+
+      # save it for examination elsewhere (and use by Registrar tests)
+      File.open(File.join("tmp", "voucher_#{voucher.device_identifier}.pkcs"), "w") do |f|
+        f.puts voucher.as_issued
+      end
+
+      system("bin/pkcs2json tmp/voucher_#{voucher.device_identifier}.pkcs tmp/voucher_#{voucher.device_identifier}.txt")
+
+      cmd = "diff tmp/voucher_#{voucher.device_identifier}.txt spec/files/voucher_#{voucher.device_identifier}.txt"
+      puts cmd
+      expect(system(cmd)).to be true
     end
 
     it "should process a voucher request into a voucher for a valid device" do

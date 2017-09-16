@@ -47,17 +47,16 @@ class Voucher < ActiveRecord::Base
     cv.serialNumber = serial_number
     cv.voucherType  = :time_based
     cv.nonce        = nonce
-    cv.createdOn    = created_at
+    cv.createdOn    = today
     cv.expiresOn    = expires_on
-    cv.idevidIssuer = MasaKeys.ca.masa_pki
+    cv.owner_cert   = MasaKeys.ca.masakey
     if owner.certder
       cv.pinnedDomainCert = owner.certder
     else
       cv.pinnedPublicKey  = owner.pubkey
     end
 
-    jv = cv.json_voucher
-    self.as_issued = MasaKeys.ca.jwt_encode(jv)
+    self.as_issued = cv.pkcs_sign(MasaKeys.ca.masaprivkey)
     save!
     self
   end
