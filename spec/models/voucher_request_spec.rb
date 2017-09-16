@@ -7,7 +7,10 @@ RSpec.describe VoucherRequest, type: :model do
     it { should belong_to(:voucher) }
     it { should belong_to(:owner) }
     it { should belong_to(:device) }
+
   end
+
+
 
   describe "voucher input request" do
     it "should read a voucher request from disk" do

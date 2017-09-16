@@ -13,8 +13,12 @@ RSpec.describe Voucher, type: :model do
 
     it "should refer to a device" do
       v1 = vouchers(:almec_v1)
-
       expect(v1.device).to eq(devices(:almec))
+    end
+
+    it "should delegate device_identifier to device" do
+      v1 = vouchers(:almec_v1)
+      expect(v1.device_identifier).to eq("JADA_f2-00-01")
     end
   end
 
