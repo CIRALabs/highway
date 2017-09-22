@@ -40,6 +40,13 @@ RSpec.describe Voucher, type: :model do
       owner_der    = Base64.urlsafe_decode64(owner_base64)
       owner = OpenSSL::X509::Certificate.new(owner_der)
       expect(owner.subject.to_s).to eq("/C=CA/ST=Ontario/L=Ottawa/O=Owner Example One/OU=Not Very/CN=owner1.example.com/emailAddress=owner1@example.com")
+
+      v1.pkcs_sign!('2017-09-22'.to_datetime)
+      # save it for examination elsewhere (and use by Registrar tests)
+      File.open(File.join("tmp", "voucher_#{v1.device_identifier}.pkcs"), "w") do |f|
+        f.puts v1.as_issued
+      end
+
     end
 
     it "should create signed json representation" do
