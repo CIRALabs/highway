@@ -20,11 +20,9 @@ RSpec.describe VoucherRequest, type: :model do
       expect(vr2.nonce).to eq("abcd1234")
       expect(vr2.owner).to_not be_nil
 
-      voucher = vr2.issue_voucher
+      voucher = vr2.issue_voucher('2017-09-15'.to_date)
       expect(voucher.nonce).to eq(vr2.nonce)
       expect(voucher.device_identifier).to eq(vr2.device_identifier)
-
-      voucher.jose_sign!('2017-09-15'.to_date)
       expect(voucher.as_issued).to_not be_nil
 
       # save it for examination elsewhere (and use by Registrar tests)

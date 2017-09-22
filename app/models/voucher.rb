@@ -41,7 +41,7 @@ class Voucher < ActiveRecord::Base
     device.serial_number
   end
 
-  def jose_sign!(today = DateTime.now.utc)
+  def pkcs_sign!(today = DateTime.now.utc)
     cv = Chariwt::Voucher.new
     cv.assertion    = 'logged'
     cv.serialNumber = serial_number

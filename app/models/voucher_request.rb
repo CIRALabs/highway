@@ -46,7 +46,7 @@ class VoucherRequest < ApplicationRecord
     self.owner = Owner.find_by_public_key(details["pinned-domain-cert"])
   end
 
-  def issue_voucher
+  def issue_voucher(effective_date = Time.now)
     # at a minimum, this must be before a device that belongs to us!
     return nil unless device
 
@@ -62,9 +62,9 @@ class VoucherRequest < ApplicationRecord
                              device: device,
                              nonce: nonce)
     unless nonce
-      voucher.expires_on = Time.now + 14.days
+      voucher.expires_on = effective_date + 14.days
     end
-    voucher.jose_sign!
+    voucher.pkcs_sign!(effective_date)
   end
 
 end
