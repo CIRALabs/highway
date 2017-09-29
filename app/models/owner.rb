@@ -41,6 +41,10 @@ class Owner < ActiveRecord::Base
     self[:pubkey]
   end
 
+  def subject
+    certder.owner
+  end
+
   def self.find_by_public_key(base64key)
     decoded = decode_pem(base64key)
     # must canonicalize the key by decode and then der.

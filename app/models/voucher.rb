@@ -15,7 +15,7 @@ class Voucher < ActiveRecord::Base
     h2["assertion"]         = "logged"
 
     if(owner.try(:certder))
-      h2["owner"]           = Base64.urlsafe_encode64(self.owner.certder.to_der)
+      h2["owner"]           = Base64.strict_encode64(self.owner.certder.to_der)
     end
 
     # return it all.
@@ -49,7 +49,7 @@ class Voucher < ActiveRecord::Base
     cv.nonce        = nonce
     cv.createdOn    = today
     cv.expiresOn    = expires_on
-    cv.owner_cert   = MasaKeys.ca.masakey
+    cv.signing_cert   = MasaKeys.ca.masakey
     if owner.certder
       cv.pinnedDomainCert = owner.certder
     else
