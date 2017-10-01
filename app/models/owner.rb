@@ -4,21 +4,11 @@ class Owner < ActiveRecord::Base
   has_many :voucher_requests
 
   def self.decode_pem(pemstuff)
-    base64stuff = ""
-    pemstuff.lines.each { |line|
-      next if line =~ /^-----BEGIN CERTIFICATE-----/
-      next if line =~ /^-----END CERTIFICATE-----/
-      base64stuff += line
-    }
-    begin
-      pkey_der = Base64.urlsafe_decode64(base64stuff)
-    rescue ArgumentError
-      pkey_der = Base64.decode64(base64stuff)
-    end
+    Chariwt::Voucher.decode_pem(pemstuff)
   end
 
   def decode_pem(pemstuff)
-    self.class.decode_pem(pemstuff)
+    Chariwt::Voucher.decode_pem(pemstuff)
   end
 
   def certder
