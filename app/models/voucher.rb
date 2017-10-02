@@ -50,10 +50,10 @@ class Voucher < ActiveRecord::Base
     cv.createdOn    = today
     cv.expiresOn    = expires_on
     cv.signing_cert   = MasaKeys.ca.masakey
-    if owner.certder
-      cv.pinnedDomainCert = owner.certder
+    if owner.certificate
+      cv.pinnedDomainCert = owner.certificate
     else
-      cv.pinnedPublicKey  = owner.pubkey
+      cv.pinnedPublicKey  = owner.pubkey_object
     end
 
     self.as_issued = cv.pkcs_sign(MasaKeys.ca.masaprivkey)

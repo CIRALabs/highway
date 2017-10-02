@@ -19,13 +19,24 @@ class Owner < ActiveRecord::Base
     end
   end
 
+  def pubkey_object
+    unless self[:pubkey].blank?
+      OpenSSL::PKey.read(Chariwt::Voucher.decode_pem(self[:pubkey]))
+    end
+  end
+
+  # this returns a PKey Object, while pubkey belows is the base64 version.
   def pubkey_from_cert
-    certder.public_key
+    @public_object ||= if certificate
+                      certder.public_key
+                    elsif self[:pubkey]
+                      pubkey_object
+                    end
   end
 
   def pubkey
     if self[:pubkey].blank? and !self.certificate.blank?
-      self.pubkey = Base64.urlsafe_encode64(pubkey_from_cert.to_der)
+      self.pubkey = Base64.strict_encode64(pubkey_from_cert.to_der)
       save!
     end
     self[:pubkey]

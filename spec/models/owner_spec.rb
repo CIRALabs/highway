@@ -20,6 +20,13 @@ RSpec.describe Owner, type: :model do
       o1 = owners(:owner1)
       expect(o1.certificate).to_not be_nil
       expect(o1.pubkey).to_not be_nil
+      expect(o1.pubkey_from_cert).to_not be_nil
+    end
+
+    it "should generate a pubkey from a public key only owner" do
+      o1 = owners(:owner446739022)
+       expect(o1.certificate).to be_nil
+      expect(o1.pubkey_object).to_not be_nil
     end
   end
 end
