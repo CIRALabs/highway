@@ -10,6 +10,10 @@ class EstController < ApiController
     end
     @voucherreq.save!
     @voucher = @voucherreq.issue_voucher
-    json_response(@voucher.as_issued, :ok)
+    if @voucher
+      json_response(@voucher.as_issued, :ok)
+    else
+      head 404
+    end
   end
 end

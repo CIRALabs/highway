@@ -65,6 +65,7 @@ class VoucherRequest < ApplicationRecord
       voucher.expires_on = effective_date + 14.days
     end
     voucher.pkcs_sign!(effective_date)
+    voucher
   end
 
 end
