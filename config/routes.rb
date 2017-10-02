@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :vouchers, concerns: :active_scaffold
   resources :devices,  concerns: :active_scaffold
 
-  post '/requestvoucher', to: 'est#requestvoucher'
+  # EST processing at well known URLs
+  post '/.well-known/est/requestvoucher', to: 'est#requestvoucher'
 
 end
