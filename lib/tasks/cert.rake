@@ -150,6 +150,11 @@ namespace :highway do
 
     eui64 = ENV['EUI64']
 
+    unless eui64
+      puts "must set EUI64= to a valid MAC address"
+      exit
+    end
+
     dev = Device.create(eui64: eui64)
     dev.gen_and_store_key
   end
