@@ -81,6 +81,7 @@ class Device < ActiveRecord::Base
     @idevid.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
 
     self.pub_key = idevid.to_pem
+    self.serial_number = sanitized_eui64
     save!
   end
 
