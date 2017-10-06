@@ -4,6 +4,8 @@ class VoucherRequest < ApplicationRecord
   belongs_to :device
   include FixtureSave
 
+  attr_accessor :tls_clientcert
+
   class InvalidVoucherRequest < Exception; end
   class MissingPublicKey < Exception; end
 
