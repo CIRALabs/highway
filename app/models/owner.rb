@@ -61,6 +61,10 @@ class Owner < ActiveRecord::Base
     pkey_pem = Base64.urlsafe_encode64(pkey.to_der)
 
     key = where(pubkey: pkey_pem).take || create(pubkey: pkey_pem)
+    if cert
+      key.certificate = cert.to_pem
+    end
+    key.save
     key
   end
 
