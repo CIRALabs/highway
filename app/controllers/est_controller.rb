@@ -11,7 +11,8 @@ class EstController < ApiController
     @voucherreq.save!
     @voucher = @voucherreq.issue_voucher
     if @voucher
-      json_response(@voucher.as_issued, :ok)
+      json_response(@voucher.as_issued, :ok,
+                    'application/pkcs7-mime; smime-type=voucher')
     else
       head 404
     end
