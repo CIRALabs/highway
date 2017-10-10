@@ -46,12 +46,15 @@ RSpec.describe Device, type: :model do
       expect(vizsla.idevid.serial).to eq(2)
 
     end
-  end
 
-  describe "ownership voucher" do
-    it "should create an ownership voucher and sign it with MASA key" do
-      almec = devices(:almec)
+    it "should create a certificate with a interesting MASA url" do
+      SystemVariable.setvalue(:masa_url, "https://masa.example.com")
 
+      ndev = Device.new
+      ndev.eui64 = '00-16-3e-ff-fe-d0-55-aa'
+      ndev.gen_and_store_key
+
+      expect(system("openssl x509 -noout -text -in #{ndev.certificate_filename} | grep masa.example.com")).to be true
     end
   end
 

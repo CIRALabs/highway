@@ -21,6 +21,12 @@ class SystemVariable < ActiveRecord::Base
     return (v.number != 0)
   end
 
+  def self.string(thing)
+    v = self.lookup(thing)
+    return nil if v.nil?
+    return v.value
+  end
+
   def self.boolcache?(thing)
     @@cache[thing] ||= boolvalue?(thing)
   end
@@ -28,6 +34,12 @@ class SystemVariable < ActiveRecord::Base
   def self.setnumber(thing, value)
     v = self.findormake(thing)
     v.number = value
+    v.save
+  end
+
+  def self.setvalue(thing, value)
+    v = self.findormake(thing)
+    v.value = value
     v.save
   end
 

@@ -26,12 +26,14 @@ class Device < ActiveRecord::Base
     File.open(vendorprivkey, "w") do |f| f.write @dev_key.to_pem end
   end
 
-  def store_certificate(dir)
+  def certificate_filename(dir = HighwayKeys.ca.devicedir)
     devdir = dir.join(sanitized_eui64)
     FileUtils.mkpath(devdir)
-
     pubkeyfile = devdir.join("device.crt")
-    File.open(pubkeyfile, "w") do |f| f.write self.pub_key end
+  end
+
+  def store_certificate(dir = HighwayKeys.ca.devicedir)
+    File.open(certificate_filename(dir), "w") do |f| f.write self.pub_key end
   end
 
   def gen_and_store_key(dir = HighwayKeys.ca.devicedir)
@@ -39,6 +41,21 @@ class Device < ActiveRecord::Base
     sign_eui64
     store_priv_key(dir)
     store_certificate(dir)
+  end
+
+  def masa_url
+    SystemVariable.string(:masa_url) || "https://highway.sandelman.ca"
+  end
+
+  def masa_extension
+    @mext ||= extension_factory.create_extension(
+      "1.3.6.1.4.1.46930.2",
+      sprintf("ASN1:UTF8String:%s", masa_url),
+      false)
+  end
+
+  def extension_factory
+    @ef ||= OpenSSL::X509::ExtensionFactory.new
   end
 
   def sign_eui64
@@ -52,16 +69,15 @@ class Device < ActiveRecord::Base
     @idevid.not_before = Time.now
     @idevid.not_after  = Time.gm(2999,12,31)
 
-    ef = OpenSSL::X509::ExtensionFactory.new
-    ef.subject_certificate = @idevid
-    ef.issuer_certificate  = HighwayKeys.ca.rootkey
-    @idevid.add_extension(ef.create_extension("subjectKeyIdentifier","hash",false))
-    @idevid.add_extension(ef.create_extension("basicConstraints","CA:FALSE",false))
+    extension_factory.subject_certificate = @idevid
+    extension_factory.issuer_certificate  = HighwayKeys.ca.rootkey
+    @idevid.add_extension(extension_factory.create_extension("subjectKeyIdentifier","hash",false))
+    @idevid.add_extension(extension_factory.create_extension("basicConstraints","CA:FALSE",false))
 
     # the OID: 1.3.6.1.4.1.46930.1 is a Private Enterprise Number OID:
     #    iso.org.dod.internet.private.enterprise . SANDELMAN=46930 . 1
     # subjectAltName=otherName:1.2.3.4;UTF8:some other identifier
-    @idevid.add_extension(ef.create_extension(
+    @idevid.add_extension(extension_factory.create_extension(
                            "subjectAltName",
                            sprintf("otherName:1.3.6.1.4.1.46930.1;UTF8:%s",
                                    self.sanitized_eui64),
@@ -72,10 +88,7 @@ class Device < ActiveRecord::Base
     # this is used for the BRSKI MASAURLExtnModule-2016 until allocated
     # depends upon a patch to ruby-openssl, at:
     #  https://github.com/mcr/openssl/commit/a59c5e049b8b4b7313c6532692fa67ba84d1707c
-    @idevid.add_extension(ef.create_extension(
-                           "1.3.6.1.4.1.46930.2",
-                           "ASN1:UTF8String:http://www.sandelman.ca",
-                           false))
+    @idevid.add_extension(masa_extension)
 
     # include the official HardwareModule OID:  1.3.6.1.5.5.7.8.4
     @idevid.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
