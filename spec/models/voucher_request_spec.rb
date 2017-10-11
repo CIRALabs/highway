@@ -30,11 +30,7 @@ RSpec.describe VoucherRequest, type: :model do
         f.puts voucher.as_issued
       end
 
-      system("bin/pkcs2json tmp/voucher_#{voucher.device_identifier}.pkcs tmp/voucher_#{voucher.device_identifier}.txt")
-
-      cmd = "diff tmp/voucher_#{voucher.device_identifier}.txt spec/files/voucher_#{voucher.device_identifier}.txt"
-      puts cmd
-      expect(system(cmd)).to be true
+      expect(Chariwt.cmp_pkcs_file(voucher.as_issued, "voucher_#{voucher.device_identifier}")).to be true
     end
 
     it "should process a voucher request into a voucher for a valid device" do
