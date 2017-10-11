@@ -40,6 +40,15 @@ RSpec.describe VoucherRequest, type: :model do
       expect(voucher.device).to  eq(req13.device)
       expect(voucher.owner).to   eq(req13.owner)
     end
+
+    it "should validate a voucher request" do
+      req14 = voucher_requests(:voucher14)
+      expect(req14.prior_voucher_request).to_not be_nil
+      expect(req14.prior_voucher_request.proximityRegistrarCert).to_not be_nil
+      owner = req14.lookup_owner
+      expect(owner).to eq(owners(:owner4))
+    end
+
   end
 
 end

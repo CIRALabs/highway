@@ -4,7 +4,7 @@ class VoucherRequest < ApplicationRecord
   belongs_to :device
   include FixtureSave
 
-  attr_accessor :tls_clientcert
+  attr_accessor :tls_clientcert, :prior_voucher_request
 
   class InvalidVoucherRequest < Exception; end
   class MissingPublicKey < Exception; end
@@ -51,16 +51,20 @@ class VoucherRequest < ApplicationRecord
     @pledge_json ||= prior_voucher_request.inner_attributes
   end
 
-  def extract_prior_signed_voucher_request(cvr)
-    self.pledge_request    = cvr.priorSignedVoucherRequest
-
-    # save the decoded results into JSON bag.
-    self.details["prior-signed-voucher-request"] = pledge_json
-
+  def lookup_owner
     proximity = pledge_json["proximity-registrar-cert"]
     if proximity
       self.owner = Owner.find_by_public_key(proximity)
     end
+    self.owner
+  end
+
+  def extract_prior_signed_voucher_request(cvr)
+    self.pledge_request    = cvr.priorSignedVoucherRequest
+    # save the decoded results into JSON bag.
+    self.details["prior-signed-voucher-request"] = pledge_json
+
+    lookup_owner
   end
 
   def populate_explicit_fields
