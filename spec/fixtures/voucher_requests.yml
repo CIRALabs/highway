@@ -14,6 +14,7 @@ sample_request1:
 
 voucher13:
   id: 13
+  signing_key: "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEZQ1CYWhxrI_MGtpkCu2c9coGiZA5o_QGQHIn0-z132mOq2XfuWz6L4fpABUciyXBSKRAGt5ngAqHTPOs3IfC1A=="
   details:
     ietf-voucher:voucher:
       assertion: ''
@@ -32,6 +33,7 @@ voucher13:
 
 voucher14:
   id: 14
+  signing_key: "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAENWQOzcNMUjP0NrtfeBc0DJLWfeMGgCFdIv6FUz4DifM1ujMBec_g6W_P6boTmyTGdFOh_8HwKUerL5bpneK8sg=="
   pledge_request: !binary |-
     MIIHGAYJKoZIhvcNAQcCoIIHCTCCBwUCAQExDzANBglghkgBZQMEAgEFADCC
     Aw0GCSqGSIb3DQEHAaCCAv4EggL6eyJpZXRmLXZvdWNoZXItcmVxdWVzdDp2

@@ -21,6 +21,7 @@ RSpec.describe VoucherRequest, type: :model do
       expect(vr2.owner).to_not be_nil
 
       voucher = vr2.issue_voucher('2017-09-15'.to_date)
+      expect(voucher).to_not be_nil
       expect(voucher.nonce).to eq(vr2.nonce)
       expect(voucher.device_identifier).to eq(vr2.device_identifier)
       expect(voucher.as_issued).to_not be_nil
@@ -31,6 +32,8 @@ RSpec.describe VoucherRequest, type: :model do
       end
 
       expect(Chariwt.cmp_pkcs_file(voucher.as_issued, "voucher_#{voucher.device_identifier}")).to be true
+
+      expect(voucher.owner.pubkey).to eq(vr2.signing_key)
     end
 
     it "should process a voucher request into a voucher for a valid device" do
@@ -47,6 +50,7 @@ RSpec.describe VoucherRequest, type: :model do
       expect(req14.prior_voucher_request.proximityRegistrarCert).to_not be_nil
       owner = req14.lookup_owner
       expect(owner).to eq(owners(:owner4))
+      expect(owner.pubkey).to eq(req14.signing_key)
     end
 
   end

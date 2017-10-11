@@ -61,8 +61,12 @@ class VoucherRequest < ApplicationRecord
 
   def extract_prior_signed_voucher_request(cvr)
     self.pledge_request    = cvr.priorSignedVoucherRequest
+
     # save the decoded results into JSON bag.
     self.details["prior-signed-voucher-request"] = pledge_json
+    if cvr.signing_cert
+      self.signing_key = Base64.urlsafe_encode64(cvr.signing_cert.public_key.to_der)
+    end
 
     lookup_owner
   end
@@ -79,6 +83,9 @@ class VoucherRequest < ApplicationRecord
 
     # must have an owner!
     return nil unless owner
+
+    # here we have to validate the prior signed voucher
+    return nil unless owner.pubkey == signing_key
 
     # XXX if there is another valid voucher for this device, it must be for
     # the same owner.
