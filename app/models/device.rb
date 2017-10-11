@@ -7,6 +7,9 @@ class Device < ActiveRecord::Base
   def self.find_by_number(number)
     where(serial_number: number).take || where(eui64: number).take
   end
+  def self.create_by_number(number)
+    find_by_number(number) || create(eui64: number)
+  end
 
   # JWT wants prime256v1 (aka secp256r1), so default to that.
   def gen_priv_key(curve = 'prime256v1')

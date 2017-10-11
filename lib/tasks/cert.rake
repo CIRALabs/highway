@@ -155,7 +155,7 @@ namespace :highway do
       exit
     end
 
-    dev = Device.create(eui64: eui64)
+    dev = Device.create_by_number(eui64)
     dev.gen_and_store_key
   end
 
