@@ -48,6 +48,10 @@ class Owner < ActiveRecord::Base
 
   def self.find_by_public_key(base64key)
     decoded = decode_pem(base64key)
+
+    # if failed to dceode, then do not look anything up.
+    return nil unless decoded
+
     # must canonicalize the key by decode and then der.
     begin
       # try decoding it as a public key
