@@ -57,8 +57,16 @@ class Owner < ActiveRecord::Base
       # try decoding it as a public key
       pkey = OpenSSL::PKey.read(decoded)
     rescue OpenSSL::PKey::PKeyError
-      cert = OpenSSL::X509::Certificate.new(decoded)
-      pkey = cert.public_key
+      pkey = nil
+    end
+
+    unless pkey
+      begin
+        cert = OpenSSL::X509::Certificate.new(decoded)
+        pkey = cert.public_key
+      rescue OpenSSL::X509::CertificateError
+        return nil
+      end
     end
 
     # use explicit base64 encoding to avoid BEGIN/END construct of to_pem.

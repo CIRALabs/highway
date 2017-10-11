@@ -24,12 +24,14 @@ class VoucherRequest < ApplicationRecord
   end
 
   def self.from_pkcs7(token, json = nil)
-    jsonresult = Chariwt::VoucherRequest.from_pkcs7(token)
+    cvr = Chariwt::VoucherRequest.from_pkcs7_withoutkey(token)
     # on MASA, voucher requests MUST always be signed
-    unless jsonresult
+    unless cvr
       raise InvalidVoucherRequest
     end
-    return from_json(jsonresult.inner_attributes, true)
+    voucher = from_json(cvr.inner_attributes, true)
+    voucher.extract_prior_signed_voucher_request(cvr)
+    voucher
   end
 
   def name
@@ -41,11 +43,30 @@ class VoucherRequest < ApplicationRecord
     save_self_tofixture(fw)
   end
 
+  def prior_voucher_request
+    @prior_voucher_request ||= Chariwt::VoucherRequest.from_pkcs7_withoutkey(pledge_request)
+  end
+
+  def pledge_json
+    @pledge_json ||= prior_voucher_request.inner_attributes
+  end
+
+  def extract_prior_signed_voucher_request(cvr)
+    self.pledge_request    = cvr.priorSignedVoucherRequest
+
+    # save the decoded results into JSON bag.
+    self.details["prior-signed-voucher-request"] = pledge_json
+
+    proximity = pledge_json["proximity-registrar-cert"]
+    if proximity
+      self.owner = Owner.find_by_public_key(proximity)
+    end
+  end
+
   def populate_explicit_fields
     self.device_identifier = details["serial-number"]
     self.device            = Device.find_by_number(device_identifier)
     self.nonce             = details["nonce"]
-    self.owner = Owner.find_by_public_key(details["pinned-domain-cert"])
   end
 
   def issue_voucher(effective_date = Time.now)
