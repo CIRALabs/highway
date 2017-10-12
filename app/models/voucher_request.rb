@@ -85,17 +85,17 @@ class VoucherRequest < ApplicationRecord
 
   def issue_voucher(effective_date = Time.now)
     # at a minimum, this must be before a device that belongs to us!
-    return nil unless device
+    return nil,:notmydevice unless device
 
     # must have an owner!
-    return nil unless owner
+    return nil,:ownerunknown unless owner
 
     # here we have to validate the prior signed voucher
-    return nil unless owner.pubkey == signing_key
+    return nil,:ownermisidentified unless owner.pubkey == signing_key
 
     # validate that the signature on the prior-signed-voucher-request
     # is from the key which was assigned to the device.
-    return nil unless device.signing_key?(prior_voucher_request.signing_cert)
+    return nil,:rawvoucherinvalid unless device.signing_key?(prior_voucher_request.signing_cert)
 
     # XXX if there is another valid voucher for this device, it must be for
     # the same owner.
@@ -111,7 +111,7 @@ class VoucherRequest < ApplicationRecord
       voucher.expires_on = effective_date + 14.days
     end
     voucher.pkcs_sign!(effective_date)
-    voucher
+    return voucher,:ok
   end
 
 end

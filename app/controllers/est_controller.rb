@@ -9,12 +9,12 @@ class EstController < ApiController
       @voucherreq.tls_clientcert = clientcert_pem
     end
     @voucherreq.save!
-    @voucher = @voucherreq.issue_voucher
-    if @voucher
+    @voucher,reason = @voucherreq.issue_voucher
+    if reason == :ok and @voucher
       json_response(@voucher.as_issued, :ok,
                     'application/pkcs7-mime; smime-type=voucher')
     else
-      head 404
+      head 404, text: reason.to_s
     end
   end
 end

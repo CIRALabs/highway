@@ -20,7 +20,7 @@ RSpec.describe VoucherRequest, type: :model do
       expect(vr2.nonce).to eq("Dss99sBr3pNMOACe-LYY7w")
       expect(vr2.owner).to_not be_nil
 
-      voucher = vr2.issue_voucher('2017-09-15'.to_date)
+      voucher,reason = vr2.issue_voucher('2017-09-15'.to_date)
       expect(voucher).to_not be_nil
       expect(voucher.nonce).to eq(vr2.nonce)
       expect(voucher.device_identifier).to eq(vr2.device_identifier)
@@ -34,7 +34,9 @@ RSpec.describe VoucherRequest, type: :model do
 
     it "should process a voucher request into a voucher for a valid device" do
       req13 = voucher_requests(:voucher13)
-      voucher = req13.issue_voucher
+      voucher,reason = req13.issue_voucher
+      expect(reason).to eq(:ok)
+      expect(voucher).to_not be_nil
       expect(voucher.nonce).to   eq(req13.nonce)
       expect(voucher.device).to  eq(req13.device)
       expect(voucher.owner).to   eq(req13.owner)
