@@ -9,8 +9,8 @@ class VoucherRequest < ApplicationRecord
   class InvalidVoucherRequest < Exception; end
   class MissingPublicKey < Exception; end
 
-  def self.from_json(json, token)
-    vr = create(details: json, raw_request: token)
+  def self.from_json(json, artifact)
+    vr = create(details: json, voucher_request: artifact)
     vr.populate_explicit_fields
     vr
   end
@@ -29,7 +29,7 @@ class VoucherRequest < ApplicationRecord
     unless cvr
       raise InvalidVoucherRequest
     end
-    voucher = from_json(cvr.inner_attributes, true)
+    voucher = from_json(cvr.inner_attributes, token)
     voucher.extract_prior_signed_voucher_request(cvr)
     voucher
   end
