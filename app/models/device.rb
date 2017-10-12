@@ -40,6 +40,22 @@ class Device < ActiveRecord::Base
     File.open(certificate_filename(dir), "w") do |f| f.write self.pub_key end
   end
 
+  def certificate
+    @certificate ||= OpenSSL::X509::Certificate.new(self.pub_key)
+  end
+
+  # compare a given key to the key that has been given to this device.
+  def signing_key?(othercert)
+    case
+    when othercert.is_a?(OpenSSL::X509::Certificate)
+      (certificate.to_der == othercert.to_der)
+    when (othercert.is_a?(OpenSSL::PKey) or othercert.is_a?(OpenSSL::PKey::EC))
+      (certificate.public_key.to_der == othercert.to_der)
+    else
+      false
+    end
+  end
+
   def gen_and_store_key(dir = HighwayKeys.ca.devicedir)
     gen_priv_key
     sign_eui64

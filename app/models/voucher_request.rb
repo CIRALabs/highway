@@ -71,6 +71,12 @@ class VoucherRequest < ApplicationRecord
     lookup_owner
   end
 
+  def signing_public_key
+    unless signing_key.blank?
+      @signing_public_key ||= OpenSSL::PKey.read(Base64.urlsafe_decode64(signing_key))
+    end
+  end
+
   def populate_explicit_fields
     self.device_identifier = details["serial-number"]
     self.device            = Device.find_by_number(device_identifier)
@@ -87,6 +93,10 @@ class VoucherRequest < ApplicationRecord
     # here we have to validate the prior signed voucher
     return nil unless owner.pubkey == signing_key
 
+    # validate that the signature on the prior-signed-voucher-request
+    # is from the key which was assigned to the device.
+    return nil unless device.signing_key?(prior_voucher_request.signing_cert)
+
     # XXX if there is another valid voucher for this device, it must be for
     # the same owner.
 
@@ -95,6 +105,8 @@ class VoucherRequest < ApplicationRecord
     voucher = Voucher.create(owner: owner,
                              device: device,
                              nonce: nonce)
+    self.voucher = voucher
+    save!
     unless nonce
       voucher.expires_on = effective_date + 14.days
     end

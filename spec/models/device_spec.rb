@@ -30,6 +30,20 @@ RSpec.describe Device, type: :model do
       almec.gen_priv_key
       almec.store_priv_key(HighwayKeys.ca.devicedir)
     end
+
+    it "should recognize a voucher request containing the same public key" do
+      vr11 = voucher_requests(:voucherreq54)
+      d11 = vr11.device
+      expect(d11).to eq(devices(:device11))
+      expect(d11.signing_key?(vr11.signing_public_key)).to be_truthy
+    end
+
+    it "should recognize a voucher request containing the wrong public key" do
+      vr11 = voucher_requests(:voucher14)
+      d11 = vr11.device
+      expect(d11).to eq(devices(:device11))
+      expect(d11.signing_key?(vr11.signing_public_key)).to be_falsey
+    end
   end
 
   describe "certificate creation" do
