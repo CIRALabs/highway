@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(version: 20171011222533) do
     t.datetime "updated_at",        null: false
     t.binary   "voucher_request"
     t.binary   "pledge_request"
+    t.text     "raw_request"
     t.text     "signing_key"
   end
 
