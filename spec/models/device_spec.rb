@@ -84,7 +84,7 @@ RSpec.describe Device, type: :model do
 
   describe "searching" do
     it "should find a device by eui64 or serialnumber" do
-      b1 = Device.find_by_number('JADA123456789')
+      b1 = Device.find_by_number('00-D0-E5-F2-00-02')
       expect(b1).to_not be_nil
     end
   end
