@@ -105,9 +105,8 @@ class Device < ActiveRecord::Base
     "device_#{self.id}"
   end
   def savefixturefw(fw)
-    device.savefixturefw(fw) if device
+    return if save_self_tofixture(fw)
     vouchers.each { |voucher| voucher.savefixturefw(fw)}
-    save_self_tofixture(fw)
   end
 
 end

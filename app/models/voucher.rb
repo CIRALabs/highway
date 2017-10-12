@@ -72,9 +72,9 @@ class Voucher < ActiveRecord::Base
     "voucher_#{self.id}"
   end
   def savefixturefw(fw)
+    return if save_self_tofixture(fw)
     device.savefixturefw(fw) if device
     owner.savefixturefw(fw)  if owner
-    save_self_tofixture(fw)
   end
 
 
