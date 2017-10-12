@@ -36,7 +36,7 @@ class Owner < ActiveRecord::Base
 
   def pubkey
     if self[:pubkey].blank? and !self.certificate.blank?
-      self.pubkey = Base64.strict_encode64(pubkey_from_cert.to_der)
+      self.pubkey = Base64.urlsafe_encode64(pubkey_from_cert.to_der)
       save!
     end
     self[:pubkey]
