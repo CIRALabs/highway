@@ -4,6 +4,7 @@ class Voucher < ActiveRecord::Base
   include FixtureSave
   belongs_to :device
   belongs_to :owner
+  has_many   :voucher_requests
 
   class InvalidVoucher < Exception; end
 

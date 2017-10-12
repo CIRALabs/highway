@@ -8,6 +8,9 @@ RSpec.describe Device, type: :model do
       almec = devices(:almec)
       expect(almec.vouchers.count).to be >= 0
     end
+    it "should belong to an owner" do
+      expect(devices(:device11).owner).to_not be_nil
+    end
   end
 
   describe "key generation" do

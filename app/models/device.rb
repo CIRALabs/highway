@@ -1,6 +1,7 @@
 class Device < ActiveRecord::Base
   include FixtureSave
   has_many :vouchers
+  belongs_to :owner
 
   attr_accessor :idevid
 
