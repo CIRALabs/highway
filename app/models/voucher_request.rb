@@ -31,6 +31,7 @@ class VoucherRequest < ApplicationRecord
     end
     voucher = from_json(cvr.inner_attributes, token)
     voucher.extract_prior_signed_voucher_request(cvr)
+    voucher.signing_key = Base64.urlsafe_encode64(cvr.signing_cert.public_key.to_der)
     voucher
   end
 
@@ -65,7 +66,7 @@ class VoucherRequest < ApplicationRecord
     # save the decoded results into JSON bag.
     self.details["prior-signed-voucher-request"] = pledge_json
     if cvr.signing_cert
-      self.signing_key = Base64.urlsafe_encode64(cvr.signing_cert.public_key.to_der)
+      self.prior_signing_key = Base64.urlsafe_encode64(prior_voucher_request.signing_cert.public_key.to_der)
     end
 
     lookup_owner
