@@ -8,32 +8,6 @@ class Voucher < ActiveRecord::Base
 
   class InvalidVoucher < Exception; end
 
-  def jsonhash(today = DateTime.utc.now)
-    h2 = Hash.new
-    h2["nonce"]      = nonce
-    h2["created-on"] = created_at
-    h2["device-identifier"] = device.eui64
-    h2["assertion"]         = "logged"
-
-    if(owner.try(:certder))
-      h2["owner"]           = Base64.strict_encode64(self.owner.certder.to_der)
-    end
-
-    # return it all.
-    h1 = Hash.new
-    h1["ietf-voucher:voucher"] = h2
-    h1
-  end
-
-  def pkcs7_signed_voucher(today = DateTime.now.utc)
-    serialized_json = jsonhash(today).to_json
-
-    signed = OpenSSL::PKCS7.sign(HighwayKeys.ca.rootkey,
-                                 HighwayKeys.ca.rootprivkey,
-                                 serialized_json)
-    signed
-  end
-
   def serial_number
     device.serial_number
   end
