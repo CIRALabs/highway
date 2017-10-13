@@ -13,7 +13,7 @@ RSpec.describe Owner, type: :model do
       expect(o1.certificate).to_not be_nil
 
       expect(o1.certder).to_not be_nil
-      expect(o1.certder.subject.to_s).to eq("/C=CA/ST=Ontario/L=Ottawa/O=Owner Example One/OU=Not Very/CN=owner1.example.com/emailAddress=owner1@example.com")
+      expect(o1.certder.subject.to_s).to eq("/DC=ca/DC=sandelman/CN=localhost")
     end
 
     it "should generate a pubkey from a certificate" do
