@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock "3.8.2"
+lock "3.9.1"
 
 set :application, "highway"
 set :repo_url, "git+ssh://code.credil.org/git/pandora/highway"
@@ -9,6 +9,12 @@ set :repo_url, "git+ssh://code.credil.org/git/pandora/highway"
 
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, "/data/highway/highway"
+
+set :rvm_type, :system
+set :rvm_ruby_version, '2.4.1'
+set :rvm_roles,    [:app]
+set :bundle_roles, [:app]
+
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
@@ -43,7 +49,7 @@ namespace :git do
   desc "Upload the git wrapper script, this script guarantees that we can script git without getting an interactive prompt"
   task :wrapper do
     on release_roles :all do
-      puts "Sending to: #{git_wrapper_path(@host)}"
+      #puts "Sending to: #{git_wrapper_path(@host)}"
       execute :mkdir, "-p", File.dirname(git_wrapper_path(@host)).shellescape
       script = StringIO.new("#!/bin/sh -e\nexec /usr/bin/ssh -l #{ENV['USER']} -o PasswordAuthentication=no -o StrictHostKeyChecking=no \"$@\"\n")
       upload! script, git_wrapper_path(@host)
@@ -62,8 +68,17 @@ module Capistrano
   module DSL
     module Paths
       def deploy_to
-        dir = @host.properties.fetch(:deploy_to) || fetch(:deploy_to)
-        puts "For #{@host.hostname} deploy_to: #{dir}"
+        dir = fetch(:deploy_to)
+
+        host = @host
+        unless host
+          host = Thread.current["sshkit_backend"].host
+        end
+        byebug unless host
+        if host and host.properties and host.properties.fetch(:deploy_to)
+          dir = host.properties.fetch(:deploy_to)
+        end
+        #puts "For #{host.hostname} deploy_to: #{dir}"
         dir
       end
 
@@ -78,7 +93,7 @@ module Capistrano
         suffix = %i(application stage local_user).map { |key| fetch(key).to_s }.join("-")
         path = "#{tmppath}/git-ssh-#{suffix}.sh"
 
-        puts "For #{hostname} wrapper_path: #{path}"
+        #puts "For #{hostname} wrapper_path: #{path}"
         path
       end
 
