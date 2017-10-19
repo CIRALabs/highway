@@ -34,3 +34,55 @@ append :linked_dirs, "db/cert", "db/devices"
 
 # Default value for keep_releases is 5
 # set :keep_releases, 5
+
+require 'byebug'
+
+# override git:wrapper
+Rake::Task["git:wrapper"].clear_actions
+namespace :git do
+  desc "Upload the git wrapper script, this script guarantees that we can script git without getting an interactive prompt"
+  task :wrapper do
+    on release_roles :all do
+      puts "Sending to: #{git_wrapper_path(@host)}"
+      execute :mkdir, "-p", File.dirname(git_wrapper_path(@host)).shellescape
+      script = StringIO.new("#!/bin/sh -e\nexec /usr/bin/ssh -l #{ENV['USER']} -o PasswordAuthentication=no -o StrictHostKeyChecking=no \"$@\"\n")
+      upload! script, git_wrapper_path(@host)
+      execute :chmod, "700", git_wrapper_path(@host).shellescape
+
+      path = git_wrapper_path(nil)
+      unless test("[ -f #{path.shellescape} ]")
+        upload! script, path
+      end
+      execute :chmod, "700", git_wrapper_path(@host).shellescape
+    end
+  end
+end
+
+module Capistrano
+  module DSL
+    module Paths
+      def deploy_to
+        dir = @host.properties.fetch(:deploy_to) || fetch(:deploy_to)
+        puts "For #{@host.hostname} deploy_to: #{dir}"
+        dir
+      end
+
+      def git_wrapper_path(role = nil)
+        if role
+          tmppath = File.join(role.properties.fetch(:deploy_to), "tmp")
+          hostname = role.hostname
+        else
+          tmppath = fetch(:tmp_dir)
+          hostname = "generic"
+        end
+        suffix = %i(application stage local_user).map { |key| fetch(key).to_s }.join("-")
+        path = "#{tmppath}/git-ssh-#{suffix}.sh"
+
+        puts "For #{hostname} wrapper_path: #{path}"
+        path
+      end
+
+
+    end
+  end
+end
