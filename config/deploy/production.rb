@@ -7,7 +7,20 @@
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
 
-server "masa.wheezes.sandelman.ca", user: "wheezes", roles: %w{app db web}
+server "masa.wheezes.sandelman.ca",
+       user: "wheezes",
+       roles: %w{app db web},
+       deploy_to: '/wheezes/app/highway',
+       git_wrapper_path: '/wheezes/app/tmp'
+
+if true
+server "masa.honeydukes.sandelman.ca",
+       user: "honeydukes",
+       roles: %w{app db web},
+       deploy_to: '/honeydukes/app/highway',
+       git_wrapper_path: '/honeydukes/app/tmp'
+end
+
 
 # Custom SSH Options
 # ==================
