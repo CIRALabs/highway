@@ -28,6 +28,7 @@ class Device < ActiveRecord::Base
 
     vendorprivkey = devdir.join("key.pem")
     File.open(vendorprivkey, "w") do |f| f.write @dev_key.to_pem end
+    File.chmod(0400, vendorprivkey)
   end
 
   def certificate_filename(dir = HighwayKeys.ca.devicedir)

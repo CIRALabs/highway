@@ -7,6 +7,12 @@ GIT
       rails (>= 4.0.5)
 
 GIT
+  remote: https://github.com/mcr/ChariWTs.git
+  revision: b6c910fbc66f35ca41c92ad263a72fff2318fe90
+  specs:
+    chariwt (0.1.0)
+
+GIT
   remote: https://github.com/mcr/ruby-openssl.git
   revision: 7c18417e2e24a9c6c407f5114c58b7f161e16d34
   specs:
