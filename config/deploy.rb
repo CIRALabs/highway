@@ -67,14 +67,14 @@ end
 module Capistrano
   module DSL
     module Paths
-      def deploy_to
+      def deploy_to(role = nil)
         dir = fetch(:deploy_to)
 
-        host = @host
-        unless host
+        host = role || @host
+        if !host and Thread.current["sshkit_backend"]
           host = Thread.current["sshkit_backend"].host
         end
-        byebug unless host
+        #byebug unless host
         if host and host.properties and host.properties.fetch(:deploy_to)
           dir = host.properties.fetch(:deploy_to)
         end
