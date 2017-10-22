@@ -49,8 +49,9 @@ end
 
 group :development do
   # Deploy with Capistrano
-  #gem 'capistrano', :git => 'https://github.com/mcr/capistrano.git', branch: 'per-host-deploy-to'
-  gem 'capistrano', :path => '../capistrano'
+  gem 'capistrano', :git => 'https://github.com/mcr/capistrano.git', branch: 'per-host-deploy-to'
+  gem 'capistrano-bundler', :git => 'https://github.com/mcr/bundler.git'
+  #gem 'capistrano', :path => '../capistrano'
   gem 'capistrano-rails'
   gem 'capistrano-passenger'
   gem 'capistrano-rvm'
