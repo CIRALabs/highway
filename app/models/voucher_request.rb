@@ -24,6 +24,11 @@ class VoucherRequest < ApplicationRecord
   end
 
   def self.from_pkcs7(token, json = nil)
+    # look to see if this is a byte-for-byte identical requestion
+    if voucher = where(voucher_request: token).take
+      return voucher
+    end
+
     cvr = Chariwt::VoucherRequest.from_pkcs7_withoutkey(token)
     # on MASA, voucher requests MUST always be signed
     unless cvr
@@ -32,6 +37,7 @@ class VoucherRequest < ApplicationRecord
     voucher = from_json(cvr.inner_attributes, token)
     voucher.extract_prior_signed_voucher_request(cvr)
     voucher.signing_key = Base64.urlsafe_encode64(cvr.signing_cert.public_key.to_der)
+    voucher.save!
     voucher
   end
 

@@ -32,6 +32,17 @@ RSpec.describe VoucherRequest, type: :model do
       expect(voucher.owner.pubkey).to eq(vr2.signing_key)
     end
 
+    it "should not duplicate a byte4byte identical request" do
+      token = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs"))
+      vr2 = VoucherRequest.from_pkcs7(token)
+      expect(vr2.id).to_not be_nil
+
+      tok2 = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs"))
+      vr3 = VoucherRequest.from_pkcs7(token)
+      expect(vr3.id).to eq(vr2.id)
+      expect(vr3.device).to eq(devices(:vizsla))
+    end
+
     it "should process a voucher request into a voucher for a valid device" do
       req13 = voucher_requests(:voucher13)
       voucher,reason = req13.issue_voucher
