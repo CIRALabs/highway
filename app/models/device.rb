@@ -31,6 +31,19 @@ class Device < ActiveRecord::Base
     File.chmod(0400, vendorprivkey)
   end
 
+  def gen_or_load_priv_key(dir, curve = 'prime256v1')
+    devdir = dir.join(sanitized_eui64)
+    vendorprivkey = devdir.join("key.pem")
+
+    if File.exists?(vendorprivkey)
+      @dev_key = OpenSSL::PKey.read(IO::read(vendorprivkey))
+    else
+      gen_priv_key
+      store_priv_key(dir)
+    end
+    @dev_key
+  end
+
   def certificate_filename(dir = HighwayKeys.ca.devicedir)
     devdir = dir.join(sanitized_eui64)
     FileUtils.mkpath(devdir)
@@ -58,9 +71,8 @@ class Device < ActiveRecord::Base
   end
 
   def gen_and_store_key(dir = HighwayKeys.ca.devicedir)
-    gen_priv_key
+    gen_or_load_priv_key(dir)
     sign_eui64
-    store_priv_key(dir)
     store_certificate(dir)
   end
 

@@ -27,8 +27,7 @@ RSpec.describe Device, type: :model do
     it "should generate a new private key, and store it" do
       almec = devices(:almec)
 
-      almec.gen_priv_key
-      almec.store_priv_key(HighwayKeys.ca.devicedir)
+      almec.gen_or_load_priv_key(HighwayKeys.ca.devicedir)
     end
 
     it "should recognize a voucher request containing the same public key" do
@@ -50,15 +49,13 @@ RSpec.describe Device, type: :model do
     it "should create a certificate with a new issue " do
       almec = devices(:almec)
 
-      almec.gen_priv_key
-      almec.store_priv_key(HighwayKeys.ca.devicedir)
+      almec.gen_or_load_priv_key(HighwayKeys.ca.devicedir)
       almec.sign_eui64
       expect(almec.idevid.serial).to eq(1)
 
       vizsla = devices(:vizsla)
 
-      vizsla.gen_priv_key
-      vizsla.store_priv_key(HighwayKeys.ca.devicedir)
+      vizsla.gen_or_load_priv_key(HighwayKeys.ca.devicedir)
       vizsla.sign_eui64
       expect(vizsla.idevid.serial).to eq(2)
 
