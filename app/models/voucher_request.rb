@@ -109,15 +109,9 @@ class VoucherRequest < ApplicationRecord
 
     ## XXX what other kinds of validation belongs here?
 
-    voucher = Voucher.create(owner: owner,
-                             device: device,
-                             nonce: nonce)
+    voucher = Voucher.create_voucher(owner, device, effective_date, nonce)
     self.voucher = voucher
     save!
-    unless nonce
-      voucher.expires_on = effective_date + 14.days
-    end
-    voucher.pkcs_sign!(effective_date)
     return voucher,:ok
   end
 

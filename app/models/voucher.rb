@@ -36,6 +36,21 @@ class Voucher < ActiveRecord::Base
     self
   end
 
+  def self.create_voucher(owner, device, effective_date, nonce = nil, expires = nil)
+    voucher = create(owner: owner,
+                     device: device,
+                     nonce: nonce)
+
+    unless expires
+      expires = effective_date + 14.days
+    end
+    unless nonce
+      voucher.expires_on = expires
+    end
+    voucher.pkcs_sign!(effective_date)
+    voucher
+  end
+
   def self.from_json(json)
     raise Voucher::InvalidVoucher unless json["ietf-voucher:voucher"]
 
