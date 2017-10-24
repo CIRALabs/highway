@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :devices,  concerns: :active_scaffold
 
   # EST processing at well known URLs
-  post '/.well-known/est/requestvoucher', to: 'est#requestvoucher'
+  post '/.well-known/est/requestvoucher',  to: 'est#requestvoucher'
+  post '/.well-known/est/requestauditlog', to: 'est#requestauditlog'
 
 end

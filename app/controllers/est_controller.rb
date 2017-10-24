@@ -19,4 +19,19 @@ class EstController < ApiController
       head 404, text: reason.to_s
     end
   end
+
+  def requestauditlog
+    binary_pkcs = Base64.decode64(request.body.read)
+    @voucherreq = VoucherRequest.from_pkcs7(binary_pkcs)
+    @device = @voucherreq.device
+    @owner  = @voucherreq.owner
+
+    if @device.device_owned_by?(@owner)
+      json_response(@device.audit_log, :ok,
+                    'application/json')
+    else
+      head 404, text: 'invalid device'
+    end
+  end
+
 end

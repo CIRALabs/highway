@@ -149,6 +149,12 @@ class Device < ActiveRecord::Base
     al
   end
 
+  # returns true if this device has ever been own owned by the given
+  # owner, which is done by looking at the audit log.
+  def device_owned_by?(owner)
+    owners.include?(owner)
+  end
+
   def name
     "device_#{self.id}"
   end
