@@ -43,6 +43,10 @@ class Voucher < ActiveRecord::Base
                      device: device,
                      nonce: nonce)
 
+    # assign the ownership.
+    device.owner = owner
+    device.save!
+
     unless expires
       expires = effective_date + 14.days
     end
