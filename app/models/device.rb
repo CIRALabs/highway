@@ -133,6 +133,22 @@ class Device < ActiveRecord::Base
     save!
   end
 
+  def audit_events
+    vouchers.creation_order.collect {|vr|
+      { 'date' => vr.created_at,
+        'registrarID' => vr.owner.registrarID_base64,
+        'nonce'       => vr.nonce
+      }
+    }
+  end
+
+  def audit_log
+    al = Hash.new
+    al['version'] = '1'
+    al['events']  = audit_events
+    al
+  end
+
   def name
     "device_#{self.id}"
   end

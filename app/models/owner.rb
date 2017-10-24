@@ -59,6 +59,10 @@ class Owner < ActiveRecord::Base
     return Digest::SHA1.digest(rawpubkey)
   end
 
+  def registrarID_base64
+    Base64.strict_encode64(registrarID)
+  end
+
   def self.find_by_public_key(base64key)
     decoded = decode_pem(base64key)
 

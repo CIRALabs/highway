@@ -100,8 +100,8 @@ RSpec.describe Device, type: :model do
       log = d14.audit_log
       expect(log['version']).to eq('1')
       expect(log['events'].count).to eq(3)
-      expect(log['events'][0]['registrarID']).to eq(owners(:owner4).registrarID)
-      expect(log['events'][1]['registrarID']).to eq(owners(:owner3).registrarID)
+      expect(log['events'][0]['registrarID']).to eq(owners(:owner4).registrarID_base64)
+      expect(log['events'][1]['registrarID']).to eq(owners(:owner2).registrarID_base64)
 
     end
   end
