@@ -28,6 +28,7 @@ RSpec.describe Device, type: :model do
       almec = devices(:almec)
 
       almec.gen_or_load_priv_key(HighwayKeys.ca.devicedir)
+      expect(almec.dev_key).to_not be_nil
     end
 
     it "should recognize a voucher request containing the same public key" do

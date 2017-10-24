@@ -3,7 +3,7 @@ class Device < ActiveRecord::Base
   has_many :vouchers
   belongs_to :owner
 
-  attr_accessor :idevid
+  attr_accessor :idevid, :dev_key
 
   def self.find_by_number(number)
     where(serial_number: number).take || where(eui64: number).take
