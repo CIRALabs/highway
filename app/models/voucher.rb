@@ -8,6 +8,8 @@ class Voucher < ActiveRecord::Base
 
   class InvalidVoucher < Exception; end
 
+  scope :creation_order, -> { order('created_at DESC') }
+
   def serial_number
     device.serial_number
   end

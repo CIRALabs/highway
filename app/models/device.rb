@@ -3,6 +3,8 @@ class Device < ActiveRecord::Base
   has_many :vouchers
   belongs_to :owner
 
+  has_many :owners, -> { order("vouchers.created_at DESC") }, through: :vouchers
+
   attr_accessor :idevid, :dev_key
 
   def self.find_by_number(number)

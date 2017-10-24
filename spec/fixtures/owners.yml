@@ -22,7 +22,8 @@ owner446739022:
   id: 446739022
   pubkey: MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEZQ1CYWhxrI_MGtpkCu2c9coGiZA5o_QGQHIn0-z132mOq2XfuWz6L4fpABUciyXBSKRAGt5ngAqHTPOs3IfC1A==
 
-owner3:
+owner2:
+  id: 2
   name: "owner2"
   fqdn: "owner2.example.com"
   dn: "C=CA, ST=Ontario, L=Ottawa, O=Owner Example One, OU=Not Very, CN=owner1.example.com/emailAddress=owner1@example.com"
@@ -54,6 +55,7 @@ owner3:
   last_ip: "192.0.2.1"
 
 owner4:
+  name: "owner4"
   certificate: |
     -----BEGIN CERTIFICATE-----
     MIIBrjCCATOgAwIBAgIBAzAKBggqhkjOPQQDAzBOMRIwEAYKCZImiZPyLGQBGRYC

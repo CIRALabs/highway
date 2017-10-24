@@ -80,6 +80,32 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe "audit log" do
+    it "should have three vouchers" do
+      d14 = devices(:device14)
+      expect(d14.vouchers.count).to eq(3)
+    end
+
+    it "should have three owners via three vouchers" do
+      d14 = devices(:device14)
+      expect(d14.owners.count).to eq(3)
+      expect(d14.owners[0]).to eq owners(:owner4)
+      expect(d14.owners[1]).to eq owners(:owner2)
+      expect(d14.owners[2]).to eq owners(:owner1)
+    end
+
+    it "should produce a hash representing the audit log for a device" do
+      d14 = devices(:device14)
+
+      log = d14.audit_log
+      expect(log['version']).to eq('1')
+      expect(log['events'].count).to eq(3)
+      expect(log['events'][0]['registrarID']).to eq(owners(:owner4).registrarID)
+      expect(log['events'][1]['registrarID']).to eq(owners(:owner3).registrarID)
+
+    end
+  end
+
   describe "searching" do
     it "should find a device by eui64 or serialnumber" do
       b1 = Device.find_by_number('00-D0-E5-F2-00-02')
