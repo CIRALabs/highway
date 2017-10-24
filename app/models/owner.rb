@@ -46,6 +46,19 @@ class Owner < ActiveRecord::Base
     certder.owner
   end
 
+  def registrarID
+    der = pubkey_from_cert.to_der
+    rawpubkey = nil
+    asn1 = OpenSSL::ASN1.decode(der)
+    asn1.value.each {|v|
+      if v.tag == 3
+        rawpubkey = v.value
+      end
+    }
+    return nil unless rawpubkey
+    return Digest::SHA1.digest(rawpubkey)
+  end
+
   def self.find_by_public_key(base64key)
     decoded = decode_pem(base64key)
 
