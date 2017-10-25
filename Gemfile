@@ -54,7 +54,8 @@ group :development do
   gem 'capistrano-bundler', :git => 'https://github.com/mcr/bundler.git', branch: 'per-host-deploy-to'
   #gem 'capistrano-bundler', :path => '../bundler'
   gem 'capistrano-rails'
-  gem 'capistrano-passenger'
+  gem 'capistrano-passenger', :git => 'https://github.com/mcr/passenger.git', branch: 'per-host-deploy-to'
+  #gem 'capistrano-passenger', :path => '../passenger'
   gem 'capistrano-rvm'
 
   # Spring speeds up development by keeping your application running
