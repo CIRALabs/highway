@@ -5,6 +5,6 @@ class StatusController < ApiController
               ['Vouchers',Voucher.count],
               ['Requests',VoucherRequest.count],
              ]
-    render
+    render :layout => 'reload'
   end
 end
