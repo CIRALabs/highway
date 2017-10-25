@@ -15,6 +15,7 @@ GIT
 GIT
   remote: https://github.com/mcr/bundler.git
   revision: c10632f30326f5fcca66781ed41bcaeedc08dfcb
+  branch: per-host-deploy-to
   specs:
     capistrano-bundler (1.3.0)
       capistrano (~> 3.1)
