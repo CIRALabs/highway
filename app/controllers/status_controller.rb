@@ -1,5 +1,10 @@
 class StatusController < ApiController
   def index
-    render text: "hello"
+    @stats = [['Devices', Device.count],
+              ['Owners',  Owner.count],
+              ['Vouchers',Voucher.count],
+              ['Requests',VoucherRequest.count],
+             ]
+    render
   end
 end
