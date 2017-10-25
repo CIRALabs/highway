@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  if $ADMININTERFACE
+  if $ADMININTERFACE or Rails.env == 'test'
   devise_for :admins
   concern :active_scaffold_association, ActiveScaffold::Routing::Association.new
   concern :active_scaffold, ActiveScaffold::Routing::Basic.new(association: true)
