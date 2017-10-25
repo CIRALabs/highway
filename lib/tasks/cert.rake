@@ -159,6 +159,39 @@ namespace :highway do
     dev.gen_and_store_key
   end
 
+  desc "Sign voucher for device EUI64= to OWNER_ID=xx, with optional NONCE=xx, EXPIRES=yy"
+  task :signvoucher => :environment do
+    eui64 = ENV['EUI64']
+    ownerid = ENV['OWNER_ID']
+    nonce = ENV['NONCE']
+    expires=ENV['EXPIRES'].try(:to_date)
+
+    unless eui64
+      puts "must set EUI64= to a valid MAC address"
+      exit
+    end
+
+    device = Device.find_by_number(eui64)
+    unless device
+      puts "no device found with EUI64=#{eui64}"
+      exit
+    end
+
+    unless ownerid
+      puts "must set OWNER_ID= to a valid database ID"
+      exit
+    end
+    owner = Owner.find(ownerid)
+
+    voucher = Voucher.create_voucher(owner, device, Time.now, nonce, expires)
+
+    puts "Voucher created and saved, #{voucher.id}, and fixture written to tmp"
+    fw = FixtureWriter.new('tmp')
+    voucher.savefixturefw(fw)
+    fw.closefiles
+  end
+
+
   def foo_one
     key = OpenSSL::PKey::RSA.new 2048
     cert = OpenSSL::X509::Certificate.new
