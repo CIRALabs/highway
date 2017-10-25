@@ -34,7 +34,7 @@ GIT
 
 GIT
   remote: https://github.com/mcr/passenger.git
-  revision: b6dc6dd1d7ef792f0261a8656bd42659025024a5
+  revision: c128b4f7c77f4a5d0865e5c0d0faf2a589cd1d75
   branch: per-host-deploy-to
   specs:
     capistrano-passenger (0.2.0)
