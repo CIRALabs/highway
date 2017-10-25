@@ -5,3 +5,4 @@ require File.expand_path('../application', __FILE__)
 Rails.application.initialize!
 
 $MASAUrl = 'https://highway.sandelman.ca/'
+$ADMINTERFACE = false
