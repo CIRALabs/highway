@@ -7,6 +7,9 @@ class Device < ActiveRecord::Base
 
   attr_accessor :idevid, :dev_key
 
+  scope :owned,   -> { where.not(owner: nil) }
+  scope :unowned, -> { where(owner: nil) }
+
   def self.find_by_number(number)
     where(serial_number: number).take || where(eui64: number).take
   end
@@ -24,11 +27,18 @@ class Device < ActiveRecord::Base
     @sanitized_eui64 ||= eui64.upcase.gsub(/[^0-9A-F-]/,"")
   end
 
-  def store_priv_key(dir)
-    devdir = dir.join(sanitized_eui64)
-    FileUtils.mkpath(devdir)
+  def device_dir(dir)
+    @devdir ||= dir.join(sanitized_eui64)
+  end
 
-    vendorprivkey = devdir.join("key.pem")
+  def zipfilename
+    sprintf("product_%s.zip", sanitized_eui64)
+  end
+
+  def store_priv_key(dir)
+    FileUtils.mkpath(device_dir(dir))
+
+    vendorprivkey = device_dir(dir).join("key.pem")
     File.open(vendorprivkey, "w") do |f| f.write @dev_key.to_pem end
     File.chmod(0400, vendorprivkey)
   end
@@ -47,7 +57,7 @@ class Device < ActiveRecord::Base
   end
 
   def certificate_filename(dir = HighwayKeys.ca.devicedir)
-    devdir = dir.join(sanitized_eui64)
+    devdir = device_dir(dir)
     FileUtils.mkpath(devdir)
     pubkeyfile = devdir.join("device.crt")
   end

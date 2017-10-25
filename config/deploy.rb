@@ -30,7 +30,7 @@ set :bundle_roles, [:app]
 append :linked_files, "config/database.yml", "config/secrets.yml"
 
 # Default value for linked_dirs is []
-append :linked_dirs, "db/cert", "db/devices"
+append :linked_dirs, "db/cert", "db/devices", "db/inventory"
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
