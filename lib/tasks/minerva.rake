@@ -11,7 +11,8 @@ namespace :highway do
     inv_dir = SystemVariable.string(:inventory_dir)
     unless inv_dir
       # set a sane default
-      SystemVariable.setvalue(:inventory_dir, Rails.root.join('db/inventory'))
+      inv_dir = Rails.root.join('db/inventory')
+      SystemVariable.setvalue(:inventory_dir, inv_dir)
     end
 
     # make sure the directory exists.
