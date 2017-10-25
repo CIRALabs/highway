@@ -30,6 +30,17 @@ RSpec.describe 'BRSKI EST API', type: :request do
              'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
            }
 
+      expect(response).to have_http_status(404)
+    end
+
+    it "expect f20003 to have one owner which is not this one" do
+      pending "needs an another parboiled voucher request"
+      token = File.read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
+      post "/.well-known/est/requestauditlog", params: token, headers: {
+             'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
+             'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
+           }
+
       expect(response).to have_http_status(200)
       jbody = JSON.parse(response.body)
       expect(jbody['version']).to_not be_nil
