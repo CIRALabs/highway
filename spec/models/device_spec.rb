@@ -3,6 +3,11 @@ require 'rails_helper'
 RSpec.describe Device, type: :model do
   fixtures :all
 
+  before(:each) do
+    HighwayKeys.ca.certdir = Rails.root.join('spec','files','cert')
+    MasaKeys.ca.certdir = Rails.root.join('spec','files','cert')
+  end
+
   describe "relations" do
     it "should have many vouchers" do
       almec = devices(:almec)

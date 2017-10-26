@@ -3,14 +3,15 @@ require 'rails_helper'
 RSpec.describe VoucherRequest, type: :model do
   fixtures :all
 
+  before(:each) do
+    MasaKeys.ca.certdir = Rails.root.join('spec','files','cert')
+  end
+
   describe "relations" do
     it { should belong_to(:voucher) }
     it { should belong_to(:owner) }
     it { should belong_to(:device) }
-
   end
-
-
 
   describe "voucher input request" do
     it "should read a voucher request from disk" do

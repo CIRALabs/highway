@@ -1,4 +1,5 @@
 class HighwayKeys
+  attr_accessor :devdir, :certdir
 
   def rootkey
     @rootkey ||= load_root_pub_key
