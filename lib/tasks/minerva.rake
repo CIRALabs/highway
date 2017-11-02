@@ -26,7 +26,7 @@ namespace :highway do
     if Device.unowned.count < inv_count
 
       devices_needed = inv_count - Device.unowned.count
-      puts "creating #{devices_needed} devices to refill inventory"
+      puts "creating #{devices_needed} devices to refill inventory to #{inv_count}"
       (1..devices_needed).each { |cnt|
 
         # need to create some new devices.... make up some new MAC addresses.
@@ -56,7 +56,7 @@ namespace :highway do
 
         # now zip up the key.
         zipfile = File.join(inv_dir, newdev.zipfilename)
-        cmd = "cd #{tdir} && zip -r #{zipfile} #{newdev.sanitized_eui64}")
+        cmd = "cd #{tdir} && zip -r #{zipfile} #{newdev.sanitized_eui64}"
         puts "Running: #{cmd}"
         system(cmd)
       }
