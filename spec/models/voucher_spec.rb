@@ -7,6 +7,10 @@ RSpec.describe Voucher, type: :model do
     "hello1"
   end
 
+  before(:each) do
+    MasaKeys.ca.certdir = Rails.root.join('spec','files','cert')
+  end
+
   describe "relations" do
     it { should belong_to(:device) }
     it { should belong_to(:owner)  }
