@@ -56,9 +56,9 @@ namespace :highway do
 
         # now zip up the key.
         zipfile = File.join(inv_dir, newdev.zipfilename)
-        cmd = "cd #{tdir} && zip -r #{zipfile} #{newdev.device_dir(tdir)}"
+        cmd = "cd #{tdir} && zip -r #{zipfile} #{newdev.sanitized_eui64}")
         puts "Running: #{cmd}"
-        system("cd #{tdir} && zip -r #{zipfile} #{newdev.sanitized_eui64}")
+        system(cmd)
       }
 
     end
