@@ -16,7 +16,7 @@ class EstController < ApiController
       json_response(@voucher.as_issued, :ok,
                     'application/pkcs7-mime; smime-type=voucher')
     else
-      logger "no voucher issued, reason: #{reason.to_s}"
+      logger.error "no voucher issued, reason: #{reason.to_s}"
       head 404, text: reason.to_s
     end
   end
