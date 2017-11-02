@@ -1,4 +1,5 @@
 class StatusController < ActionController::Base
+  include Response
 
   def index
     respond_to do |format|
