@@ -28,6 +28,10 @@ class MasaKeys < HighwayKeys
     JWT.encode jv, masaprivkey, algorithm
   end
 
+  def masa_pubkey
+    certdir.join("masa_#{curve}.crt")
+  end
+
   protected
   def load_masa_priv_key
     masaprivkey=certdir.join("masa_#{curve}.key")
@@ -37,7 +41,7 @@ class MasaKeys < HighwayKeys
   end
 
   def load_masa_pub_key
-    File.open(certdir.join("masa_#{curve}.crt"),'r') do |f|
+    File.open(masa_pubkey,'r') do |f|
       OpenSSL::X509::Certificate.new(f)
     end
   end
