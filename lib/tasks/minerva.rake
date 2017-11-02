@@ -6,6 +6,7 @@ namespace :highway do
   task :inventory => :environment do
 
     inv_count = ENV['INVENTORY'].to_i || 5
+    verbose   = ENV['VERBOSER'].present?
 
     # where is the inventory stored?
     inv_dir = SystemVariable.string(:inventory_dir)
@@ -64,6 +65,7 @@ namespace :highway do
 
     # now look for devices which are owned by still seem to be available
     # for download.
+    puts "Found #{Device.owned.count} devices owned" if verbose
     Device.owned.each { |dev|
       zipfile = File.join(inv_dir, dev.zipfilename)
       if File.exists?(zipfile)
@@ -71,6 +73,8 @@ namespace :highway do
 
         puts "Marking #{zipfile} as sold"
         File.rename(zipfile, sold_zipfile)
+      else
+        puts "Device #{dev.name} already marked as sold" if verbose
       end
     }
 
