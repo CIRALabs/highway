@@ -5,7 +5,7 @@ namespace :highway do
   desc "Maintain inventory of devices to buy, INVENTORY=count"
   task :inventory => :environment do
 
-    inv_count = ENV['INVENTORY'] || 5
+    inv_count = ENV['INVENTORY'].to_i || 5
 
     # where is the inventory stored?
     inv_dir = SystemVariable.string(:inventory_dir)
