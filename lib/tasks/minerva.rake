@@ -50,6 +50,9 @@ namespace :highway do
         tdir = HighwayKeys.ca.devicedir
         newdev.gen_and_store_key(tdir)
 
+        # stick the MASA vendor anchor key in as well.
+        system("cp #{MasaKeys.masa.masa_pubkey} #{File.join(newdev.device_dir(tdir), "masa.crt")}")
+
         # now zip up the key.
         zipfile = File.join(inv_dir, newdev.zipfilename)
         cmd = "cd #{tdir} && zip -r #{zipfile} #{newdev.device_dir(tdir)}"
