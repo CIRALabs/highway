@@ -2,21 +2,20 @@ class StatusController < ActionController::Base
   include Response
 
   def index
+    @stats = [['Devices', Device.count],
+              ['Inventory',  Device.unowned.count],
+              ['Owners',  Owner.count],
+              ['Vouchers',Voucher.count],
+              ['Requests',VoucherRequest.count],
+             ]
     respond_to do |format|
       format.html {
-        @stats = [['Devices', Device.count],
-                  ['Owners',  Owner.count],
-                  ['Vouchers',Voucher.count],
-                  ['Requests',VoucherRequest.count],
-                 ]
         render layout: 'reload'
       }
       format.json {
-        json_response({ 'Devices' => Device.count,
-                        'Owners'  => Owner.count,
-                        'Vouchers'=> Voucher.count,
-                        'Requests'=> VoucherRequest.count},
-                      :ok, 'application/json')
+        data = Hash.new
+        @stats.each { |n| data[n[0]]=n[1] }
+        json_response(data, :ok, 'application/json')
       }
     end
   end
