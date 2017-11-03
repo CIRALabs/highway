@@ -4,7 +4,8 @@ RSpec.describe VoucherRequest, type: :model do
   fixtures :all
 
   before(:each) do
-    MasaKeys.ca.certdir = Rails.root.join('spec','files','cert')
+    HighwayKeys.ca.certdir = Rails.root.join('spec','files','cert')
+    MasaKeys.masa.certdir = Rails.root.join('spec','files','cert')
   end
 
   describe "relations" do

@@ -33,7 +33,7 @@ class Voucher < ActiveRecord::Base
       cv.pinnedPublicKey  = owner.pubkey_object
     end
 
-    self.as_issued = cv.pkcs_sign(MasaKeys.masa.masa_pubkey)
+    self.as_issued = cv.pkcs_sign(MasaKeys.masa.masaprivkey)
     save!
     self
   end

@@ -1,5 +1,4 @@
 class MasaKeys < HighwayKeys
-
   def masakey
     @masakey ||= load_masa_pub_key
   end
