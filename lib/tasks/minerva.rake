@@ -5,7 +5,7 @@ namespace :highway do
   desc "Maintain inventory of devices to buy, INVENTORY=count"
   task :inventory => :environment do
 
-    inv_count = ENV['INVENTORY'].to_i || 5
+    inv_count = ENV['INVENTORY'].try(:to_i) || 5
     verbose   = ENV['VERBOSE'].present?
 
     # where is the inventory stored?
@@ -23,7 +23,9 @@ namespace :highway do
     FileUtils.mkdir_p(sold_dir)
 
     # now count how many devices exist which have no owner.
-    if Device.unowned.count < inv_count
+    unowned = Device.unowned.count
+    puts "Found #{unowned} devices unowned, need #{inv_count}" if verbose
+    if unowned < inv_count
 
       devices_needed = inv_count - Device.unowned.count
       puts "creating #{devices_needed} devices to refill inventory to #{inv_count}"
@@ -75,7 +77,7 @@ namespace :highway do
         puts "Marking #{zipfile} as sold"
         File.rename(zipfile, sold_zipfile)
       else
-        puts "Device #{dev.name}(#{sanitized_eui64}) already marked as sold" if verbose
+        puts "Device #{dev.name}(#{dev.sanitized_eui64}) already marked as sold" if verbose
       end
     }
 
