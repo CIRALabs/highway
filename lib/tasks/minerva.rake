@@ -6,7 +6,7 @@ namespace :highway do
   task :inventory => :environment do
 
     inv_count = ENV['INVENTORY'].to_i || 5
-    verbose   = ENV['VERBOSER'].present?
+    verbose   = ENV['VERBOSE'].present?
 
     # where is the inventory stored?
     inv_dir = SystemVariable.string(:inventory_dir)
@@ -17,7 +17,7 @@ namespace :highway do
     end
 
     # make sure the directory exists.
-    FileUtils.mkdir_p(inv_dir)
+    #FileUtils.mkdir_p(inv_dir)
 
     sold_dir = File.join(inv_dir, "sold")
     FileUtils.mkdir_p(sold_dir)
@@ -52,6 +52,7 @@ namespace :highway do
         newdev.gen_and_store_key(tdir)
 
         # stick the MASA vendor anchor key in as well.
+        system("cp #{HighwayKeys.ca.vendor_pubkey} #{File.join(newdev.device_dir(tdir), "vendor.crt")}")
         system("cp #{MasaKeys.masa.masa_pubkey} #{File.join(newdev.device_dir(tdir), "masa.crt")}")
 
         # now zip up the key.
@@ -74,7 +75,7 @@ namespace :highway do
         puts "Marking #{zipfile} as sold"
         File.rename(zipfile, sold_zipfile)
       else
-        puts "Device #{dev.name} already marked as sold" if verbose
+        puts "Device #{dev.name}(#{sanitized_eui64}) already marked as sold" if verbose
       end
     }
 

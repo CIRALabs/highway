@@ -35,6 +35,10 @@ class HighwayKeys
     @certdir ||= Rails.root.join('db').join('cert')
   end
 
+  def vendor_pubkey
+    certdir.join("vendor_#{curve}.crt")
+  end
+
   def self.ca
     @ca ||= self.new
   end
@@ -48,7 +52,7 @@ class HighwayKeys
   end
 
   def load_root_pub_key
-    File.open(certdir.join("vendor_#{curve}.crt"),'r') do |f|
+    File.open(vendor_pubkey,'r') do |f|
       OpenSSL::X509::Certificate.new(f)
     end
   end
