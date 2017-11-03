@@ -45,7 +45,11 @@ class HighwayKeys
 
   protected
   def load_root_priv_key
-    vendorprivkey=certdir.join("vendor_#{curve}.key")
+    if ENV['CERTDIR']
+      vendorprivkey=File.join(ENV['CERTDIR'], "vendor_#{curve}.key")
+    else
+      vendorprivkey=certdir.join("vendor_#{curve}.key")
+    end
     File.open(vendorprivkey) do |f|
       OpenSSL::PKey.read(f)
     end

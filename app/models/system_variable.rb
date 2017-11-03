@@ -2,6 +2,13 @@ class SystemVariable < ActiveRecord::Base
 
   @@cache = Hash.new
 
+  def self.dump_vars
+    all.each { |thing|
+      puts "#{thing.variable}: #{thing.number} #{thing.value}"
+    }
+    true
+  end
+
   def self.lookup(thing)
     self.find_by_variable(thing.to_s)
   end

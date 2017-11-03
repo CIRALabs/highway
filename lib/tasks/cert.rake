@@ -26,8 +26,9 @@ namespace :highway do
     root_ca  = OpenSSL::X509::Certificate.new
     # cf. RFC 5280 - to make it a "v3" certificate
     root_ca.version = 2
-    root_ca.serial = 1
-    root_ca.subject = OpenSSL::X509::Name.parse "/DC=ca/DC=sandelman/CN=Unstrung Highway CA"
+    root_ca.serial  = SystemVariable.nextval(:serialnumber)
+    dn = sprintf("/DC=ca/DC=sandelman/CN=%s", SystemVariable.string(:hostname))
+    root_ca.subject = OpenSSL::X509::Name.parse dn
 
     # root CA's are "self-signed"
     root_ca.issuer = root_ca.subject
@@ -74,8 +75,10 @@ namespace :highway do
     masa_crt  = OpenSSL::X509::Certificate.new
     # cf. RFC 5280 - to make it a "v3" certificate
     masa_crt.version = 2
-    masa_crt.serial = 1
-    masa_crt.subject = OpenSSL::X509::Name.parse "/DC=ca/DC=sandelman/CN=Unstrung MASA"
+    root_ca.serial  = SystemVariable.nextval(:serialnumber)
+
+    dn = sprintf("/DC=ca/DC=sandelman/CN=%s MASA", SystemVariable.string(:hostname))
+    masa_crt.subject = OpenSSL::X509::Name.parse dn
 
     root_ca = HighwayKeys.ca.rootkey
     # masa is signed by root_ca
