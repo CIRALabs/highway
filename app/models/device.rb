@@ -165,9 +165,16 @@ class Device < ActiveRecord::Base
     owners.include?(owner)
   end
 
-  def name
+  # for building fixtures, etc.
+  def simplename
     "device_#{self.id}"
   end
+
+  # for human consumption
+  def name
+    "Device #{sanitized_eui64}"
+  end
+
   def savefixturefw(fw)
     return if save_self_tofixture(fw)
     vouchers.each { |voucher| voucher.savefixturefw(fw)}
