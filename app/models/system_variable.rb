@@ -38,6 +38,12 @@ class SystemVariable < ActiveRecord::Base
     @@cache[thing] ||= boolvalue?(thing)
   end
 
+  def self.number(thing)
+    v = self.lookup(thing)
+    return 0 if v.nil?
+    return v.number
+  end
+
   def self.setnumber(thing, value)
     v = self.findormake(thing)
     v.number = value
