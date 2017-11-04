@@ -43,7 +43,15 @@ class Owner < ActiveRecord::Base
   end
 
   def subject
-    certder.owner
+    certder.subject
+  end
+
+  def simplename
+    "owner_#{id}"
+  end
+
+  def name
+    @name ||= subject.to_s
   end
 
   def registrarID

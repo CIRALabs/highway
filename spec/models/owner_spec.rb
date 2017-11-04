@@ -16,6 +16,11 @@ RSpec.describe Owner, type: :model do
       expect(o1.certder.subject.to_s).to eq("/DC=ca/DC=sandelman/CN=localhost")
     end
 
+    it "should have a nname" do
+      o1 = owners(:owner1)
+      expect(o1.name).to_not be_nil
+    end
+
     it "should generate a pubkey from a certificate" do
       o1 = owners(:owner1)
       expect(o1.certificate).to_not be_nil
