@@ -1,0 +1,2 @@
+class DeviceNotifierMailer < ApplicationMailer
+end
