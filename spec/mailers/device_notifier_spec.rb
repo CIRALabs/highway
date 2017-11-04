@@ -9,8 +9,16 @@ RSpec.describe DeviceNotifierMailer, type: :mailer do
       today  = '2017-01-01'.to_date
       v1.pkcs_sign!(today)
 
-
-
+      expect { v1.pkcs_sign!(today) }
+        .to change { ActionMailer::Base.deliveries.count }.by(1)
     end
+
+    it "should send a test email against a voucher" do
+      v1 = vouchers(:almec_v1)
+
+      expect { v1.notify_voucher! }
+        .to change { ActionMailer::Base.deliveries.count }.by(1)
+    end
+
   end
 end

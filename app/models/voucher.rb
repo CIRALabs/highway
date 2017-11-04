@@ -18,6 +18,10 @@ class Voucher < ActiveRecord::Base
     device.serial_number
   end
 
+  def notify_voucher!
+    DeviceNotifierMailer.voucher_issued_email(self).deliver
+  end
+
   def pkcs_sign!(today = DateTime.now.utc)
     cv = Chariwt::Voucher.new
     cv.assertion    = 'logged'
@@ -34,6 +38,7 @@ class Voucher < ActiveRecord::Base
     end
 
     self.as_issued = cv.pkcs_sign(MasaKeys.masa.masaprivkey)
+    notify_voucher!
     save!
     self
   end

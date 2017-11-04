@@ -1,8 +1,6 @@
 class DeviceNotifierMailer < ApplicationMailer
 
-  def voucher_issued_email(user, voucher)
-    @user = user
-    @url  = 'http://example.com/login'
+  def voucher_issued_email(voucher)
     @owner = voucher.owner
     @device= voucher.device
     @hostname = SystemVariable.string(:hostname)
