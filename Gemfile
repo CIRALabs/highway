@@ -20,6 +20,9 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
+# raven for sentry.io
+gem "sentry-raven"
+
 gem 'uglifier'
 gem 'openssl', :git => 'https://github.com/mcr/ruby-openssl.git'
 
