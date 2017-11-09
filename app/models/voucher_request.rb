@@ -91,8 +91,12 @@ class VoucherRequest < ApplicationRecord
   end
 
   def issue_voucher(effective_date = Time.now)
+
     # at a minimum, this must be before a device that belongs to us!
-    return nil,:notmydevice unless device
+    unless device
+      DeviceNotifierMailer.voucher_notissued_email(self, :notmydevice).deliver
+      return nil,:notmydevice
+    end
 
     # must have an owner!
     return nil,:ownerunknown unless owner

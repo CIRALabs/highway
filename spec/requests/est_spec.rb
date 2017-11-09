@@ -18,6 +18,22 @@ RSpec.describe 'BRSKI EST API', type: :request do
       expect(assigns(:voucher).owner).to_not be_nil
     end
 
+    it "POST /.well-known/est/requestvoucher" do
+      # make an HTTPS request for a new device which does not belong
+      # to the MASA
+      token = File.read("spec/files/parboiled_vr-00-D0-E5-02-00-20.pkcs")
+
+      expect {
+        post "/.well-known/est/requestvoucher", params: token, headers: {
+               'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
+               'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
+             }
+
+      }.to change { ActionMailer::Base.deliveries.count }.by(1)
+
+      expect(response).to have_http_status(404)
+    end
+
   end
 
   describe "audit log request" do
