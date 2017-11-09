@@ -5,7 +5,7 @@ namespace :highway do
   def prompt_variable(prompt, variable, previous)
     print prompt
     print "(default #{previous}): "
-    value = STDIN.gets
+    value = STDIN.gets.chomp
 
     if value.blank?
       value = previous
