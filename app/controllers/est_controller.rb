@@ -5,6 +5,7 @@ class EstController < ApiController
     @voucherreq = VoucherRequest.from_pkcs7(binary_pkcs)
     # keep the raw encoded request.
     @voucherreq.raw_request = request.body.read
+    @voucherreq.originating_ip = request.env["REMOTE_HOST"]
 
     clientcert_pem = request.env["SSL_CLIENT_CERT"]
     if clientcert_pem
