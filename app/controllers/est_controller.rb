@@ -5,7 +5,7 @@ class EstController < ApiController
     @voucherreq = VoucherRequest.from_pkcs7(binary_pkcs)
     # keep the raw encoded request.
     @voucherreq.raw_request = request.body.read
-    @voucherreq.originating_ip = request.env["REMOTE_HOST"]
+    @voucherreq.originating_ip = request.env["REMOTE_ADDR"]
 
     clientcert_pem = request.env["SSL_CLIENT_CERT"]
     if clientcert_pem
@@ -17,7 +17,7 @@ class EstController < ApiController
       json_response(@voucher.as_issued, :ok,
                     'application/pkcs7-mime; smime-type=voucher')
     else
-      logger.error "no voucher issued for #{request.env["REMOTE_HOST"]}, reason: #{reason.to_s}"
+      logger.error "no voucher issued for #{request.env["REMOTE_ADDR"]}, reason: #{reason.to_s}"
       head 404, text: reason.to_s
     end
   end
