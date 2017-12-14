@@ -45,6 +45,8 @@ namespace :highway do
     prompt_variable_value("Setup inventory base mac address",
                           :base_mac)
 
+    SystemVariable.setvalue(:masa_url, "http://" + SystemVariable.string(:hostname))
+
     SystemVariable.dump_vars
   end
 

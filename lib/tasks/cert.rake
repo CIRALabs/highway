@@ -75,12 +75,12 @@ namespace :highway do
     masa_crt  = OpenSSL::X509::Certificate.new
     # cf. RFC 5280 - to make it a "v3" certificate
     masa_crt.version = 2
-    root_ca.serial  = SystemVariable.nextval(:serialnumber)
 
     dn = sprintf("/DC=ca/DC=sandelman/CN=%s MASA", SystemVariable.string(:hostname))
     masa_crt.subject = OpenSSL::X509::Name.parse dn
 
     root_ca = HighwayKeys.ca.rootkey
+    root_ca.serial  = SystemVariable.nextval(:serialnumber)
     # masa is signed by root_ca
     masa_crt.issuer = root_ca.subject
     #root_ca.public_key = root_key.public_key
