@@ -8,7 +8,8 @@ RSpec.describe Voucher, type: :model do
   end
 
   before(:each) do
-    MasaKeys.ca.certdir = Rails.root.join('spec','files','cert')
+    FileUtils::mkdir_p("tmp")
+    MasaKeys.masa.certdir = Rails.root.join('spec','files','cert')
   end
 
   describe "relations" do

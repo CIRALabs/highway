@@ -3,6 +3,11 @@ require "rails_helper"
 RSpec.describe DeviceNotifierMailer, type: :mailer do
   fixtures :all
 
+  before(:each) do
+    FileUtils::mkdir_p("tmp")
+    MasaKeys.masa.certdir = Rails.root.join('spec','files','cert')
+  end
+
   describe "emails to administrator" do
     it "should send an email when a voucher is issued" do
       v1 = vouchers(:almec_v1)
