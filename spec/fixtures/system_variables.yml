@@ -33,3 +33,7 @@ closedbeta:
   variable: 'ClosedBeta'
   number:   1
 
+hostname:
+  id: 9
+  variable: 'hostname'
+  value: 'highway-test.example.com'

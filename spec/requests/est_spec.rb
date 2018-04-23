@@ -20,7 +20,7 @@ RSpec.describe 'BRSKI EST API', type: :request do
 
     it "POST /.well-known/est/requestvoucher" do
       # make an HTTPS request for a new device which does not belong
-      # to the MASA
+      # to the MASA ---> it will produce an email about that.
       token = File.read("spec/files/parboiled_vr-00-D0-E5-02-00-20.pkcs")
 
       expect {
