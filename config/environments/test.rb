@@ -47,7 +47,7 @@ Rails.application.configure do
     :openssl_verify_mode => 'none'
   }
 
-  config.action_mailer.perform_deliveries = false
+  config.action_mailer.perform_deliveries    = true
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_options = {from: 'mcr+minerva@sandelman.ca'}
 
