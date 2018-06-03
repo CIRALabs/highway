@@ -65,10 +65,12 @@ RSpec.describe VoucherRequest, type: :model do
     end
 
     it "should load a constrained voucher request into database" do
-      token = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-01-00-09.vch")bb)
-      vch = VoucherRequest.from_cbor_cose(token)
+      token = IO::read("spec/files/parboiled_vr-00-D0-E5-01-00-09.vch")
+      regfile= File.join("spec","files","jrc_prime256v1.crt")
+      pubkey = OpenSSL::X509::Certificate.new(IO::read(regfile))
 
-      byebug
+      vch = VoucherRequest.from_cbor_cose(token, pubkey)
+      expect(vch).to be        proximity?
       expect(vch.nonce).to_not be_nil
     end
 

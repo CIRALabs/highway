@@ -23,6 +23,19 @@ class VoucherRequest < ApplicationRecord
     return from_json(jsonresult.inner_attributes, token)
   end
 
+  def self.from_cbor_cose(token, pubkey = nil)
+    vr = Chariwt::VoucherRequest.from_cbor_cose(token, pubkey)
+    unless vr
+      raise InvalidVoucherRequest
+    end
+    hash = vr.sanitized_hash
+    voucher = create(details: hash, voucher_request: token)
+    #voucher.request = vr
+    voucher.populate_explicit_fields(vr.vrhash)
+    #voucher.pledge_request = token
+    voucher
+  end
+
   def self.from_pkcs7(token, json = nil)
     # look to see if this is a byte-for-byte identical requestion
     if voucher = where(voucher_request: token).take
@@ -44,6 +57,11 @@ class VoucherRequest < ApplicationRecord
   def name
     "voucherreq_#{self.id}"
   end
+
+  def proximity?
+    "proximity" == details["assertion"]
+  end
+
   def savefixturefw(fw)
     voucher.savefixturefw(fw) if voucher
     owner.savefixturefw(fw)   if owner
@@ -84,10 +102,10 @@ class VoucherRequest < ApplicationRecord
     end
   end
 
-  def populate_explicit_fields
-    self.device_identifier = details["serial-number"]
+  def populate_explicit_fields(hash = details)
+    self.device_identifier = hash["serial-number"]
     self.device            = Device.find_by_number(device_identifier)
-    self.nonce             = details["nonce"]
+    self.nonce             = hash["nonce"]
   end
 
   def issue_voucher(effective_date = Time.now)
