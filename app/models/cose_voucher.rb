@@ -1,0 +1,2 @@
+class CoseVoucher < Voucher
+end

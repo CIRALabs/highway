@@ -27,6 +27,13 @@ RSpec.describe Voucher, type: :model do
     end
   end
 
+  describe "subclasses" do
+    it "should have a COSE and CMS types" do
+      expect(vouchers(:almec_v1).type).to eq("CmsVoucher")
+      expect(vouchers(:vizla_v1).type).to eq("CoseVoucher")
+    end
+  end
+
   describe "json creation" do
     it "should create signed json representation" do
       v1 = vouchers(:almec_v1)

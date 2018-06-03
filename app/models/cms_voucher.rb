@@ -1,0 +1,2 @@
+class CmsVoucher < Voucher
+end

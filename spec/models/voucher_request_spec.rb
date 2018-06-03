@@ -70,7 +70,7 @@ RSpec.describe VoucherRequest, type: :model do
       pubkey = OpenSSL::X509::Certificate.new(IO::read(regfile))
 
       vch = VoucherRequest.from_cbor_cose(token, pubkey)
-      expect(vch).to be        proximity?
+      expect(vch).to    be_proximity
       expect(vch.nonce).to_not be_nil
     end
 
