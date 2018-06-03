@@ -64,6 +64,15 @@ RSpec.describe VoucherRequest, type: :model do
       expect(owner.pubkey).to eq(req14.signing_key)
     end
 
+    it "should load a constrained voucher request into database" do
+      token = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-01-00-09.vch")bb)
+      vch = VoucherRequest.from_cbor_cose(token)
+
+      byebug
+      expect(vch.nonce).to_not be_nil
+    end
+
+
   end
 
 end
