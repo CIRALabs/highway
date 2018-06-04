@@ -2,7 +2,7 @@ class EstController < ApiController
 
   def requestvoucher
     binary_pkcs = Base64.decode64(request.body.read)
-    @voucherreq = VoucherRequest.from_pkcs7(binary_pkcs)
+    @voucherreq = CmsVoucherRequest.from_pkcs7(binary_pkcs)
     # keep the raw encoded request.
     @voucherreq.raw_request = request.body.read
     @voucherreq.originating_ip = request.env["REMOTE_ADDR"]
@@ -24,7 +24,7 @@ class EstController < ApiController
 
   def requestauditlog
     binary_pkcs = Base64.decode64(request.body.read)
-    @voucherreq = VoucherRequest.from_pkcs7(binary_pkcs)
+    @voucherreq = CmsVoucherRequest.from_pkcs7(binary_pkcs)
     @device = @voucherreq.device
     @owner  = @voucherreq.owner
 

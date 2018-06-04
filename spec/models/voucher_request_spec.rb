@@ -17,7 +17,7 @@ RSpec.describe VoucherRequest, type: :model do
   describe "voucher input request" do
     it "should read a voucher request from disk" do
       token = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs"))
-      vr2 = VoucherRequest.from_pkcs7(token)
+      vr2 = CmsVoucherRequest.from_pkcs7(token)
       expect(vr2.device_identifier).to eq("00-D0-E5-F2-00-02")
       expect(vr2.nonce).to eq("Dss99sBr3pNMOACe-LYY7w")
       expect(vr2.owner).to_not be_nil
@@ -36,11 +36,11 @@ RSpec.describe VoucherRequest, type: :model do
 
     it "should not duplicate a byte4byte identical request" do
       token = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs"))
-      vr2 = VoucherRequest.from_pkcs7(token)
+      vr2 = CmsVoucherRequest.from_pkcs7(token)
       expect(vr2.id).to_not be_nil
 
       tok2 = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs"))
-      vr3 = VoucherRequest.from_pkcs7(token)
+      vr3 = CmsVoucherRequest.from_pkcs7(token)
       expect(vr3.id).to eq(vr2.id)
       expect(vr3.device).to eq(devices(:vizsla))
     end
@@ -69,7 +69,7 @@ RSpec.describe VoucherRequest, type: :model do
       regfile= File.join("spec","files","jrc_prime256v1.crt")
       pubkey = OpenSSL::X509::Certificate.new(IO::read(regfile))
 
-      vch = VoucherRequest.from_cbor_cose(token, pubkey)
+      vch = CmsVoucherRequest.from_cbor_cose(token, pubkey)
       expect(vch).to    be_proximity
       expect(vch.nonce).to_not be_nil
     end

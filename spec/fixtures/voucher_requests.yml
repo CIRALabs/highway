@@ -1,4 +1,5 @@
 sample_request1:
+  type: CmsVoucherRequest
   originating_ip: "127.0.0.1:9984"
   nonce: "Y2hhaDJlamVpejdhZUgxVGhhaWthdGVpNVNpaTdqb2gK"
   device_identifier: "abcd12345"
@@ -14,6 +15,7 @@ sample_request1:
 
 voucher13:
   id: 13
+  type: CmsVoucherRequest
   details:
     assertion: proximity
     created-on: '2017-10-12T17:54:30.767+00:00'
@@ -43,6 +45,7 @@ voucher13:
 
 voucher14:
   id: 14
+  type: CmsVoucherRequest
   signing_key: "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAENWQOzcNMUjP0NrtfeBc0DJLWfeMGgCFdIv6FUz4DifM1ujMBec_g6W_P6boTmyTGdFOh_8HwKUerL5bpneK8sg=="
   pledge_request: !binary |-
     MIIHGAYJKoZIhvcNAQcCoIIHCTCCBwUCAQExDzANBglghkgBZQMEAgEFADCC
@@ -103,6 +106,7 @@ voucher14:
 
 voucherreq54:
   id: 54
+  type: CmsVoucherRequest
   details:
     assertion: proximity
     created-on: '2017-10-12T03:44:40.088+00:00'
