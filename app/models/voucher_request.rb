@@ -37,22 +37,6 @@ class VoucherRequest < ApplicationRecord
     save_self_tofixture(fw)
   end
 
-  def prior_voucher_request
-    @prior_voucher_request ||= Chariwt::VoucherRequest.from_pkcs7_withoutkey(pledge_request)
-  end
-
-  def pledge_json
-    @pledge_json ||= prior_voucher_request.inner_attributes
-  end
-
-  def lookup_owner
-    proximity = pledge_json["proximity-registrar-cert"]
-    if proximity
-      self.owner = Owner.find_by_public_key(proximity)
-    end
-    self.owner
-  end
-
   def signing_public_key
     unless signing_key.blank?
       @signing_public_key ||= OpenSSL::PKey.read(Base64.urlsafe_decode64(signing_key))

@@ -17,18 +17,21 @@ class CmsVoucherRequest < VoucherRequest
     voucher
   end
 
-  def self.from_cbor_cose(token, pubkey = nil)
-    vr = Chariwt::VoucherRequest.from_cbor_cose(token, pubkey)
-    unless vr
-      raise InvalidVoucherRequest
-    end
-    hash = vr.sanitized_hash
-    voucher = create(details: hash, voucher_request: token)
-    #voucher.request = vr
-    voucher.populate_explicit_fields(vr.vrhash)
-    voucher.extract_prior_signed_voucher_request(vr)
+  def pledge_json
+    @pledge_json ||= prior_voucher_request.inner_attributes
+  end
 
-    voucher
+  def lookup_owner
+    proximity = pledge_json["proximity-registrar-cert"]
+    if proximity
+      cooked_key = Chariwt::Voucher.decode_pem(proximity)
+      self.owner = Owner.find_by_public_key(cooked_key)
+    end
+    self.owner
+  end
+
+  def prior_voucher_request
+    @prior_voucher_request ||= Chariwt::VoucherRequest.from_pkcs7_withoutkey(pledge_request)
   end
 
   def extract_prior_signed_voucher_request(cvr)

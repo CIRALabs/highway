@@ -71,10 +71,8 @@ class Owner < ActiveRecord::Base
     Base64.strict_encode64(registrarID)
   end
 
-  def self.find_by_public_key(base64key)
-    decoded = decode_pem(base64key)
-
-    # if failed to dceode, then do not look anything up.
+  def self.find_by_public_key(decoded)
+    # if failed to decode, then do not look anything up.
     return nil unless decoded
 
     # must canonicalize the key by decode and then der.
