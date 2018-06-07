@@ -7,7 +7,7 @@ RSpec.describe 'BRSKI EST API', type: :request do
     it "POST /.well-known/est/requestvoucher" do
       # make an HTTPS request for a new voucher
       # this is section 3.3 of RFCXXXX/draft-ietf-anima-dtbootstrap-anima-keyinfra
-      token = File.read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
+      token = open("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
       post "/.well-known/est/requestvoucher", params: token, headers: {
              'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
              'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'

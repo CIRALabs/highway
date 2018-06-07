@@ -1,8 +1,14 @@
 class CoseVoucherRequest < VoucherRequest
 
   def self.from_cbor_cose(token, pubkey = nil)
+    from_cbor_cose(StringIO.new(token), pubkey)
+  end
 
-    vr = Chariwt::VoucherRequest.from_cbor_cose(token, pubkey)
+  def self.from_cbor_cose_io(iotoken, pubkey = nil)
+    iotoken = StringIO.new(iotoken.read)
+    token   = iotoken.read
+    iotoken.pos = 0  # rewind.
+    vr = Chariwt::VoucherRequest.from_cbor_cose_io(iotoken, pubkey)
     unless vr
       raise InvalidVoucherRequest
     end
