@@ -34,6 +34,52 @@ RSpec.describe 'BRSKI EST API', type: :request do
       expect(response).to have_http_status(404)
     end
 
+    it "POST a voucher request, with an invalid content_type" do
+      token = open("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
+
+      expect {
+        post "/.well-known/est/requestvoucher", params: token, headers: {
+               'CONTENT_TYPE' => 'text/plain',
+               'ACCEPT'       => 'application/voucher-cose+cbor',
+             }
+      }.to change { ActionMailer::Base.deliveries.count }.by(0)
+
+      expect(response).to have_http_status(406)
+      expect(response.location).to_not be_nil
+    end
+
+    it "POST a constrained voucher request, without a client certificate" do
+      token = open("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
+
+      expect {
+        post "/.well-known/est/requestvoucher", params: token, headers: {
+               'CONTENT_TYPE' => 'application/voucher-cose+cbor',
+               'ACCEPT'       => 'application/voucher-cose+cbor'
+             }
+      }.to change { ActionMailer::Base.deliveries.count }.by(1)
+
+      expect(response).to have_http_status(406)
+      expect(response.location).to_not be_nil
+    end
+
+    it "POST a constrained voucher request and get a constrained voucher" do
+      token = open("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
+      regfile= File.join("spec","files","jrc_prime256v1.crt")
+      pubkey_pem = IO::read(regfile)
+
+      expect {
+        post "/.well-known/est/requestvoucher", params: token, headers: {
+               'CONTENT_TYPE' => 'application/voucher-cose+cbor',
+               'ACCEPT'       => 'application/voucher-cose+cbor',
+               'SSL_CLIENT_CERT'=> pubkey_pem
+             }
+      }.to change { ActionMailer::Base.deliveries.count }.by(1)
+
+      expect(response).to have_http_status(201)
+      byebug
+      expect(response.location).to_not be_nil
+    end
+
   end
 
   describe "audit log request" do
