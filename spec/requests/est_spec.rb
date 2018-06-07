@@ -27,7 +27,8 @@ RSpec.describe 'BRSKI EST API', type: :request do
       expect {
         post "/.well-known/est/requestvoucher", params: token, headers: {
                'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
-               'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
+               'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher',
+               'SSL_CLIENT_CERT'=> pubkey_pem
              }
 
       }.to change { ActionMailer::Base.deliveries.count }.by(1)
