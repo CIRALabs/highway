@@ -23,6 +23,12 @@ class EstController < ApiController
     else
       head 406,
            text: "unknown voucher-request content-type: #{request.content_type}"
+      return
+    end
+
+    unless @voucherreq
+      head 404, text: 'missing voucher request'
+      return
     end
 
     if clientcert_pem

@@ -47,7 +47,6 @@ RSpec.describe 'BRSKI EST API', type: :request do
       }.to change { ActionMailer::Base.deliveries.count }.by(0)
 
       expect(response).to have_http_status(406)
-      expect(response.location).to_not be_nil
     end
 
     it "POST a constrained voucher request, without a client certificate" do
