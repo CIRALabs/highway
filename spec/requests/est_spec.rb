@@ -7,7 +7,7 @@ RSpec.describe 'BRSKI EST API', type: :request do
     it "POST /.well-known/est/requestvoucher" do
       # make an HTTPS request for a new voucher
       # this is section 3.3 of RFCXXXX/draft-ietf-anima-dtbootstrap-anima-keyinfra
-      token = open("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
+      token = File.read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
       post "/.well-known/est/requestvoucher", params: token, headers: {
              'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
              'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
@@ -21,7 +21,8 @@ RSpec.describe 'BRSKI EST API', type: :request do
     it "POST /.well-known/est/requestvoucher" do
       # make an HTTPS request for a new device which does not belong
       # to the MASA ---> it will produce an email about that.
-      token = File.read("spec/files/parboiled_vr-00-D0-E5-02-00-20.pkcs")
+      pubkey_pem = IO::read(File.join("spec","files","jrc_prime256v1.crt"))
+      token = IO::read("spec/files/parboiled_vr-00-D0-E5-02-00-20.pkcs")
 
       expect {
         post "/.well-known/est/requestvoucher", params: token, headers: {
@@ -35,7 +36,7 @@ RSpec.describe 'BRSKI EST API', type: :request do
     end
 
     it "POST a voucher request, with an invalid content_type" do
-      token = open("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
+      token = IO::read("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
 
       expect {
         post "/.well-known/est/requestvoucher", params: token, headers: {
@@ -49,7 +50,7 @@ RSpec.describe 'BRSKI EST API', type: :request do
     end
 
     it "POST a constrained voucher request, without a client certificate" do
-      token = open("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
+      token = IO::read("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
 
       expect {
         post "/.well-known/est/requestvoucher", params: token, headers: {
@@ -63,7 +64,7 @@ RSpec.describe 'BRSKI EST API', type: :request do
     end
 
     it "POST a constrained voucher request and get a constrained voucher" do
-      token = open("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
+      token = IO::read("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
       regfile= File.join("spec","files","jrc_prime256v1.crt")
       pubkey_pem = IO::read(regfile)
 
@@ -86,7 +87,7 @@ RSpec.describe 'BRSKI EST API', type: :request do
     it "expect f20002 to be empty" do
       # make an HTTPS request for a history of owners for a device.
       # this is section 5.7 of RFCXXXX/draft-ietf-anima-dtbootstrap-anima-keyinfra
-      token = File.read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
+      token = IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
       post "/.well-known/est/requestauditlog", params: token, headers: {
              'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
              'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
@@ -97,7 +98,7 @@ RSpec.describe 'BRSKI EST API', type: :request do
 
     it "expect f20003 to have one owner which is not this one" do
       pending "needs an another parboiled voucher request"
-      token = File.read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
+      token = IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
       post "/.well-known/est/requestauditlog", params: token, headers: {
              'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
              'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
@@ -113,7 +114,7 @@ RSpec.describe 'BRSKI EST API', type: :request do
     it "expect f20002 to have one owner" do
       # make an HTTPS request for a history of owners for a device.
       # this is section 5.7 of RFCXXXX/draft-ietf-anima-dtbootstrap-anima-keyinfra
-      token = File.read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
+      token = IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
       post "/.well-known/est/requestvoucher", params: token, headers: {
              'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
              'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
