@@ -10,7 +10,6 @@ class EstController < ApiController
 
     @replytype  = request.content_type
 
-
     case request.content_type
     when 'application/pkcs7-mime; smime-type=voucher-request',
          'application/pkcs7-mime',
@@ -22,6 +21,7 @@ class EstController < ApiController
       begin
         @voucherreq = CoseVoucherRequest.from_cbor_cose_io(request.body, clientcert)
       rescue VoucherRequest::InvalidVoucherRequest
+        DeviceNotifierMailer.invalid_voucher_request(request).deliver
         head 406,
              text: "voucher request was not signed with known public key"
         return
