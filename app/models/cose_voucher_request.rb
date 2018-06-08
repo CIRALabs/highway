@@ -8,7 +8,12 @@ class CoseVoucherRequest < VoucherRequest
     iotoken = StringIO.new(iotoken.read)
     token   = iotoken.read
     iotoken.pos = 0  # rewind.
-    vr = Chariwt::VoucherRequest.from_cbor_cose_io(iotoken, pubkey)
+    begin
+      vr = Chariwt::VoucherRequest.from_cbor_cose_io(iotoken, pubkey)
+    rescue Chariwt::Voucher::MissingPublicKey
+      raise InvalidVoucherRequest
+    end
+
     unless vr
       raise InvalidVoucherRequest
     end

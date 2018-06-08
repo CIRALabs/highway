@@ -57,10 +57,9 @@ RSpec.describe 'BRSKI EST API', type: :request do
                'CONTENT_TYPE' => 'application/voucher-cose+cbor',
                'ACCEPT'       => 'application/voucher-cose+cbor'
              }
-      }.to change { ActionMailer::Base.deliveries.count }.by(1)
+      }.to change { ActionMailer::Base.deliveries.count }.by(0)
 
       expect(response).to have_http_status(406)
-      expect(response.location).to_not be_nil
     end
 
     it "POST a constrained voucher request and get a constrained voucher" do
