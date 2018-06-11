@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180603201952) do
+ActiveRecord::Schema.define(version: 20180611025219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,14 +68,15 @@ ActiveRecord::Schema.define(version: 20180603201952) do
     t.text     "originating_ip"
     t.text     "nonce"
     t.text     "device_identifier"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.binary   "raw_request"
     t.binary   "voucher_request"
     t.binary   "pledge_request"
-    t.text     "raw_request"
     t.text     "signing_key"
     t.text     "prior_signing_key"
     t.text     "type"
+    t.boolean  "validated",         default: false
   end
 
   create_table "vouchers", force: :cascade do |t|

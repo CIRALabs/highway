@@ -49,6 +49,20 @@ class VoucherRequest < ApplicationRecord
     self.nonce             = hash["nonce"]
   end
 
+  def validated!
+    self.validated = true
+  end
+
+  def validate_prior!
+    if prior_voucher_request.verify_with_key(owner.certder)
+      self.signing_key = owner.pubkey
+      self.validated!
+    else
+      # or raise?
+      return false
+    end
+  end
+
   def issue_voucher(effective_date = Time.now)
 
     # at a minimum, this must be before a device that belongs to us!
@@ -65,7 +79,7 @@ class VoucherRequest < ApplicationRecord
 
     # validate that the signature on the prior-signed-voucher-request
     # is from the key which was assigned to the device.
-    return nil,:rawvoucherinvalid unless device.signing_key?(prior_voucher_request.signing_cert)
+    return nil,:rawvoucherinvalid unless validated?
 
     # XXX if there is another valid voucher for this device, it must be for
     # the same owner.

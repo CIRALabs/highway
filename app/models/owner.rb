@@ -11,6 +11,7 @@ class Owner < ActiveRecord::Base
     Chariwt::Voucher.decode_pem(pemstuff)
   end
 
+  # returns an OpenSSL certificate object made by decoding the stored PEM.
   def certder
     if self.certificate
       @cert ||= OpenSSL::X509::Certificate.new(decode_pem(self.certificate))
