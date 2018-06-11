@@ -16,6 +16,7 @@ sample_request1:
 voucher13:
   id: 13
   type: CmsVoucherRequest
+  validated: true
   details:
     assertion: proximity
     created-on: '2017-10-12T17:54:30.767+00:00'
