@@ -19,18 +19,18 @@ class CoseVoucherRequest < VoucherRequest
     end
     hash = vr.sanitized_hash
     voucher = create(details: hash, voucher_request: token)
+    voucher.validated=false
+    voucher.raw_request = Base64.urlsafe_encode64(token)
     #voucher.request = vr
-    voucher.populate_explicit_fields(vr.vrhash)
-
     voucher.extract_prior_signed_voucher_request(vr)
-    voucher.signing_key = pubkey
+    voucher.populate_explicit_fields(voucher.prior_voucher_request.attributes)
     voucher.lookup_owner
-
+    voucher.validate_prior!
     voucher
   end
 
   def pledge_cbor
-    @pledge_cbor ||= prior_voucher_request.inner_attributes
+    @pledge_cbor ||= prior_voucher_request.attributes
   end
 
   def lookup_owner
@@ -47,11 +47,12 @@ class CoseVoucherRequest < VoucherRequest
   end
 
   def extract_prior_signed_voucher_request(cvr)
-    self.pledge_request    = cvr.priorSignedVoucherRequest
-
-    if cvr.signing_cert and prior_voucher_request.signing_cert
-      self.prior_signing_key = Base64.urlsafe_encode64(prior_voucher_request.try(:signing_cert).public_key.to_der)
-    end
+    self.pledge_request = cvr.priorSignedVoucherRequest
   end
+
+  def generate_voucher(owner, device, effective_date, nonce, expires = nil)
+    CoseVoucher.create_voucher(owner, device, effective_date, nonce, expires)
+  end
+
 
 end

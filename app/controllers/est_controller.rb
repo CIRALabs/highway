@@ -42,18 +42,17 @@ class EstController < ApiController
     end
 
     # keep the raw encoded request.
-    @voucherreq.raw_request = request.body.read
     @voucherreq.originating_ip = request.env["REMOTE_ADDR"]
 
+    byebug
     @voucherreq.save!
-    #byebug
-    @voucher,reason = @voucherreq.issue_voucher
+    @voucher,@reason = @voucherreq.issue_voucher
 
-    if reason == :ok and @voucher
+    if @reason == :ok and @voucher
       json_response(@voucher.as_issued, :ok, @replytype)
     else
-      logger.error "no voucher issued for #{request.env["REMOTE_ADDR"]}, reason: #{reason.to_s}"
-      head 404, text: reason.to_s
+      logger.error "no voucher issued for #{request.env["REMOTE_ADDR"]}, reason: #{@reason.to_s}"
+      head 404, text: @reason.to_s
     end
   end
 

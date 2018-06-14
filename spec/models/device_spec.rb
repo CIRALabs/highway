@@ -117,4 +117,23 @@ RSpec.describe Device, type: :model do
       expect(b1).to_not be_nil
     end
   end
+
+  describe "signed voucher requests" do
+    it "should load a constrained prior-signed (pledge) voucher request, and validate it" do
+      # this file created with reach.
+      token  = open("spec/files/vr_00-D0-E5-F2-10-03.vch")
+
+      pvch = Chariwt::VoucherRequest.from_cose_withoutkey(token)
+
+      idevid = pvch.attributes["proximity-registrar-cert"]
+      expect(idevid).to_not be_nil
+
+      owner = Owner.find_by_public_key(idevid)
+      expect(owner).to                 be_present
+
+      expect(vch.validate_prior!).to be_truthy
+      expect(pvch.verify_with_key(owner.certder)).to be_truthy
+    end
+  end
+
 end

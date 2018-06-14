@@ -83,3 +83,36 @@ device14:
     zone: *2
     time: *3
   serial_number: 00-D0-E5-F2-00-03
+
+f21003:
+  id: 15
+  eui64: 00-d0-e5-f2-10-03
+  pub_key: |
+    -----BEGIN CERTIFICATE-----
+    MIICMTCCAbegAwIBAgIBAzAKBggqhkjOPQQDAjBNMRIwEAYKCZImiZPyLGQBGRYC
+    Y2ExGTAXBgoJkiaJk/IsZAEZFglzYW5kZWxtYW4xHDAaBgNVBAMME1Vuc3RydW5n
+    IEhpZ2h3YXkgQ0EwIBcNMTgwNTMxMDEwMjEyWhgPMjk5OTEyMzEwMDAwMDBaMEsx
+    EjAQBgoJkiaJk/IsZAEZFgJjYTEZMBcGCgmSJomT8ixkARkWCXNhbmRlbG1hbjEa
+    MBgGA1UEAwwRMDAtRDAtRTUtRjItMTAtMDMwWTATBgcqhkjOPQIBBggqhkjOPQMB
+    BwNCAASQsqxhK/7dv8csllANgsUti/7MrBJw93U2+ff1QOAU8W6xmuwSyg2M2L/e
+    qKqUWYoQV/P66u8Z/E/O/E4ijtrLo4GHMIGEMB0GA1UdDgQWBBRmK7Olr5x/Ecnl
+    Po3ArfCMmxzsTDAJBgNVHRMEAjAAMCsGA1UdEQQkMCKgIAYJKwYBBAGC7lIBoBMM
+    ETAwLUQwLUU1LUYyLTEwLTAzMCsGCSsGAQQBgu5SAgQeDBxodHRwczovL2hpZ2h3
+    YXkuc2FuZGVsbWFuLmNhMAoGCCqGSM49BAMCA2gAMGUCMQDKrnmayytFkv/Rdtuz
+    OLBzGJVsEIyHoEkXXnm2x0A+TtN+IijfHsGZ7/iPwL9ZFt0CMFeiO0ZcdWor2u6i
+    fTwjbrw45FUZSYyk9CvF7jAXchX2/awRLhfBq579arxnkw6p/Q==
+    -----END CERTIFICATE-----
+  owner_id: 1
+  model_id:
+  notes:
+  created_at: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &1 2018-05-31 01:02:12.873962000 Z
+    zone: &2 !ruby/object:ActiveSupport::TimeZone
+      name: Etc/UTC
+    time: *1
+  updated_at: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &3 2018-05-31 01:02:12.880190000 Z
+    zone: *2
+    time: *3
+  serial_number: 00-D0-E5-F2-10-03
+  

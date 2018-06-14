@@ -68,11 +68,19 @@ RSpec.describe VoucherRequest, type: :model do
       pubkey = OpenSSL::X509::Certificate.new(IO::read(regfile))
 
       vch = CoseVoucherRequest.from_cbor_cose_io(token, pubkey)
-      expect(vch).to    be_proximity
-      expect(vch.owner).to be_present
+      expect(vch).to                       be_proximity
+      expect(vch.owner).to                 be_present
+      expect(vch.device_identifier).to_not be_nil
+      expect(vch.device).to                be_present
+
+      # now see if the looked up owner has a public key to validate the prior
+      # signed voucher key.
+      expect(vch.validate_prior!).to be_truthy
+
+      voucher,reason = vch.issue_voucher
+      expect(reason).to be :ok
+      expect(voucher).to_not be_nil
     end
-
-
   end
 
 end

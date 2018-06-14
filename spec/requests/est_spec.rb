@@ -73,9 +73,10 @@ RSpec.describe 'BRSKI EST API', type: :request do
                'ACCEPT'       => 'application/voucher-cose+cbor',
                'SSL_CLIENT_CERT'=> pubkey_pem
              }
+        expect(assigns(:reason)).to be :ok
+        expect(response).to have_http_status(201)
       }.to change { ActionMailer::Base.deliveries.count }.by(1)
 
-      expect(response).to have_http_status(201)
       byebug
       expect(response.location).to_not be_nil
     end
