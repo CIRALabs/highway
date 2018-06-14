@@ -44,7 +44,6 @@ class EstController < ApiController
     # keep the raw encoded request.
     @voucherreq.originating_ip = request.env["REMOTE_ADDR"]
 
-    byebug
     @voucherreq.save!
     @voucher,@reason = @voucherreq.issue_voucher
 

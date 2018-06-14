@@ -12,8 +12,9 @@ class CmsVoucherRequest < VoucherRequest
     end
     voucher = from_json(cvr.inner_attributes, token)
     voucher.extract_prior_signed_voucher_request(cvr)
+    voucher.populate_explicit_fields
     voucher.signing_key = Base64.urlsafe_encode64(cvr.signing_cert.public_key.to_der)
-    voucher.save!
+
     voucher.lookup_owner
     voucher.validate_prior!
     voucher.save!
