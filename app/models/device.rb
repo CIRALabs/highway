@@ -70,6 +70,10 @@ class Device < ActiveRecord::Base
     @certificate ||= OpenSSL::X509::Certificate.new(self.pub_key)
   end
 
+  def pubkey
+    self[:pub_key]
+  end
+
   # compare a given key to the key that has been given to this device.
   def signing_key?(othercert)
     case

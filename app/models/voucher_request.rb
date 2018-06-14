@@ -54,8 +54,8 @@ class VoucherRequest < ApplicationRecord
   end
 
   def validate_prior!
-    if prior_voucher_request.verify_with_key(owner.certder)
-      self.signing_key = owner.pubkey
+    if prior_voucher_request.verify_with_key(device.certificate)
+      self.signing_key = device.pubkey
       self.validated!
     else
       # or raise?
@@ -73,9 +73,6 @@ class VoucherRequest < ApplicationRecord
 
     # must have an owner!
     return nil,:ownerunknown unless owner
-
-    # here we have to validate the prior signed voucher
-    return nil,:ownermisidentified unless owner.pubkey == signing_key
 
     # validate that the signature on the prior-signed-voucher-request
     # is from the key which was assigned to the device.

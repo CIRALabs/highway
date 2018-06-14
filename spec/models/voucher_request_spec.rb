@@ -30,8 +30,6 @@ RSpec.describe VoucherRequest, type: :model do
 
       # save it for examination elsewhere (and use by Registrar tests)
       expect(Chariwt.cmp_pkcs_file(voucher.as_issued, "voucher_#{voucher.device_identifier}")).to be true
-
-      expect(voucher.owner.pubkey).to eq(vr2.signing_key)
     end
 
     it "should not duplicate a byte4byte identical request" do

@@ -40,4 +40,5 @@ RSpec.describe Owner, type: :model do
       expect(o1.pubkey_object).to_not be_nil
     end
   end
+
 end

@@ -37,7 +37,8 @@ class Voucher < ActiveRecord::Base
     unless nonce
       voucher.expires_on = expires
     end
-    voucher.pkcs_sign!(effective_date)
+
+    voucher.sign!(effective_date)
     voucher
   end
 
