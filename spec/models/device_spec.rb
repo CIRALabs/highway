@@ -134,6 +134,7 @@ RSpec.describe Device, type: :model do
       # validate that the voucher was signed by a device
       serialnumber = pvch.attributes["serial-number"]
       expect(serialnumber).to_not be_nil
+
       device = Device.find_by_number(serialnumber)
       expect(device).to                be_present
 

@@ -74,11 +74,8 @@ RSpec.describe 'BRSKI EST API', type: :request do
                'SSL_CLIENT_CERT'=> pubkey_pem
              }
         expect(assigns(:reason)).to be :ok
-        expect(response).to have_http_status(201)
+        expect(response).to have_http_status(200)
       }.to change { ActionMailer::Base.deliveries.count }.by(1)
-
-      byebug
-      expect(response.location).to_not be_nil
     end
 
   end
