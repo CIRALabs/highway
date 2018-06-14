@@ -39,6 +39,8 @@ gem 'sass-rails'
 gem 'devise', git: 'https://github.com/plataformatec/devise.git', branch: 'master'
 
 gem 'ecdsa',   :git => 'https://github.com/AnimaGUS-minerva/ruby_ecdsa.git', :branch => 'ecdsa_interface_openssl'
+#gem 'ecdsa',   :path => '../minerva/ruby_ecdsa'
+
 gem 'chariwt', :path => '../chariwt'
 #gem 'chariwt', :git => 'https://github.com/mcr/ChariWTs.git'
 gem 'jwt'
