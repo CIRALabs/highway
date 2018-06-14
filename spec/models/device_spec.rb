@@ -123,16 +123,21 @@ RSpec.describe Device, type: :model do
       # this file created with reach.
       token  = open("spec/files/vr_00-D0-E5-F2-10-03.vch")
 
-      pvch = Chariwt::VoucherRequest.from_cose_withoutkey(token)
+      pvch = Chariwt::VoucherRequest.from_cose_withoutkey_io(token)
 
-      idevid = pvch.attributes["proximity-registrar-cert"]
-      expect(idevid).to_not be_nil
-
-      owner = Owner.find_by_public_key(idevid)
+      # validate that the registry was nearby
+      ownercert = pvch.attributes["proximity-registrar-cert"]
+      expect(ownercert).to_not be_nil
+      owner = Owner.find_by_public_key(ownercert)
       expect(owner).to                 be_present
 
-      expect(vch.validate_prior!).to be_truthy
-      expect(pvch.verify_with_key(owner.certder)).to be_truthy
+      # validate that the voucher was signed by a device
+      serialnumber = pvch.attributes["serial-number"]
+      expect(serialnumber).to_not be_nil
+      device = Device.find_by_number(serialnumber)
+      expect(device).to                be_present
+
+      expect(pvch.verify_with_key(device.certificate)).to be_truthy
     end
   end
 
