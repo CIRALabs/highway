@@ -48,7 +48,7 @@ class EstController < ApiController
     @voucher,@reason = @voucherreq.issue_voucher
 
     if @reason == :ok and @voucher
-      json_response(@voucher.as_issued, :ok, @replytype)
+      api_response(@voucher.as_issued, :ok, @replytype)
     else
       logger.error "no voucher issued for #{request.env["REMOTE_ADDR"]}, reason: #{@reason.to_s}"
       head 404, text: @reason.to_s
@@ -62,7 +62,7 @@ class EstController < ApiController
     @owner  = @voucherreq.owner
 
     if @device.device_owned_by?(@owner)
-      json_response(@device.audit_log, :ok,
+      api_response(@device.audit_log, :ok,
                     'application/json')
     else
       head 404, text: 'invalid device'

@@ -15,7 +15,7 @@ class StatusController < ActionController::Base
       format.json {
         data = Hash.new
         @stats.each { |n| data[n[0]]=n[1] }
-        json_response(data, :ok, 'application/json')
+        api_response(data, :ok, 'application/json')
       }
     end
   end
