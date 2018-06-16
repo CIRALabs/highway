@@ -76,6 +76,10 @@ RSpec.describe 'BRSKI EST API', type: :request do
         expect(assigns(:reason)).to be :ok
         expect(response).to have_http_status(200)
       }.to change { ActionMailer::Base.deliveries.count }.by(1)
+
+      outfilename = File.join("tmp", "voucher_00-D0-E5-F2-10-03.vch")
+      File.open(outfilename, "wb") do |f| f.write response.body end
+
     end
 
   end
