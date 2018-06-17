@@ -10,14 +10,24 @@ class EstController < ApiController
 
     @replytype  = request.content_type
 
-    case request.content_type
-    when 'application/pkcs7-mime; smime-type=voucher-request',
-         'application/pkcs7-mime',
-         'application/voucher-cms+json'
+    media_types = HTTP::Accept::MediaTypes.parse(request.env['CONTENT_TYPE'])
+
+    if media_types == nil or media_types.length < 1
+      head 406,
+           text: "unknown voucher-request content-type: #{request.content_type}"
+      return
+    end
+    media_type = media_types.first
+
+    case
+    when ((media_type.mime_type  == 'application/pkcs7-mime' and
+           media_type.parameters == { 'smime-type' => 'voucher-request'} ) or
+          (media_type.mime_type == 'application/voucher-cms+json'))
+
       binary_pkcs = Base64.decode64(request.body.read)
       @voucherreq = CmsVoucherRequest.from_pkcs7(binary_pkcs)
 
-    when 'application/voucher-cose+cbor'
+    when (media_type.mime_type == 'application/voucher-cose+cbor')
       begin
         @voucherreq = CoseVoucherRequest.from_cbor_cose_io(request.body, clientcert)
       rescue VoucherRequest::InvalidVoucherRequest
@@ -42,15 +52,45 @@ class EstController < ApiController
     end
 
     # keep the raw encoded request.
-    @voucherreq.originating_ip = request.env["REMOTE_ADDR"]
+    @voucherreq.originating_ip = request.ip
 
     @voucherreq.save!
     @voucher,@reason = @voucherreq.issue_voucher
 
+    @answered = false
     if @reason == :ok and @voucher
-      api_response(@voucher.as_issued, :ok, @replytype)
+
+      accept_types = HTTP::Accept::MediaTypes.parse(request.content_type)
+      accept_types.each { |type|
+
+        case
+        when type.mime_type == 'multipart/mixed'
+          logger.debug "returning multipart"
+
+        when ((type.mime_type == 'application/pkcs7-mime' and
+               type.parameters == { 'smime-type' => 'voucher'}) or
+              (type.mime_type == 'application/pkcs7-mime' and
+               type.parameters == { } )                         or
+              (type.mime_type == 'application/voucher-cms+json'))
+          api_response(@voucher.as_issued, :ok, @replytype)
+          @answered = true
+
+        when (media_type.mime_type == 'application/voucher-cose+cbor')
+          api_response(@voucher.as_issued, :ok, @replytype)
+          @answered = true
+
+        else
+          logger.debug "accept type: #{type} not recognized"
+          # nothing, inside loop
+        end
+      }
+
+      unless @answered
+        head 406, text: "no acceptable HTTP_ACCEPT type found"
+      end
+
     else
-      logger.error "no voucher issued for #{request.env["REMOTE_ADDR"]}, reason: #{@reason.to_s}"
+      logger.error "no voucher issued for #{request.ip}, reason: #{@reason.to_s}"
       head 404, text: @reason.to_s
     end
   end
