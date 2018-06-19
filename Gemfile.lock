@@ -157,6 +157,7 @@ GEM
     minitest (5.11.3)
     multi_json (1.13.1)
     multipart-post (2.0.0)
+    multipart_body (0.2.1)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (4.2.0)
@@ -295,6 +296,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   jwt
+  multipart_body
   openssl!
   pg (~> 0.15)
   rails (~> 5.0.0)

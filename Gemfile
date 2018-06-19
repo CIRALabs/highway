@@ -42,6 +42,9 @@ gem 'devise', git: 'https://github.com/plataformatec/devise.git', branch: 'maste
 # split off smime-type=voucher in pkcs7-mime, and other parameters
 gem 'http-accept'
 
+# used to generate multipart bodies
+gem 'multipart_body'
+
 gem 'ecdsa',   :git => 'https://github.com/AnimaGUS-minerva/ruby_ecdsa.git', :branch => 'ecdsa_interface_openssl'
 #gem 'ecdsa',   :path => '../minerva/ruby_ecdsa'
 
