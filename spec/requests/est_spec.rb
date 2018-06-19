@@ -79,7 +79,25 @@ RSpec.describe 'BRSKI EST API', type: :request do
 
       outfilename = File.join("tmp", "voucher_00-D0-E5-F2-10-03.vch")
       File.open(outfilename, "wb") do |f| f.write response.body end
+    end
 
+    it "POST a constrained voucher request and get a multipart constrained voucher" do
+      token = IO::read("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
+      regfile= File.join("spec","files","jrc_prime256v1.crt")
+      pubkey_pem = IO::read(regfile)
+
+      expect {
+        post "/.well-known/est/requestvoucher", params: token, headers: {
+               'CONTENT_TYPE' => 'application/voucher-cose+cbor',
+               'ACCEPT'       => 'multipart/mixed',
+               'SSL_CLIENT_CERT'=> pubkey_pem
+             }
+        expect(assigns(:reason)).to be :ok
+        expect(response).to have_http_status(200)
+      }.to change { ActionMailer::Base.deliveries.count }.by(1)
+
+      outfilename = File.join("tmp", "voucher_00-D0-E5-F2-10-03.mvch")
+      File.open(outfilename, "wb") do |f| f.write response.body end
     end
 
   end

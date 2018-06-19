@@ -1,3 +1,5 @@
+require 'multipart_body'
+
 class EstController < ApiController
 
   def requestvoucher
@@ -60,12 +62,15 @@ class EstController < ApiController
     @answered = false
     if @reason == :ok and @voucher
 
-      accept_types = HTTP::Accept::MediaTypes.parse(request.content_type)
+      accept_types = HTTP::Accept::MediaTypes.parse(request.env['HTTP_ACCEPT'])
       accept_types.each { |type|
 
         case
         when type.mime_type == 'multipart/mixed'
-          logger.debug "returning multipart"
+          part1 = Part.new(:body => @voucher.as_issued,    :content_type => 'applpication/voucher-cose+cbor')
+          part2 = Part.new(:body => MasaKeys.masa.masakey, :content_type => 'application/pkcs7-mime; smime-type=certs-only')
+          multipart = MultipartBody.new([part1, part2])
+          api_response(multipart, :ok, 'application/mixed')
 
         when ((type.mime_type == 'application/pkcs7-mime' and
                type.parameters == { 'smime-type' => 'voucher'}) or
