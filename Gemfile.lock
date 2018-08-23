@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/AnimaGUS-minerva/multipart_body.git
+  revision: 47654456f0dcf47f2d9ca2b6e4064e2ec6f2328b
+  branch: binary_http_multipart
+  specs:
+    multipart_body (0.2.0)
+
+GIT
   remote: https://github.com/AnimaGUS-minerva/ruby_ecdsa.git
   revision: c81223b9e1a6201991c5e33477245cc13dca4fac
   branch: ecdsa_interface_openssl
@@ -157,7 +164,6 @@ GEM
     minitest (5.11.3)
     multi_json (1.13.1)
     multipart-post (2.0.0)
-    multipart_body (0.2.1)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (4.2.0)
@@ -296,7 +302,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   jwt
-  multipart_body
+  multipart_body!
   openssl!
   pg (~> 0.15)
   rails (~> 5.0.0)

@@ -67,10 +67,11 @@ class EstController < ApiController
 
         case
         when type.mime_type == 'multipart/mixed'
-          part1 = Part.new(:body => @voucher.as_issued,    :content_type => 'applpication/voucher-cose+cbor')
-          part2 = Part.new(:body => MasaKeys.masa.masakey, :content_type => 'application/pkcs7-mime; smime-type=certs-only')
-          multipart = MultipartBody.new([part1, part2])
-          api_response(multipart, :ok, 'application/mixed')
+          part1 = Part.new(:body => @voucher.as_issued,    :content_type => 'application/voucher-cose+cbor')
+          part2 = Part.new(:body => MasaKeys.masa.masakey.to_pem, :content_type => 'application/pkcs7-mime; smime-type=certs-only')
+          @multipart = MultipartBody.new([part1, part2])
+          raw_response(@multipart, :ok, "application/mixed; boundary=#{@multipart.boundary}")
+          @answered = true
 
         when ((type.mime_type == 'application/pkcs7-mime' and
                type.parameters == { 'smime-type' => 'voucher'}) or
@@ -81,7 +82,7 @@ class EstController < ApiController
           @answered = true
 
         when (media_type.mime_type == 'application/voucher-cose+cbor')
-          api_response(@voucher.as_issued, :ok, @replytype)
+          raw_response(@voucher.as_issued, :ok, @replytype)
           @answered = true
 
         else
