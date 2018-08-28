@@ -52,8 +52,18 @@ namespace :highway do
 
   desc "Sign a MUD json file"
   task :mud_json_sign => :environment do
-    file = ENV['FILE']
+    file    = ENV['FILE']
+    sigfilename = File.join(file, ".sig")
+    if ENV['SIGFILE']
+      sigfilename = ENV['SIGFILE']
+    end
     muddata = File.read(file)
+
+    flags  = OpenSSL::PKCS7::NOCERTS | OpenSSL::PKCS7::DETACHED
+    smime  = OpenSSL::PKCS7.sign(signing_cert, privkey, muddata, [], flags )
+    signed = Base64.strict_encode64(smime.to_der)
+    File.create(sigfilename, "wb") do |sigfile| sigfile.write signed end
+
   end
 
 end
