@@ -11,51 +11,49 @@
                 "access-list": [
                     {
                         "name": "inbound-stuff"
-                    },
+                    }
                 ]
             }
         }
     },
-   "ietf-access-control-list:acls":  {
-     "acl": [
-         {
-             "name": "inbound-stuff",
-             "type" : "ipv4-acl-type",
+    "ietf-access-control-list:acls":  {
+        "acl": [
+            {
+                "name": "inbound-stuff",
+                "type" : "ipv4-acl-type",
 
-             "ietf-mud:direction" : "to-device",  ??
-
-             "aces": {
-                 "ace": [
-                     {
-                         "name": "access-cloud",
-                         "matches": {
-                             "ipv4" : {
-                                 "ietf-acldns:s:qrc-dnsname": "lighting-system.example.com",
-                                 "protocol" : 6
-                             },
-                             "ipv6" : {
-                                 "ietf-acldns:s:qrc-dnsname": "lighting-system.example.com",
-                                 "protocol" : 6,
-                             },
-                             "tcp": {
-				 "ietf-mud:direction-initiated": "from-device",
-				 "destination-port": {
-				     "operator": "eq",
-				     "port": 9000
-				 },
-				 "source-port": {
-				     "operator": "eq",
-				     "port": 443
-				 },
-                             },
-                             "actions" : {
-                                 "forwarding" : "ACCEPT"
-                             },
-                         },
-                     },
-                 ],
-	     },
-         },
-     },
-   },
+                "aces": {
+                    "ace": [
+                        {
+                            "name": "access-cloud",
+                            "matches": {
+                                "ipv4" : {
+                                    "ietf-acldns:s:qrc-dnsname": "lighting-system.example.com",
+                                    "protocol" : 6
+                                },
+                                "ipv6" : {
+                                    "ietf-acldns:s:qrc-dnsname": "lighting-system.example.com",
+                                    "protocol" : 6
+                                },
+                                "tcp": {
+				    "ietf-mud:direction-initiated": "from-device",
+				    "destination-port": {
+				        "operator": "eq",
+				        "port": 9000
+				    },
+				    "source-port": {
+				        "operator": "eq",
+				        "port": 443
+				    }
+                                },
+                                "actions" : {
+                                    "forwarding" : "ACCEPT"
+                                }
+                            }
+                        }
+                    ]
+	        }
+            }
+        ]
+    }
 }
