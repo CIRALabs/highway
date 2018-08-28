@@ -5,7 +5,7 @@ namespace :highway do
   desc "Create a certificate for the MASA to sign MUD objects"
   task :bootstrap_mud => :environment do
 
-    curve = HighwayKeys.ca.curve
+    curve = MudKeys.ca.curve
 
     certdir = Rails.root.join('db').join('cert')
     FileUtils.mkpath(certdir)
@@ -57,12 +57,30 @@ namespace :highway do
     if ENV['SIGFILE']
       sigfilename = ENV['SIGFILE']
     end
-    muddata = File.read(file)
+    outfilename = File.join(file, ".json")
+    if ENV['OUTFILE']
+      outfilename = ENV['OUTFILE']
+    end
 
-    flags  = OpenSSL::PKCS7::NOCERTS | OpenSSL::PKCS7::DETACHED
-    smime  = OpenSSL::PKCS7.sign(signing_cert, privkey, muddata, [], flags )
-    signed = Base64.strict_encode64(smime.to_der)
-    File.create(sigfilename, "wb") do |sigfile| sigfile.write signed end
+    rawjson = File.read(file)
+
+    sigurl      = File.basename(sigfilename)
+
+    # the mudjson must have the mud-signature URL inserted into it.
+    muddata = JSON::parse(rawjson)
+
+    muddata["ietf-mud:mud"]["mud-signature"] = sigurl
+
+    cookedjson = muddata.to_json
+
+    privkey = MudKeys.mud.mudprivkey
+    signing_cert = MudKeys.mud.mudkey
+
+    flags  = OpenSSL::PKCS7::DETACHED
+    flags |= OpenSSL::PKCS7::BINARY | OpenSSL::PKCS7::NOSMIMECAP
+    signature= OpenSSL::PKCS7.sign(signing_cert, privkey, cookedjson, [], flags )
+    File.open(sigfilename, "wb") do |sigfile| sigfile.write signature.to_der  end
+    File.open(outfilename, "wb") do |outfile| outfile.write cookedjson end
 
   end
 
