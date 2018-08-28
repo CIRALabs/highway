@@ -76,6 +76,8 @@ group :development do
   #  in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 
+  gem 'sprockets', "~> 3.7.2"
+
   # sometimes does not get installed by default
   gem 'rb-readline'
 
