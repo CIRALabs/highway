@@ -97,7 +97,11 @@ RSpec.describe 'BRSKI EST API', type: :request do
       }.to change { ActionMailer::Base.deliveries.count }.by(1)
 
       outfilename = File.join("tmp", "voucher_00-D0-E5-F2-10-03.mvch")
-      File.open(outfilename, "wb") do |f| f.write response.body end
+      File.open(outfilename, "wb") do |f|
+        f.write "Content-Type: " + response.headers['Content-Type']
+        f.write "\n\n"
+        f.write response.body
+      end
     end
 
   end
