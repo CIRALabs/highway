@@ -33,4 +33,20 @@ RSpec.describe SystemVariable, type: :model do
     expect(g.number).to eq(3)
   end
 
+  it "should generate a sequence of random numbers" do
+    l = SystemVariable.nextval(:counter)
+    expect(l).to eq(1)
+
+    l = SystemVariable.randomseq(:counter)
+    expect(l).to_not eq 0
+    #puts "l: #{l}"
+    l = SystemVariable.randomseq(:counter)
+    expect(l).to_not eq 0
+    #puts "l: #{l}"
+    l = SystemVariable.randomseq(:counter)
+    expect(l).to_not eq 0
+    #puts "l: #{l}"
+  end
+
+
 end
