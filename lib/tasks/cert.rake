@@ -2,8 +2,8 @@
 
 namespace :highway do
 
-  desc "Create initial self-signed CA certificate"
-  task :bootstrap_ca => :environment do
+  desc "Create initial self-signed CA certificate, or resign existing one"
+  task :h0_bootstrap_ca => :environment do
 
     # X25519 is for key-agreement only.
     #curve='X25519'
@@ -26,7 +26,7 @@ namespace :highway do
     root_ca  = OpenSSL::X509::Certificate.new
     # cf. RFC 5280 - to make it a "v3" certificate
     root_ca.version = 2
-    root_ca.serial  = SystemVariable.nextval(:serialnumber)
+    root_ca.serial  = SystemVariable.randomseq(:serialnumber)
     dn = sprintf("/DC=ca/DC=sandelman/CN=%s", SystemVariable.string(:hostname))
     root_ca.subject = OpenSSL::X509::Name.parse dn
 
