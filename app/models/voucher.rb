@@ -22,6 +22,10 @@ class Voucher < ActiveRecord::Base
     DeviceNotifierMailer.voucher_issued_email(self).deliver
   end
 
+  def signing_cert
+    MasaKeys.masa.masakey
+  end
+
   def self.create_voucher(owner, device, effective_date, nonce = nil, expires = nil)
     voucher = create(owner: owner,
                      device: device,
