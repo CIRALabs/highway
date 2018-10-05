@@ -18,9 +18,7 @@ class HighwayKeys
   end
 
   def serial
-    @serial ||= 2
-    @serial += 1
-    @serial
+    SystemVariable.randomseq(:serialnumber)
   end
 
   def digest

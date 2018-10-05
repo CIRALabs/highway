@@ -8,10 +8,10 @@ class MasaKeys < HighwayKeys
   end
 
   def curve
-    'secp384r1'
+    'prime256v1'
   end
   def algorithm
-    'ES384'
+    'ES256'
   end
 
   def self.masa

@@ -3,7 +3,7 @@
 namespace :highway do
 
   desc "Create initial self-signed CA certificate, or resign existing one"
-  task :h0_bootstrap_ca => :environment do
+  task :h1_bootstrap_ca => :environment do
 
     # X25519 is for key-agreement only.
     #curve='X25519'
@@ -28,6 +28,7 @@ namespace :highway do
     root_ca.version = 2
     root_ca.serial  = SystemVariable.randomseq(:serialnumber)
     dn = sprintf("/DC=ca/DC=sandelman/CN=%s", SystemVariable.string(:hostname))
+    puts "issuer is now: #{dn}"
     root_ca.subject = OpenSSL::X509::Name.parse dn
 
     # root CA's are "self-signed"
@@ -55,9 +56,9 @@ namespace :highway do
   end
 
   desc "Create a certificate for the MASA to sign vouchers with"
-  task :bootstrap_masa => :environment do
+  task :h2_bootstrap_masa => :environment do
 
-    curve = HighwayKeys.ca.curve
+    curve = MasaKeys.ca.curve
 
     certdir = Rails.root.join('db').join('cert')
     FileUtils.mkpath(certdir)
@@ -76,16 +77,63 @@ namespace :highway do
     # cf. RFC 5280 - to make it a "v3" certificate
     masa_crt.version = 2
 
+    dn = sprintf("/DC=ca/DC=sandelman/CN=%s MASA", SystemVariable.string(:hostname))
+    masa_crt.subject = OpenSSL::X509::Name.parse dn
+
+    root_ca = HighwayKeys.ca.rootkey
+
+    # masa is signed by root_ca
+    masa_crt.issuer = root_ca.subject
+    masa_crt.serial     = HighwayKeys.ca.serial
+    masa_crt.public_key = masa_key
+    masa_crt.not_before = Time.now
+
+    # 2 years validity
+    masa_crt.not_after = masa_crt.not_before + 2 * 365 * 24 * 60 * 60
+
+    # Extension Factory
+    ef = OpenSSL::X509::ExtensionFactory.new
+    ef.subject_certificate = masa_crt
+    ef.issuer_certificate  = root_ca
+    masa_crt.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
+    masa_crt.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
+
+    File.open(certdir.join("masa_#{curve}.crt"),'w') do |f|
+      f.write masa_crt.to_pem
+    end
+  end
+
+  desc "Create a certificate for the MASA to sign MUD objects"
+  task :h3_bootstrap_mud => :environment do
+
+    curve = MudKeys.ca.curve
+
+    certdir = Rails.root.join('db').join('cert')
+    FileUtils.mkpath(certdir)
+
+    mudprivkey=certdir.join("mud_#{curve}.key")
+    if File.exists?(mudprivkey)
+      mud_key = OpenSSL::PKey.read(File.open(mudprivkey))
+    else
+      # the MUD's public/private key - 3*1024 + 8
+      mud_key = OpenSSL::PKey::EC.new(curve)
+      mud_key.generate_key
+      File.open(mudprivkey, "w") do |f| f.write mud_key.to_pem end
+    end
+
+    mud_crt  = OpenSSL::X509::Certificate.new
+    # cf. RFC 5280 - to make it a "v3" certificate
+    mud_crt.version = 2
+
     dn = sprintf("/DC=ca/DC=sandelman/CN=%s MUD", SystemVariable.string(:hostname))
     mud_crt.subject = OpenSSL::X509::Name.parse dn
 
     root_ca = HighwayKeys.ca.rootkey
-    root_ca.serial  = SystemVariable.nextval(:serialnumber)
 
+    mud_crt.serial     = HighwayKeys.ca.serial
     # masa is signed by root_ca
     mud_crt.issuer = root_ca.subject
-    #root_ca.public_key = root_key.public_key
-    mud_crt.public_key = masa_key
+    mud_crt.public_key = mud_key
     mud_crt.not_before = Time.now
 
     # 2 years validity
@@ -104,7 +152,7 @@ namespace :highway do
   end
 
   desc "Create a certificate for the MASA web interface (EST) to answer requests"
-  task :masa_server_cert => :environment do
+  task :h4_masa_server_cert => :environment do
 
     curve = HighwayKeys.ca.client_curve
 

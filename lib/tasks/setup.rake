@@ -29,12 +29,9 @@ namespace :highway do
   end
 
   desc "Do initial setup of sytem variables"
-  task :setup_masa => :environment do
+  task :h0_setup_masa => :environment do
 
     SystemVariable.dump_vars
-
-    prompt_variable_number("Set initial serial number",
-                           :serialnumber)
 
     prompt_variable_value("Hostname for this instance",
                           :hostname)
