@@ -3,6 +3,11 @@ require 'rails_helper'
 
 RSpec.describe 'BRSKI EST API', type: :request do
 
+  before(:each) do
+    FileUtils::mkdir_p("tmp")
+    MasaKeys.masa.certdir = Rails.root.join('spec','files','cert')
+  end
+
   describe "voucher request" do
     it "POST /.well-known/est/requestvoucher" do
       # make an HTTPS request for a new voucher
