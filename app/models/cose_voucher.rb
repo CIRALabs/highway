@@ -15,7 +15,7 @@ class CoseVoucher < Voucher
     cv.nonce        = nonce
     cv.createdOn    = today
     cv.expiresOn    = expires_on
-    cv.signing_cert   = MasaKeys.masa.masakey
+    cv.signing_cert   = signing_cert
     if owner.certificate
       cv.pinnedDomainCert = owner.certder
     else
@@ -23,6 +23,12 @@ class CoseVoucher < Voucher
     end
 
     self.as_issued = cv.cose_sign(MasaKeys.masa.masaprivkey)
+
+    if false
+      # verify that key validates contents
+      valid = Chariwt::Voucher.from_cbor_cose(as_issued, signing_cert)
+    end
+
     notify_voucher!
     save!
     self
