@@ -7,14 +7,14 @@ GIT
 
 GIT
   remote: https://github.com/AnimaGUS-minerva/ruby_ecdsa.git
-  revision: c81223b9e1a6201991c5e33477245cc13dca4fac
+  revision: e3840d25a60b8cb6eff9247062663542d332130a
   branch: ecdsa_interface_openssl
   specs:
     ecdsa (1.3.0)
 
 GIT
   remote: https://github.com/activescaffold/active_scaffold.git
-  revision: 4f1bc57229dae08684c3017b1734d5831751d7f0
+  revision: 8ea75d975c0742753586f52e0e5b2deb4013a03f
   specs:
     active_scaffold (3.5.99)
       cow_proxy (~> 0.2.0)
@@ -58,7 +58,7 @@ GIT
 
 GIT
   remote: https://github.com/plataformatec/devise.git
-  revision: 3b0bc08ec67dd073ddd6d043c71646c2784ced6c
+  revision: 94adec3ceef6a3e9eb6bdc4d3fa7ed4a3fc6b348
   branch: master
   specs:
     devise (4.5.0)
@@ -134,7 +134,7 @@ GEM
     diff-lcs (1.3)
     erubis (2.7.0)
     execjs (2.7.0)
-    faraday (0.15.2)
+    faraday (0.15.3)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.25)
     globalid (0.4.1)
@@ -168,7 +168,7 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (5.0.2)
     nio4r (2.3.1)
-    nokogiri (1.8.4)
+    nokogiri (1.8.5)
       mini_portile2 (~> 2.3.0)
     orm_adapter (0.5.0)
     pg (0.21.0)
@@ -231,7 +231,7 @@ GEM
       rspec-mocks (~> 3.8.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
-    sass (3.5.7)
+    sass (3.6.0)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -276,7 +276,7 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    uglifier (4.1.18)
+    uglifier (4.1.19)
       execjs (>= 0.3.0, < 3)
     warden (1.2.7)
       rack (>= 1.0)
