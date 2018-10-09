@@ -2,7 +2,8 @@
 lock "3.9.1"
 
 set :application, "highway"
-set :repo_url, "git+ssh://code.credil.org/git/pandora/highway"
+#set :repo_url, "git+ssh://code.credil.org/git/pandora/highway"
+set :repo_url, "git@github.com:AnimaGUS-minerva/highway.git"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -44,12 +45,12 @@ append :linked_dirs, "db/cert", "db/devices", "db/inventory", "log", "tmp"
 require 'byebug'
 
 # override git:wrapper
-Rake::Task["git:wrapper"].clear_actions
+#Rake::Task["git:wrapper"].clear_actions
 namespace :git do
   desc "Upload the git wrapper script, this script guarantees that we can script git without getting an interactive prompt"
-  task :wrapper do
+  task :wrapper2 do
     on release_roles :all do
-      #puts "Sending to: #{git_wrapper_path(@host)}"
+      puts "Sending to: #{git_wrapper_path(@host)}"
       execute :mkdir, "-p", File.dirname(git_wrapper_path(@host)).shellescape
       script = StringIO.new("#!/bin/sh -e\nexec /usr/bin/ssh -l #{ENV['USER']} -o PasswordAuthentication=no -o StrictHostKeyChecking=no \"$@\"\n")
       upload! script, git_wrapper_path(@host)
