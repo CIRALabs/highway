@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/AnimaGUS-minerva/multipart_body.git
+  revision: 47654456f0dcf47f2d9ca2b6e4064e2ec6f2328b
+  branch: binary_http_multipart
+  specs:
+    multipart_body (0.2.0)
+
+GIT
   remote: https://github.com/AnimaGUS-minerva/ruby_ecdsa.git
   revision: e3840d25a60b8cb6eff9247062663542d332130a
   branch: ecdsa_interface_openssl
@@ -68,11 +75,6 @@ GIT
       railties (>= 4.1.0, < 6.0)
       responders
       warden (~> 1.2.3)
-
-PATH
-  remote: ../minerva/multipart_body
-  specs:
-    multipart_body (0.2.0)
 
 GEM
   remote: https://rubygems.org/

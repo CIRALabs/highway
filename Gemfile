@@ -43,8 +43,8 @@ gem 'devise', git: 'https://github.com/plataformatec/devise.git', branch: 'maste
 gem 'http-accept'
 
 # used to generate multipart bodies
-#gem 'multipart_body', :git => 'https://github.com/AnimaGUS-minerva/multipart_body.git', :branch => 'binary_http_multipart'
-gem 'multipart_body', :path => '../minerva/multipart_body'
+gem 'multipart_body', :git => 'https://github.com/AnimaGUS-minerva/multipart_body.git', :branch => 'binary_http_multipart'
+#gem 'multipart_body', :path => '../minerva/multipart_body'
 
 gem 'ecdsa',   :git => 'https://github.com/AnimaGUS-minerva/ruby_ecdsa.git', :branch => 'ecdsa_interface_openssl'
 #gem 'ecdsa',   :path => '../minerva/ruby_ecdsa'
