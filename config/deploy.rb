@@ -65,6 +65,18 @@ namespace :git do
   end
 end
 
+namespace :deploy do
+  after :finished, :set_current_version do
+    on roles(:app) do
+      # dump current git version
+      within release_path do
+        execute :echo, "$REVISION = \"#{fetch(:revision_log_message)}\" >> config/initializers/revision.rb"
+      end
+    end
+  end
+end
+
+
 module Capistrano
   module DSL
     module Paths

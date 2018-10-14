@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   post '/.well-known/est/requestvoucher',  to: 'est#requestvoucher'
   post '/.well-known/est/requestauditlog', to: 'est#requestauditlog'
 
-  resources :status, :only => [:index ]
+  resources :status,  :only => [:index ]
+  resources :version, :only => [:index ]
 
 end
