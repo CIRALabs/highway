@@ -53,6 +53,8 @@ gem 'ecdsa',   :git => 'https://github.com/AnimaGUS-minerva/ruby_ecdsa.git', :br
 gem 'chariwt', :git => 'https://github.com/mcr/ChariWTs.git'
 gem 'jwt'
 
+gem 'thin'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
