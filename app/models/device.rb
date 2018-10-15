@@ -7,11 +7,13 @@ class Device < ActiveRecord::Base
 
   attr_accessor :idevid, :dev_key
 
+  scope :active,  -> { where.not(obsolete: true) }
+  scope :obsolete,-> { where(obsolete: true) }
   scope :owned,   -> { where.not(owner: nil) }
   scope :unowned, -> { where(owner: nil) }
 
   def self.find_by_number(number)
-    where(serial_number: number).take || where(eui64: number).take
+    active.where(serial_number: number).take || active.where(eui64: number).take
   end
   def self.create_by_number(number)
     find_by_number(number) || create(eui64: number)

@@ -5,6 +5,12 @@ almec:
   notes: 'almec.sandelman.ca'
   serial_number: JADA_f2-00-01
 
+almec_O:
+  eui64: '00-d0-e5-f2-00-01'
+  notes: 'almec.sandelman.ca'
+  serial_number: JADA_f2-00-01
+  obsolete: true
+
 vizsla:
   id: 12
   eui64: '00-d0-e5-f2-00-02'

@@ -116,6 +116,12 @@ RSpec.describe Device, type: :model do
       b1 = Device.find_by_number('00-D0-E5-F2-00-02')
       expect(b1).to_not be_nil
     end
+
+    it "should ignore obsolete devices when looking for unowned" do
+      expect(Device.active.unowned.count).to eq(2)
+      expect(Device.active.owned.count).to   eq(3)
+      expect(Device.obsolete.count).to eq(1)
+    end
   end
 
   describe "signed voucher requests" do
