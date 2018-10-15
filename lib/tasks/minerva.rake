@@ -23,11 +23,11 @@ namespace :highway do
     FileUtils.mkdir_p(sold_dir)
 
     # now count how many devices exist which have no owner.
-    unowned = Device.unowned.count
+    unowned = Device.active.unowned.count
     puts "Found #{unowned} devices unowned, need #{inv_count}" if verbose
     if unowned < inv_count
 
-      devices_needed = inv_count - Device.unowned.count
+      devices_needed = inv_count - Device.active.unowned.count
       puts "creating #{devices_needed} devices to refill inventory to #{inv_count}"
       (1..devices_needed).each { |cnt|
 
