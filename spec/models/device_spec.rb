@@ -8,6 +8,29 @@ RSpec.describe Device, type: :model do
     MasaKeys.ca.certdir = Rails.root.join('spec','files','cert')
   end
 
+  describe "canonical eui" do
+    it "should turn colons into dashes" do
+      expect(Device.canonicalize_eui64("aa:bb:cc:dd:ee:ff")).to eq("aa-bb-cc-dd-ee-ff")
+    end
+
+    it "should handle 6 byte eui" do
+      expect(Device.canonicalize_eui64("aa-bb-cc-dd-ee-ff")).to eq("aa-bb-cc-dd-ee-ff")
+    end
+
+    it "should handle 7 byte eui" do
+      expect(Device.canonicalize_eui64("00-11-aa-bb-cc-dd-ee-ff")).to eq("00-11-aa-bb-cc-dd-ee-ff")
+    end
+
+    it "should downcase hex digits" do
+      expect(Device.canonicalize_eui64("AA-Bb-cc-dD-eE-ff")).to eq("aa-bb-cc-dd-ee-ff")
+    end
+
+    it "should insert dashes if missing" do
+      expect(Device.canonicalize_eui64("aabbccddeeff")).to eq("aa-bb-cc-dd-ee-ff")
+    end
+
+  end
+
   describe "relations" do
     it "should have many vouchers" do
       almec = devices(:almec)

@@ -12,6 +12,20 @@ class Device < ActiveRecord::Base
   scope :owned,   -> { where.not(owner: nil) }
   scope :unowned, -> { where(owner: nil) }
 
+  def self.canonicalize_eui64(str)
+    nocolondash = str.downcase.gsub(/[\-\:]/,'')
+    result=''
+    filler=''
+    toggle=false
+    nocolondash.split('').each { |letter|
+      result = result + filler + letter
+      filler = '-' if toggle
+      filler = ''  unless toggle
+      toggle = !toggle
+    }
+    result
+  end
+
   def self.find_by_number(number)
     active.where(serial_number: number).take || active.where(eui64: number).take
   end
