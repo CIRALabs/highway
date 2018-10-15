@@ -27,10 +27,15 @@ class Device < ActiveRecord::Base
   end
 
   def self.find_by_number(number)
-    active.where(serial_number: number).take || active.where(eui64: number).take
+    active.where(serial_number: number).take || active.where(eui64: canonicalize_eui64(number)).take
   end
   def self.create_by_number(number)
-    find_by_number(number) || create(eui64: number)
+    find_by_number(number) || create(eui64: canonicalize_eui64(number))
+  end
+
+  def obsoleted!
+    self.obsolete = true
+    save!
   end
 
   # JWT wants prime256v1 (aka secp256r1), so default to that.
