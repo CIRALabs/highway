@@ -80,7 +80,19 @@ namespace :highway do
         puts "Device #{dev.name}(#{dev.sanitized_eui64}) already marked as sold" if verbose
       end
     }
+  end
 
+  desc "Obsolete PRODUCTID=00-11-22-33-44-55"
+  task :obsolete => :environment do
+    productid  = ENV['PRODUCTID']
+
+    device = Device.find_by_number(productid)
+    if device
+      device.obsoleted!
+      puts "Device #{device.id} marked obsolete"
+    else
+      puts "Device #{productid} not found"
+    end
   end
 
 end
