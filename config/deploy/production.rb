@@ -13,6 +13,9 @@ server "masa.wheezes.sandelman.ca",
        deploy_to: '/wheezes/app/highway',
        git_wrapper_path: '/wheezes/app/tmp'
 
+# connect the hook directly
+after :publishing, :'passenger:restart'
+
 if true
 server "masa.honeydukes.sandelman.ca",
        user: "honeydukes",
