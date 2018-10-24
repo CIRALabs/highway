@@ -4,7 +4,8 @@ class DeviceNotifierMailer < ApplicationMailer
     @owner = voucher.owner
     @device= voucher.device
     @hostname = SystemVariable.string(:hostname)
-    mail(to: ENV['USER'], subject: "New voucher issued for #{@device.name}")
+    type = voucher.voucher_type
+    mail(to: ENV['USER'], subject: "New #{type} voucher issued for #{@device.name}")
   end
 
   def voucher_notissued_email(voucher_req, reason)
