@@ -5,7 +5,8 @@ class EstController < ApiController
   def requestvoucher
 
     clientcert = nil
-    clientcert_pem = request.env["SSL_CLIENT_CERT"]
+    clientcert_pem   = request.env["SSL_CLIENT_CERT"]
+    clientcert_pem ||= request.env["rack.peer_cert"]
     if clientcert_pem
       clientcert = OpenSSL::X509::Certificate.new(Chariwt::Voucher.decode_pem(clientcert_pem))
     end
