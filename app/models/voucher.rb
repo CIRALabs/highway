@@ -53,9 +53,14 @@ class Voucher < ActiveRecord::Base
     self.nonce = vdetails["nonce"]
   end
 
-  def name
-    "voucher_#{self.id}"
+  def voucher_type
+    "generic"
   end
+
+  def name
+    "#{voucher_type}_#{self.id}"
+  end
+
   def savefixturefw(fw)
     return if save_self_tofixture(fw)
     device.savefixturefw(fw) if device

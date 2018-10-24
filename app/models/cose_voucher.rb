@@ -7,6 +7,11 @@ class CoseVoucher < Voucher
     Base64.urlsafe_decode64(self[:as_issued])
   end
 
+  def voucher_type
+    "cose_voucher"
+  end
+
+
   def sign!(today = DateTime.now.utc)
     cv = Chariwt::Voucher.new
     cv.assertion    = 'logged'
