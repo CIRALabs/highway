@@ -82,7 +82,7 @@ class EstController < ApiController
           api_response(@voucher.as_issued, :ok, @replytype)
           @answered = true
 
-        when (media_type.mime_type == 'application/voucher-cose+cbor')
+        when (type.mime_type == 'application/voucher-cose+cbor')
           raw_response(@voucher.as_issued, :ok, @replytype)
           @answered = true
 
@@ -90,6 +90,8 @@ class EstController < ApiController
           logger.debug "accept type: #{type} not recognized"
           # nothing, inside loop
         end
+
+        break if @answered
       }
 
       unless @answered
