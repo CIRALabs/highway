@@ -86,6 +86,10 @@ class EstController < ApiController
           raw_response(@voucher.as_issued, :ok, @replytype)
           @answered = true
 
+        when (type.mime_type == '*/*')
+          # just ignore this entry, it does not help
+          true
+
         else
           logger.debug "accept type: #{type} not recognized"
           # nothing, inside loop
