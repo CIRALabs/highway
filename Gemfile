@@ -26,6 +26,9 @@ gem "sentry-raven"
 gem 'uglifier'
 gem 'openssl', :git => 'https://github.com/mcr/ruby-openssl.git'
 
+# for github warning
+gem "loofah", ">= 2.2.3"
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
