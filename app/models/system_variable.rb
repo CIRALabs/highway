@@ -77,6 +77,7 @@ class SystemVariable < ActiveRecord::Base
     # a random value.
     if v.value.nil?
       prng = Random.new
+      v.number = 1 unless v.number
       [1..(v.number)].each {|n|
         prng.rand(2147483648)
       }
