@@ -20,7 +20,7 @@ namespace :highway do
       # the CA's public/private key - 3*1024 + 8
       root_key = OpenSSL::PKey::EC.new(curve)
       root_key.generate_key
-      File.open(vendorprivkey, "w") do |f| f.write root_key.to_pem end
+      File.open(vendorprivkey, "w", 0600) do |f| f.write root_key.to_pem end
     end
 
     root_ca  = OpenSSL::X509::Certificate.new
@@ -72,7 +72,7 @@ namespace :highway do
       # the MASA's public/private key - 3*1024 + 8
       masa_key = OpenSSL::PKey::EC.new(curve)
       masa_key.generate_key
-      File.open(masaprivkey, "w") do |f| f.write masa_key.to_pem end
+      File.open(masaprivkey, "w", 0600) do |f| f.write masa_key.to_pem end
     end
 
     masa_crt  = OpenSSL::X509::Certificate.new
@@ -121,7 +121,7 @@ namespace :highway do
       # the MUD's public/private key - 3*1024 + 8
       mud_key = OpenSSL::PKey::EC.new(curve)
       mud_key.generate_key
-      File.open(mudprivkey, "w") do |f| f.write mud_key.to_pem end
+      File.open(mudprivkey, "w", 0600) do |f| f.write mud_key.to_pem end
     end
 
     mud_crt  = OpenSSL::X509::Certificate.new
@@ -170,7 +170,7 @@ namespace :highway do
       # the MASA's public/private key - 3*1024 + 8
       server_key = OpenSSL::PKey::EC.new(curve)
       server_key.generate_key
-      File.open(serverprivkey, "w") do |f| f.write server_key.to_pem end
+      File.open(serverprivkey, "w", 0600) do |f| f.write server_key.to_pem end
     end
 
     dnprefix = SystemVariable.string(:dnprefix) || "/DC=ca/DC=sandelman"
