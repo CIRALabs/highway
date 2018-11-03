@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: https://github.com/activescaffold/active_scaffold.git
-  revision: 8ea75d975c0742753586f52e0e5b2deb4013a03f
+  revision: 730f34b59fb82ac48cf58a94d649c04fc5642619
   specs:
     active_scaffold (3.5.99)
       cow_proxy (~> 0.2.0)
@@ -60,13 +60,14 @@ GIT
 
 GIT
   remote: https://github.com/mcr/ruby-openssl.git
-  revision: 7c18417e2e24a9c6c407f5114c58b7f161e16d34
+  revision: 896b22b3a939913f4d7ea569a1b912c752eeb969
+  branch: dtls-coap-client
   specs:
-    openssl (2.1.0)
+    openssl (2.2.0.pre.mcr1)
 
 GIT
   remote: https://github.com/plataformatec/devise.git
-  revision: 94adec3ceef6a3e9eb6bdc4d3fa7ed4a3fc6b348
+  revision: 517010e2c543920c43378e527ddb62e1bc6eb490
   branch: master
   specs:
     devise (4.5.0)
@@ -143,7 +144,7 @@ GEM
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     http-accept (1.7.0)
-    i18n (1.1.0)
+    i18n (1.1.1)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     jbuilder (2.7.0)
@@ -159,9 +160,9 @@ GEM
     loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
-    mail (2.7.0)
+    mail (2.7.1)
       mini_mime (>= 0.1.1)
-    method_source (0.9.0)
+    method_source (0.9.1)
     mini_mime (1.0.1)
     mini_portile2 (2.3.0)
     minitest (5.11.3)
@@ -219,13 +220,13 @@ GEM
       railties (>= 4.2.0, < 5.3)
     rspec-core (3.8.0)
       rspec-support (~> 3.8.0)
-    rspec-expectations (3.8.1)
+    rspec-expectations (3.8.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
     rspec-mocks (3.8.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
-    rspec-rails (3.8.0)
+    rspec-rails (3.8.1)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
@@ -265,7 +266,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    sshkit (1.17.0)
+    sshkit (1.18.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     therubyracer (0.12.3)
@@ -309,6 +310,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   jwt
+  loofah (>= 2.2.3)
   multipart_body!
   openssl!
   pg (~> 0.15)

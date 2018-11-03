@@ -24,7 +24,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem "sentry-raven"
 
 gem 'uglifier'
-gem 'openssl', :git => 'https://github.com/mcr/ruby-openssl.git'
+gem 'openssl', :git => 'https://github.com/mcr/ruby-openssl.git', :branch => 'dtls-coap-client'
 
 # for github warning
 gem "loofah", ">= 2.2.3"
