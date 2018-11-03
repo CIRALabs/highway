@@ -36,6 +36,9 @@ namespace :highway do
     prompt_variable_value("Hostname for this instance",
                           :hostname)
 
+    prompt_variable_value("DN prefix for certificates",
+                          :dnprefix)
+
     prompt_variable_value("Inventory directory for this instance",
                           :inventory_dir)
 

@@ -27,7 +27,9 @@ namespace :highway do
     # cf. RFC 5280 - to make it a "v3" certificate
     root_ca.version = 2
     root_ca.serial  = SystemVariable.randomseq(:serialnumber)
-    dn = sprintf("/DC=ca/DC=sandelman/CN=%s", SystemVariable.string(:hostname))
+
+    dnprefix = SystemVariable.string(:dnprefix) || "/DC=ca/DC=sandelman"
+    dn = sprintf("%s/CN=%s CA", dnprefix, SystemVariable.string(:hostname))
     puts "issuer is now: #{dn}"
     root_ca.subject = OpenSSL::X509::Name.parse dn
 
@@ -77,7 +79,8 @@ namespace :highway do
     # cf. RFC 5280 - to make it a "v3" certificate
     masa_crt.version = 2
 
-    dn = sprintf("/DC=ca/DC=sandelman/CN=%s MASA", SystemVariable.string(:hostname))
+    dnprefix = SystemVariable.string(:dnprefix) || "/DC=ca/DC=sandelman"
+    dn = sprintf("%s/CN=%s MASA", dnprefix, SystemVariable.string(:hostname))
     masa_crt.subject = OpenSSL::X509::Name.parse dn
 
     root_ca = HighwayKeys.ca.rootkey
@@ -125,7 +128,8 @@ namespace :highway do
     # cf. RFC 5280 - to make it a "v3" certificate
     mud_crt.version = 2
 
-    dn = sprintf("/DC=ca/DC=sandelman/CN=%s MUD", SystemVariable.string(:hostname))
+    dnprefix = SystemVariable.string(:dnprefix) || "/DC=ca/DC=sandelman"
+    dn = sprintf("%s/CN=%s MUD", dnprefix, SystemVariable.string(:hostname))
     mud_crt.subject = OpenSSL::X509::Name.parse dn
 
     root_ca = HighwayKeys.ca.rootkey
@@ -169,11 +173,14 @@ namespace :highway do
       File.open(serverprivkey, "w") do |f| f.write server_key.to_pem end
     end
 
+    dnprefix = SystemVariable.string(:dnprefix) || "/DC=ca/DC=sandelman"
+    dn = sprintf("%s/CN=%s", dnprefix, SystemVariable.string(:hostname))
+
     server_crt  = OpenSSL::X509::Certificate.new
     # cf. RFC 5280 - to make it a "v3" certificate
     server_crt.version = 2
     server_crt.serial  = HighwayKeys.ca.serial
-    server_crt.subject = OpenSSL::X509::Name.parse "/DC=ca/DC=sandelman/CN=localhost"
+    server_crt.subject = OpenSSL::X509::Name.parse dn
 
     root_ca = HighwayKeys.ca.rootkey
     # masa is signed by root_ca
