@@ -4,7 +4,11 @@ class SystemVariable < ActiveRecord::Base
 
   def self.dump_vars
     all.each { |thing|
-      puts "#{thing.variable}: #{thing.number} #{thing.value}"
+      valshort = thing.value
+      if valshort.size > 128
+        valshort = valshort[0..7]+"..."+valshort[-7..-1]
+      end
+     puts "#{thing.variable}: #{thing.number} #{valshort}"
     }
     true
   end
