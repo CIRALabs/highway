@@ -250,23 +250,4 @@ namespace :highway do
     fw.closefiles
   end
 
-
-  def foo_one
-    key = OpenSSL::PKey::RSA.new 2048
-    cert = OpenSSL::X509::Certificate.new
-    cert.version = 2
-    cert.serial = 2
-    cert.subject = OpenSSL::X509::Name.parse "/DC=org/DC=ruby-lang/CN=Ruby certificate"
-    cert.issuer = root_ca.subject # root CA is the issuer
-    cert.public_key = key.public_key
-    cert.not_before = Time.now
-    cert.not_after = cert.not_before + 1 * 365 * 24 * 60 * 60 # 1 years validity
-    ef = OpenSSL::X509::ExtensionFactory.new
-    ef.subject_certificate = cert
-    ef.issuer_certificate = root_ca
-    cert.add_extension(ef.create_extension("keyUsage","digitalSignature", true))
-    cert.add_extension(ef.create_extension("subjectKeyIdentifier","hash",false))
-    cert.sign(root_key, OpenSSL::Digest::SHA256.new)
-  end
-
 end
