@@ -60,7 +60,7 @@ class Device < ActiveRecord::Base
     FileUtils.mkpath(device_dir(dir))
 
     vendorprivkey = device_dir(dir).join("key.pem")
-    File.open(vendorprivkey, "w") do |f| f.write @dev_key.to_pem end
+    File.open(vendorprivkey, "w", 0600) do |f| f.write @dev_key.to_pem end
     File.chmod(0400, vendorprivkey)
   end
 
