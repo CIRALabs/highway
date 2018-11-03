@@ -66,11 +66,19 @@ namespace :git do
 end
 
 namespace :deploy do
+  task :env do
+    Capistrano::Configuration.env.variables.each { |k,n|
+      puts "#{k} = #{n}"
+    }
+  end
+end
+
+namespace :deploy do
   after :finished, :set_current_version do
     on roles(:app) do
       # dump current git version
       within release_path do
-        execute :echo, "$REVISION = \"#{fetch(:revision_log_message)}\" >> config/initializers/revision.rb"
+        execute :echo, "\\$REVISION = \\\"#{fetch(:current_revision,"development")}\\\" >> config/initializers/revision.rb"
       end
     end
   end
