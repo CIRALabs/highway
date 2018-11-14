@@ -100,7 +100,7 @@ RSpec.describe Device, type: :model do
 
       dev = Device.create_from_csr(csr)
       expect(dev).to be_present
-      expect(dev.serial_number).to_not be_nil
+      expect(dev.serial_number).to     eq("IOTRUS-0123456789")
       expect(dev.idevid_cert).to_not   be_nil
       expect(dev.certificate.subject.to_s).to eq("/serialNumber=IOTRUS-0123456789")
     end
