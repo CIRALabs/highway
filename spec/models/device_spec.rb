@@ -124,7 +124,7 @@ RSpec.describe Device, type: :model do
 
     end
 
-    it "should create a certificate with a interesting MASA url" do
+    it "should create a certificate with an interesting MASA url" do
       SystemVariable.setvalue(:masa_url, "https://masa.example.com")
 
       ndev = Device.new
