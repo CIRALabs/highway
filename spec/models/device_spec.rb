@@ -63,6 +63,19 @@ RSpec.describe Device, type: :model do
       expect(almec.public_key).to be_kind_of(OpenSSL::PKey::EC)
     end
 
+    it "should preserve public key in pub_key field" do
+      almec = devices(:almec)
+      almec.gen_or_load_priv_key(HighwayKeys.ca.devicedir)
+      expect(almec.dev_key).to_not be_nil
+
+      gen_pubkey = almec.public_key
+
+      # get fresh copy
+      almec = Device.find(almec.id)
+      # use to_pem to get deep comparison of contents
+      expect(almec.public_key.to_pem).to eq(gen_pubkey.to_pem)
+    end
+
     it "should recognize a voucher request containing the same public key" do
       vr11 = voucher_requests(:voucherreq54)
       d11 = vr11.device
