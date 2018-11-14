@@ -100,10 +100,6 @@ class Device < ActiveRecord::Base
     @certificate ||= OpenSSL::X509::Certificate.new(self.idevid_cert)
   end
 
-  def idevid
-    self[:idevid_cert]
-  end
-
   def pubkey
     self[:pub_key]
   end
@@ -176,7 +172,7 @@ class Device < ActiveRecord::Base
     # include the official HardwareModule OID:  1.3.6.1.5.5.7.8.4
     @idevid.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
 
-    self.idevid_cert   = idevid.to_pem
+    self.idevid_cert   = @idevid.to_pem
     self.serial_number = sanitized_eui64
     save!
   end
