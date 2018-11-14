@@ -7,6 +7,8 @@ class Device < ActiveRecord::Base
 
   attr_accessor :idevid, :dev_key
 
+  before_save :fill_in_pub_key
+
   scope :active,  -> { where.not(obsolete: true) }
   scope :obsolete,-> { where(obsolete: true) }
   scope :owned,   -> { where.not(owner: nil) }
@@ -36,6 +38,13 @@ class Device < ActiveRecord::Base
   def obsoleted!
     self.obsolete = true
     save!
+  end
+
+  def fill_in_pub_key
+    if idevid_cert and !pub_key
+      self.pub_key = Base64::encode64(certificate.public_key.to_der)
+    end
+    true
   end
 
   # JWT wants prime256v1 (aka secp256r1), so default to that.

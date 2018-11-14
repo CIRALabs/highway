@@ -81,6 +81,8 @@ RSpec.describe Device, type: :model do
       almec.gen_or_load_priv_key(HighwayKeys.ca.devicedir)
       almec.sign_eui64
       expect(almec.idevid.serial).to eq(1)
+      almec.save!
+      expect(almec.pub_key).to_not be_nil
 
       vizsla = devices(:vizsla)
 
