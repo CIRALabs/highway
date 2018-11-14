@@ -218,6 +218,16 @@ namespace :highway do
     dev.gen_and_store_key
   end
 
+  desc "Create an IDevID certificate based upon a Certificate Signing Request (CSR=). Output to CERT="
+  task :signcsr => :environment do
+
+    input = ENV['CSR']
+    output= ENV['CERT']
+
+    dev = Device.create_from_csr_io(File.read(input))
+    File.open(output, "w") do |f| f.write dev.certificate.to_pem; end
+  end
+
   desc "Sign voucher for device EUI64= to OWNER_ID=xx, with optional NONCE=xx, EXPIRES=yy"
   task :signvoucher => :environment do
     eui64 = ENV['EUI64']

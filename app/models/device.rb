@@ -35,6 +35,10 @@ class Device < ActiveRecord::Base
     find_by_number(number) || create(eui64: canonicalize_eui64(number))
   end
 
+  def self.create_from_csr_io(csrio)
+    create_from_csr(OpenSSL::X509::Request.new(csrio))
+  end
+
   # call-seq:
   #   Device.create_by_csr(csr) => device
   #
