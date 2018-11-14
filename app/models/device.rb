@@ -35,6 +35,24 @@ class Device < ActiveRecord::Base
     find_by_number(number) || create(eui64: canonicalize_eui64(number))
   end
 
+  def self.find_by_PKey(pkey)
+    b64 = Base64::encode64(pkey.to_der)
+    find_by_pub_key(b64)
+  end
+
+  def set_public_key(key)
+    if key.kind_of?(OpenSSL::PKey::EC::Point)
+      pub = OpenSSL::PKey::EC.new(key.group)
+      pub.public_key = key
+      key = pub
+    end
+    self.pub_key = Base64::encode64(key.to_der)
+  end
+
+  def public_key
+    @public_key ||= OpenSSL::PKey.read(Base64::decode64(pub_key))
+  end
+
   def obsoleted!
     self.obsolete = true
     save!
@@ -80,8 +98,13 @@ class Device < ActiveRecord::Base
     if File.exists?(vendorprivkey)
       @dev_key = OpenSSL::PKey.read(IO::read(vendorprivkey))
     else
-      gen_priv_key
+      gen_priv_key       # sets @dev_key
       store_priv_key(dir)
+    end
+
+    if pub_key.blank?
+      set_public_key(@dev_key.public_key)
+      save!
     end
     @dev_key
   end
@@ -142,8 +165,7 @@ class Device < ActiveRecord::Base
     @idevid.version = 2
     @idevid.serial = SystemVariable.nextval(:serialnumber)
     @idevid.issuer = HighwayKeys.ca.rootkey.issuer
-    #idevid.public_key = @dev_key.public_key
-    @idevid.public_key = @dev_key
+    @idevid.public_key = self.public_key
     @idevid.subject = OpenSSL::X509::Name.parse "/DC=ca/DC=sandelman/CN=#{sanitized_eui64}"
     @idevid.not_before = Time.now
     @idevid.not_after  = Time.gm(2999,12,31)

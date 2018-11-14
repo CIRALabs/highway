@@ -57,6 +57,10 @@ RSpec.describe Device, type: :model do
 
       almec.gen_or_load_priv_key(HighwayKeys.ca.devicedir)
       expect(almec.dev_key).to_not be_nil
+
+      # weirdly, PKey::EC is not actually subclass of PKey.
+      # expect(almec.public_key).to be_kind_of(OpenSSL::PKey)
+      expect(almec.public_key).to be_kind_of(OpenSSL::PKey::EC)
     end
 
     it "should recognize a voucher request containing the same public key" do
