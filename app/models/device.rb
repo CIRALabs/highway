@@ -8,6 +8,7 @@ class Device < ActiveRecord::Base
   attr_accessor :idevid, :dev_key
 
   before_save :fill_in_pub_key
+  before_save :serial_number_from_eui64
 
   scope :active,  -> { where.not(obsolete: true) }
   scope :obsolete,-> { where(obsolete: true) }
@@ -126,6 +127,14 @@ class Device < ActiveRecord::Base
       self.pub_key = Base64::encode64(certificate.public_key.to_der)
     end
     true
+  end
+
+  def serial_number_from_eui64
+    serial_number ||= eui64
+    true
+  end
+  def serial_number
+    self[:serial_number] ||= eui64
   end
 
   # JWT wants prime256v1 (aka secp256r1), so default to that.
