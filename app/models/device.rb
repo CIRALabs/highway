@@ -35,6 +35,65 @@ class Device < ActiveRecord::Base
     find_by_number(number) || create(eui64: canonicalize_eui64(number))
   end
 
+  # call-seq:
+  #   Device.create_by_csr(csr) => device
+  #
+  # creates a new device identity using the public key found in the CSR.
+  # the public key will be used to lookup a device object by public key, creating one
+  # if necessary.
+  #
+  # Any serialNumber attribute found in the CSR will be used, provided it is already
+  # unique (or matches the existing device), otherwise, the creation fails.
+  # The rest of the proposed DN will be ignored, and any subjectAltName proposed will
+  # also be ignored.
+  def self.create_from_csr(csr)
+    unless csr.verify(csr.public_key)
+      # raise bad CSR?
+      return nil
+    end
+
+    dev = self.find_by_PKey(csr.public_key)
+
+
+
+    # if no existing device, then look for one with the same serial number, and
+    # reject if it exists.
+    unless dev
+      attributes = Hash.new
+      items = csr.subject.to_a
+      items.each { |attr|
+        case attr[2]
+        when 12       # UTF8STRING
+          attributes[attr[0]] = attr[1]
+        when 19       # PRINTABLESTRING
+          attributes[attr[0]] = attr[1]
+        else
+          # not sure what to do with other types now.
+        end
+      }
+
+      if attributes["serialNumber"]
+        odev = active.find_by_serial_number(attributes["serialNumber"])
+        if odev
+          # raise duplicate?
+          return nil
+        end
+      end
+
+      # so, not found, create a device with the same serial number.
+      dev = create(:serial_number => attributes["serialNumber"])
+      dev.eui64 = dev.serial_number
+      dev.set_public_key(csr.public_key)
+    end
+
+    # found a suitable dev, now write a certificate for it, and store it.
+    # will allocate an EUI-64 for it along the way.
+    # The caller can set the model if desired.
+    dev.sign_eui64
+
+    dev
+  end
+
   def self.find_by_PKey(pkey)
     b64 = Base64::encode64(pkey.to_der)
     find_by_pub_key(b64)
@@ -166,7 +225,7 @@ class Device < ActiveRecord::Base
     @idevid.serial = SystemVariable.nextval(:serialnumber)
     @idevid.issuer = HighwayKeys.ca.rootkey.issuer
     @idevid.public_key = self.public_key
-    @idevid.subject = OpenSSL::X509::Name.parse "/DC=ca/DC=sandelman/CN=#{sanitized_eui64}"
+    @idevid.subject = OpenSSL::X509::Name.new([["serialNumber", serial_number,12]])
     @idevid.not_before = Time.now
     @idevid.not_after  = Time.gm(2999,12,31)
 
@@ -195,7 +254,7 @@ class Device < ActiveRecord::Base
     @idevid.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
 
     self.idevid_cert   = @idevid.to_pem
-    self.serial_number = sanitized_eui64
+    self.serial_number ||= sanitized_eui64
     save!
   end
 

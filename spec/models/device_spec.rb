@@ -91,6 +91,21 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe "certificate signing request" do
+    it "should accept a CSR in a file, generating an IDevID" do
+      input = Rails.root.join("spec", "files", "csr", "sample1.csr")
+      csr = OpenSSL::X509::Request.new(File.read(input))
+
+      expect(csr.subject.to_s).to eq("/CN=www.iotrus.com/O=IOT-R-US, Inc./C=US/ST=NC/L=RTP/serialNumber=IOTRUS-0123456789")
+
+      dev = Device.create_from_csr(csr)
+      expect(dev).to be_present
+      expect(dev.serial_number).to_not be_nil
+      expect(dev.idevid_cert).to_not   be_nil
+      expect(dev.certificate.subject.to_s).to eq("/serialNumber=IOTRUS-0123456789")
+    end
+  end
+
   describe "certificate creation" do
     it "should create a certificate with a new issue " do
       almec = devices(:almec)
