@@ -84,11 +84,15 @@ class Device < ActiveRecord::Base
   end
 
   def store_certificate(dir = HighwayKeys.ca.devicedir)
-    File.open(certificate_filename(dir), "w") do |f| f.write self.pub_key end
+    File.open(certificate_filename(dir), "w") do |f| f.write self.idevid_cert end
   end
 
   def certificate
-    @certificate ||= OpenSSL::X509::Certificate.new(self.pub_key)
+    @certificate ||= OpenSSL::X509::Certificate.new(self.idevid_cert)
+  end
+
+  def idevid
+    self[:idevid_cert]
   end
 
   def pubkey
@@ -163,7 +167,7 @@ class Device < ActiveRecord::Base
     # include the official HardwareModule OID:  1.3.6.1.5.5.7.8.4
     @idevid.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
 
-    self.pub_key = idevid.to_pem
+    self.idevid_cert   = idevid.to_pem
     self.serial_number = sanitized_eui64
     save!
   end

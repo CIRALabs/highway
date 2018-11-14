@@ -17,7 +17,7 @@ vizsla:
   notes: 'vizsla.sandelman.ca'
   serial_number: 00-D0-E5-F2-00-02
   eui64: 00-d0-e5-f2-00-02
-  pub_key: |
+  idevid_cert: |
     -----BEGIN CERTIFICATE-----
     MIICMjCCAbegAwIBAgIBDDAKBggqhkjOPQQDAjBNMRIwEAYKCZImiZPyLGQBGRYC
     Y2ExGTAXBgoJkiaJk/IsZAEZFglzYW5kZWxtYW4xHDAaBgNVBAMME1Vuc3RydW5n
@@ -38,7 +38,7 @@ vizsla:
 device11:
   id: 11
   eui64: '08:11:96:ff:fe:01:81:e0'
-  pub_key: |
+  idevid_cert: |
     -----BEGIN CERTIFICATE-----
     MIICLjCCAbWgAwIBAgIBCzAKBggqhkjOPQQDAjBNMRIwEAYKCZImiZPyLGQBGRYC
     Y2ExGTAXBgoJkiaJk/IsZAEZFglzYW5kZWxtYW4xHDAaBgNVBAMME1Vuc3RydW5n
@@ -62,7 +62,7 @@ device14:
   id: 14
   owner_id: 1
   eui64: 00-d0-e5-f2-00-03
-  pub_key: |
+  idevid_cert: |
     -----BEGIN CERTIFICATE-----
     MIICMjCCAbegAwIBAgIBDjAKBggqhkjOPQQDAjBNMRIwEAYKCZImiZPyLGQBGRYC
     Y2ExGTAXBgoJkiaJk/IsZAEZFglzYW5kZWxtYW4xHDAaBgNVBAMME1Vuc3RydW5n
@@ -93,7 +93,7 @@ device14:
 f21003:
   id: 15
   eui64: 00-d0-e5-f2-10-03
-  pub_key: |
+  idevid_cert: |
     -----BEGIN CERTIFICATE-----
     MIICMTCCAbegAwIBAgIBAzAKBggqhkjOPQQDAjBNMRIwEAYKCZImiZPyLGQBGRYC
     Y2ExGTAXBgoJkiaJk/IsZAEZFglzYW5kZWxtYW4xHDAaBgNVBAMME1Vuc3RydW5n

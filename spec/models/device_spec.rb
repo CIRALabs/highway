@@ -47,7 +47,7 @@ RSpec.describe Device, type: :model do
 
       almec.gen_and_store_key
 
-      expect(almec.pub_key).to_not be_nil
+      expect(almec.idevid_cert).to_not be_nil
       expect(File.exists?("db/devices/#{almec.sanitized_eui64}/device.crt")).to be true
       # expect almec public key to verify with root key
     end
