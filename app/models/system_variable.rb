@@ -4,8 +4,8 @@ class SystemVariable < ActiveRecord::Base
 
   def self.dump_vars
     all.each { |thing|
-      valshort = thing.value
-      if valshort.size > 128
+      valshort = thing.value || ""
+      if valshort && valshort.size > 128
         valshort = valshort[0..7]+"..."+valshort[-7..-1]
       end
      puts "#{thing.variable}: #{thing.number} #{valshort}"
