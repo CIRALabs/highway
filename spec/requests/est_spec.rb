@@ -1,7 +1,7 @@
 # spec/requests/todos_spec.rb
 require 'rails_helper'
 
-RSpec.describe 'BRSKI EST API', type: :request do
+RSpec.describe 'BRSKI-MASA EST API', type: :request do
 
   before(:each) do
     FileUtils::mkdir_p("tmp")
@@ -9,6 +9,15 @@ RSpec.describe 'BRSKI EST API', type: :request do
   end
 
   describe "voucher request" do
+    it "incorrectly receives an unsigned voucher request" do
+      json = File.read("spec/files/raw_unsigned_vr-00-12-34-56-78-9A.json")
+      post "/.well-known/est/requestvoucher", params: json, headers: {
+             'CONTENT_TYPE' => 'application/json',
+             'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
+           }
+      expect(response).to have_http_status(406)
+    end
+
     it "POST /.well-known/est/requestvoucher" do
       # make an HTTPS request for a new voucher
       # this is section 3.3 of RFCXXXX/draft-ietf-anima-dtbootstrap-anima-keyinfra

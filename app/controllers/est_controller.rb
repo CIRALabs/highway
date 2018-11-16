@@ -1,6 +1,15 @@
 require 'multipart_body'
 
-class EstController < ApiController
+# use of ActionController::Metal means that JSON parameters are
+# not automatically parsed, which reduces cases of processing bad
+# JSON when no JSON is acceptable anyway.
+class EstController < ActionController::Metal
+  include AbstractController::Rendering
+  include ActionController::Renderers::All
+  include ActionController::Head
+  include ActionController::Redirecting
+  include Rails.application.routes.url_helpers
+  include Response
 
   def requestvoucher
 
