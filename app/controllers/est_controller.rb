@@ -74,7 +74,7 @@ class EstController < ApiController
           part1 = Part.new(:body => @voucher.as_issued,    :content_type => 'application/voucher-cose+cbor')
           part2 = Part.new(:body => @voucher.signing_cert.to_pem, :content_type => 'application/pkcs7-mime; smime-type=certs-only')
           @multipart = MultipartBody.new([part1, part2])
-          raw_response(@multipart, :ok, "multipart/mixed; boundary=#{@multipart.boundary}")
+          raw_response(@multipart.to_s, :ok, "multipart/mixed; boundary=#{@multipart.boundary}")
           @answered = true
 
         when ((type.mime_type == 'application/pkcs7-mime' and
