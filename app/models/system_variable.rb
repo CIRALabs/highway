@@ -1,4 +1,5 @@
 class SystemVariable < ActiveRecord::Base
+  include FixtureSave
 
   @@cache = Hash.new
 

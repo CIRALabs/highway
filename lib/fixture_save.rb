@@ -4,7 +4,7 @@ require 'fixture_writer'
 module FixtureSave
   # for saving the records for later use.
   def simplename
-    if name
+    if respond_to? :name and name
       name.gsub(/ /,'')
     else
       sprintf("%s%u", self.class.name, id)
