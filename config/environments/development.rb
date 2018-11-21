@@ -51,3 +51,8 @@ Rails.application.configure do
   config.action_mailer.default_options = {from: 'mcr+minerva@sandelman.ca'}
 
 end
+
+# in development mode, use the canned certificates from spec/files/cert,
+# which are also used for test.
+HighwayKeys.ca.certdir = Rails.root.join('spec','files','cert')
+MasaKeys.ca.certdir = Rails.root.join('spec','files','cert')
