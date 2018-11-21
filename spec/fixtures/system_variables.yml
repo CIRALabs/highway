@@ -1,39 +1,30 @@
-one:
-  id:       1
-  variable: bar
-  value:    34
-
-two:
-  id:       2
-  variable: baz
-  value:    0
-
-user1:
-  id:       4
-  variable: 'email_confirmation'
-  number:   1
-
-user2:
-  id:       5
-  variable: 'email_sender'
-  value:    "support@simtonecdu.com"
-
-defloc:
-  id:       6
-  variable: 'DefaultLocation'
-  number:   14
-
-stagingloc:
-  id:       7
-  variable: 'StagingLocation'
-  number:   17
-
-closedbeta:
-  id:       8
-  variable: 'ClosedBeta'
-  number:   1
-
-hostname:
+---
+SystemVariable9:
   id: 9
-  variable: 'hostname'
-  value: 'highway-test.example.com'
+  variable: hostname
+  value: highway-test.example.com
+  number: 
+---
+SystemVariable10:
+  id: 10
+  variable: dnprefix
+  value: 
+  number: 
+---
+SystemVariable11:
+  id: 11
+  variable: inventory_dir
+  value: db/devices
+  number: 
+---
+SystemVariable12:
+  id: 12
+  variable: base_mac
+  value: 00-D0-E5-F2-00-00
+  number: 
+---
+SystemVariable13:
+  id: 13
+  variable: masa_url
+  value: https://highway-test.example.com
+  number: 
