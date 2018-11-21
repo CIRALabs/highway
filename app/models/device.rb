@@ -168,6 +168,7 @@ class Device < ActiveRecord::Base
     vendorprivkey = devdir.join("key.pem")
 
     if File.exists?(vendorprivkey)
+      puts "Reused private key from #{vendorprivkey}"
       @dev_key = OpenSSL::PKey.read(IO::read(vendorprivkey))
     else
       gen_priv_key       # sets @dev_key
