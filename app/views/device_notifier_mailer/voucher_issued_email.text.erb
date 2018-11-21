@@ -2,5 +2,5 @@
 Message from <%= @hostname %>
 =============================
 
-Device <%= @device.name %> was sold to <%= @owner.name %>
+Device <%= @device.name %> was <%= @resold ? "re-" : "" %>sold to <%= @owner.name %>
 

@@ -4,6 +4,7 @@ class DeviceNotifierMailer < ApplicationMailer
     @owner = voucher.owner
     @device= voucher.device
     @hostname = SystemVariable.string(:hostname)
+    @resold = @device.owners.count > 1
     type = voucher.voucher_type
     mail(to: ENV['USER'], subject: "New #{type} voucher issued for #{@device.name}")
   end
