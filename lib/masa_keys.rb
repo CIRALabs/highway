@@ -33,11 +33,7 @@ class MasaKeys < HighwayKeys
 
   protected
   def load_masa_priv_key
-    if ENV['CERTDIR']
-      masaprivkey_file=File.join(ENV['CERTDIR'], "masa_#{curve}.key")
-    else
-      masaprivkey_file=certdir.join("masa_#{curve}.key")
-    end
+    masaprivkey_file=certdir.join("masa_#{curve}.key")
 
     File.open(masaprivkey_file) do |f|
       OpenSSL::PKey.read(f)

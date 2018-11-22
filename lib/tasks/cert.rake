@@ -10,11 +10,12 @@ namespace :highway do
     #curve='secp384r1'
     curve = HighwayKeys.ca.curve
 
-    certdir = Rails.root.join('db').join('cert')
+    certdir = HighwayKeys.ca.certdir
     FileUtils.mkpath(certdir)
 
     vendorprivkey=certdir.join("vendor_#{curve}.key")
     if File.exists?(vendorprivkey)
+      puts "CA using existing key at: #{vendorprivkey}"
       root_key = OpenSSL::PKey.read(File.open(vendorprivkey))
     else
       # the CA's public/private key - 3*1024 + 8
@@ -52,9 +53,11 @@ namespace :highway do
     root_ca.add_extension(ef.create_extension("authorityKeyIdentifier","keyid:always",false))
     root_ca.sign(root_key, OpenSSL::Digest::SHA256.new)
 
-    File.open(certdir.join("vendor_#{curve}.crt"),'w') do |f|
+    outfile=certdir.join("vendor_#{curve}.crt")
+    File.open(outfile,'w') do |f|
       f.write root_ca.to_pem
     end
+    puts "CA Certificate writtten to: #{outfile}"
   end
 
   desc "Create a certificate for the MASA to sign vouchers with"
@@ -62,11 +65,12 @@ namespace :highway do
 
     curve = MasaKeys.ca.curve
 
-    certdir = Rails.root.join('db').join('cert')
+    certdir = HighwayKeys.ca.certdir
     FileUtils.mkpath(certdir)
 
     masaprivkey=certdir.join("masa_#{curve}.key")
     if File.exists?(masaprivkey)
+      puts "MASA using existing key at: #{masaprivkey}"
       masa_key = OpenSSL::PKey.read(File.open(masaprivkey))
     else
       # the MASA's public/private key - 3*1024 + 8
@@ -99,11 +103,14 @@ namespace :highway do
     ef.subject_certificate = masa_crt
     ef.issuer_certificate  = root_ca
     masa_crt.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
+    puts "Signing with CA key at #{HighwayKeys.ca.root_priv_key_file}"
     masa_crt.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
 
-    File.open(certdir.join("masa_#{curve}.crt"),'w') do |f|
+    outfile=certdir.join("masa_#{curve}.crt")
+    File.open(outfile,'w') do |f|
       f.write masa_crt.to_pem
     end
+    puts "MASA voucher signing certificate writtten to: #{outfile}"
   end
 
   desc "Create a certificate for the MASA to sign MUD objects"
@@ -111,11 +118,12 @@ namespace :highway do
 
     curve = MudKeys.ca.curve
 
-    certdir = Rails.root.join('db').join('cert')
+    certdir = HighwayKeys.ca.certdir
     FileUtils.mkpath(certdir)
 
     mudprivkey=certdir.join("mud_#{curve}.key")
     if File.exists?(mudprivkey)
+      puts "MUD using existing key at: #{mudprivkey}"
       mud_key = OpenSSL::PKey.read(File.open(mudprivkey))
     else
       # the MUD's public/private key - 3*1024 + 8
@@ -148,11 +156,14 @@ namespace :highway do
     ef.subject_certificate = mud_crt
     ef.issuer_certificate  = root_ca
     mud_crt.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
+    puts "Signing with CA key at #{HighwayKeys.ca.root_priv_key_file}"
     mud_crt.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
 
-    File.open(certdir.join("mud_#{curve}.crt"),'w') do |f|
+    outfile=certdir.join("mud_#{curve}.crt")
+    File.open(outfile,'w') do |f|
       f.write mud_crt.to_pem
     end
+    puts "MUD file signing certificate writtten to: #{outfile}"
   end
 
   desc "Create a certificate for the MASA web interface (EST) to answer requests"
@@ -160,11 +171,12 @@ namespace :highway do
 
     curve = HighwayKeys.ca.client_curve
 
-    certdir = Rails.root.join('db').join('cert')
+    certdir = HighwayKeys.ca.certdir
     FileUtils.mkpath(certdir)
 
     serverprivkey=certdir.join("server_#{curve}.key")
     if File.exists?(serverprivkey)
+      puts "Server using existing key at: #{serverprivkey}"
       server_key = OpenSSL::PKey.read(File.open(serverprivkey))
     else
       # the MASA's public/private key - 3*1024 + 8
@@ -197,11 +209,14 @@ namespace :highway do
     ef.subject_certificate = server_crt
     ef.issuer_certificate  = root_ca
     server_crt.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
+    puts "Signing with CA key at #{HighwayKeys.ca.root_priv_key_file}"
     server_crt.sign(HighwayKeys.ca.rootprivkey, HighwayKeys.ca.digest)
 
-    File.open(certdir.join("server_#{curve}.crt"),'w') do |f|
+    outfile=certdir.join("server_#{curve}.crt")
+    File.open(outfile,'w') do |f|
       f.write server_crt.to_pem
     end
+    puts "MASA server certificate writtten to: #{outfile}"
   end
 
   desc "Sign a IDevID certificate for a new device, EUI64=xx"

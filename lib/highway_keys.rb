@@ -30,7 +30,11 @@ class HighwayKeys
   end
 
   def certdir
-    @certdir ||= Rails.root.join('db').join('cert')
+    @certdir ||= if ENV['CERTDIR']
+                   Pathname.new(ENV['CERTDIR'])
+                 else
+                   Rails.root.join('db').join('cert')
+                 end
   end
 
   def vendor_pubkey
@@ -41,14 +45,13 @@ class HighwayKeys
     @ca ||= self.new
   end
 
+  def root_priv_key_file
+    @vendorprivkey ||= File.join(certdir, "vendor_#{curve}.key")
+  end
+
   protected
   def load_root_priv_key
-    if ENV['CERTDIR']
-      vendorprivkey=File.join(ENV['CERTDIR'], "vendor_#{curve}.key")
-    else
-      vendorprivkey=certdir.join("vendor_#{curve}.key")
-    end
-    File.open(vendorprivkey) do |f|
+    File.open(root_priv_key_file) do |f|
       OpenSSL::PKey.read(f)
     end
   end
