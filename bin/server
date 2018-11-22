@@ -1,0 +1,35 @@
+#!/bin/bash
+
+. /etc/profile.d/rvm.sh
+
+rvm use 2.5.1
+
+#cd ~/current
+
+echo RUNNING in `pwd`
+dir=$(pwd)
+
+RAILS_ENV=${RAILS_ENV-production}
+export RAILS_ENV
+
+case $RAILS_ENV in
+    production) priv=${dir}/db/cert/server_prime256v1.key;
+                cert=${dir}/db/cert/server_prime256v1.crt;;
+
+    *) priv=${dir}/spec/files/cert/server_prime256v1.key;
+       cert=${dir}/spec/files/cert/server_prime256v1.crt;
+       export CERTDIR=${dir}/spec/files/cert;;
+esac
+
+
+touch log/${RAILS_ENV}.log
+tail -f log/${RAILS_ENV}.log &
+TAIL_PID=$!
+trap "kill $TAIL_PID; exit 0" 1 2 3 15
+
+bundle exec thin start --ssl \
+  --address ::  \
+  --port    443  \
+  --ssl-cert-file ${cert} \
+  --ssl-key-file  ${priv} "$@"
+
