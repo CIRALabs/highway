@@ -62,6 +62,28 @@ RSpec.describe VoucherRequest, type: :model do
       expect(owner.pubkey).to eq(req14.signing_key)
     end
 
+    # validate that the parsing routines
+    it "should process a CMS voucher request content with unsigned pledge" do
+
+      token = File.read("spec/files/parboiled_00-D0-E5-F2-00-03.txt")
+      json0 = JSON.parse(token)
+      json1 = json0['ietf-voucher-request:voucher']
+      cvr = Chariwt::VoucherRequest.object_from_verified_json(json1, nil)
+
+      uvr = CmsVoucherRequest.from_json(cvr.inner_attributes, nil)
+      v = uvr.issue_voucher
+      expect(v).to_not be_nil
+    end
+
+    it "should validate a voucher request, with unsigned prior" do
+      req15 = voucher_requests(:voucher15)
+      expect(req15.prior_voucher_request).to_not be_nil
+      expect(req15.prior_voucher_request.proximityRegistrarCert).to_not be_nil
+      owner = req15.lookup_owner
+      expect(owner).to eq(owners(:owner9))
+      expect(owner.pubkey).to eq(req15.signing_key)
+    end
+
     it "should load a constrained voucher request into database" do
       token  = open("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
       regfile= File.join("spec","files","cert", "jrcA_prime256v1.crt")

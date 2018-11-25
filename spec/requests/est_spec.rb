@@ -18,6 +18,18 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
       expect(response).to have_http_status(406)
     end
 
+    it "processes unsigned plege request from registrar" do
+      token = File.read("spec/files/parboiled_vr_00-12-34-56-78-9A.vrq")
+      post "/.well-known/est/requestvoucher", params: token, headers: {
+             'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
+             'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
+           }
+
+      expect(response).to have_http_status(200)
+      expect(assigns(:voucherreq).device_identifier).to eq('00-D0-E5-F2-12-34')
+      expect(assigns(:voucher).owner).to_not be_nil
+    end
+
     it "POST /.well-known/est/requestvoucher" do
       # make an HTTPS request for a new voucher
       # this is section 3.3 of RFCXXXX/draft-ietf-anima-dtbootstrap-anima-keyinfra

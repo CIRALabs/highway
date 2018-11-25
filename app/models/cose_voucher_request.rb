@@ -43,7 +43,12 @@ class CoseVoucherRequest < VoucherRequest
   end
 
   def prior_voucher_request
-    @prior_voucher_request ||= Chariwt::VoucherRequest.from_cose_withoutkey(pledge_request)
+    case pledge_request
+    when String
+      @prior_voucher_request ||= Chariwt::VoucherRequest.from_cose_withoutkey(pledge_request)
+    when Hash
+      @prior_voucher_request ||= Chariwt::VoucherRequest.object_from_unsigned_json(pledge_request)
+    end
   end
 
   def extract_prior_signed_voucher_request(cvr)

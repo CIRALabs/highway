@@ -45,7 +45,9 @@ class VoucherRequest < ApplicationRecord
 
   def populate_explicit_fields(hash = details)
     self.device_identifier = hash["serial-number"]
-    self.device            = Device.find_by_number(device_identifier)
+    if self.device_identifier
+      self.device            = Device.find_by_number(device_identifier)
+    end
     self.nonce             = hash["nonce"]
   end
 
