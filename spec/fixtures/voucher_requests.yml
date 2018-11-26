@@ -108,7 +108,7 @@ voucher14:
 
 voucher15:
   id: 15
-  type: VoucherRequest
+  type: UnsignedVoucherRequest
   signing_key:
   pledge_request:
   details:
