@@ -1,8 +1,8 @@
 class CmsVoucherRequest < VoucherRequest
   def self.from_pkcs7(token, json = nil)
     # look to see if this is a byte-for-byte identical requestion
-    if voucher = where(voucher_request: token).take
-      return voucher
+    if vreq = where(voucher_request: token).take
+      return vreq
     end
 
     cvr = Chariwt::VoucherRequest.from_pkcs7_withoutkey(token)
@@ -10,15 +10,15 @@ class CmsVoucherRequest < VoucherRequest
     unless cvr
       raise InvalidVoucherRequest
     end
-    voucher = from_json(cvr.inner_attributes, token)
-    voucher.extract_prior_signed_voucher_request(cvr)
-    voucher.populate_explicit_fields
-    voucher.signing_key = Base64.urlsafe_encode64(cvr.signing_cert.public_key.to_der)
+    vreq = from_json(cvr.inner_attributes, token)
+    vreq.extract_prior_signed_voucher_request(cvr)
+    vreq.populate_explicit_fields
+    vreq.signing_key = Base64.urlsafe_encode64(cvr.signing_cert.public_key.to_der)
 
-    voucher.lookup_owner
-    voucher.validate_prior!
-    voucher.save!
-    voucher
+    vreq.lookup_owner
+    vreq.validate_prior!
+    vreq.save!
+    vreq
   end
 
   def pledge_json
