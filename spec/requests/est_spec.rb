@@ -21,8 +21,8 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
     it "processes unsigned plege request from registrar" do
       token = File.read("spec/files/parboiled_vr_00-12-34-56-78-9A.vrq")
       post "/.well-known/est/requestvoucher", params: token, headers: {
-             'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
-             'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
+             'CONTENT_TYPE' => 'application/voucher-cms+json',
+             'ACCEPT'       => 'application/voucher-cms+json'
            }
 
       expect(response).to have_http_status(200)
@@ -35,8 +35,8 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
       # this is section 3.3 of RFCXXXX/draft-ietf-anima-dtbootstrap-anima-keyinfra
       token = File.read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
       post "/.well-known/est/requestvoucher", params: token, headers: {
-             'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
-             'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
+             'CONTENT_TYPE' => 'application/voucher-cms+json',
+             'ACCEPT'       => 'application/voucher-cms+json'
            }
 
       expect(response).to have_http_status(200)
@@ -52,8 +52,8 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
 
       expect {
         post "/.well-known/est/requestvoucher", params: token, headers: {
-               'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
-               'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher',
+               'CONTENT_TYPE' => 'application/voucher-cms+json',
+               'ACCEPT'       => 'application/voucher-cms+json',
                'SSL_CLIENT_CERT'=> pubkey_pem
              }
 
@@ -138,8 +138,8 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
       # this is section 5.7 of RFCXXXX/draft-ietf-anima-dtbootstrap-anima-keyinfra
       token = IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
       post "/.well-known/est/requestauditlog", params: token, headers: {
-             'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
-             'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
+             'CONTENT_TYPE' => 'application/voucher-cms+json',
+             'ACCEPT'       => 'application/voucher-cms+json'
            }
 
       expect(response).to have_http_status(404)
@@ -149,8 +149,8 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
       pending "needs an another parboiled voucher request"
       token = IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
       post "/.well-known/est/requestauditlog", params: token, headers: {
-             'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
-             'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
+             'CONTENT_TYPE' => 'application/voucher-cms+json',
+             'ACCEPT'       => 'application/voucher-cms+json'
            }
 
       expect(response).to have_http_status(200)
@@ -165,14 +165,14 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
       # this is section 5.7 of RFCXXXX/draft-ietf-anima-dtbootstrap-anima-keyinfra
       token = IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
       post "/.well-known/est/requestvoucher", params: token, headers: {
-             'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
-             'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
+             'CONTENT_TYPE' => 'application/voucher-cms+json',
+             'ACCEPT'       => 'application/voucher-cms+json'
            }
       expect(response).to have_http_status(200)
 
       post "/.well-known/est/requestauditlog", params: token, headers: {
-             'CONTENT_TYPE' => 'application/pkcs7-mime; smime-type=voucher-request',
-             'ACCEPT'       => 'application/pkcs7-mime; smime-type=voucher'
+             'CONTENT_TYPE' => 'application/voucher-cms+json',
+             'ACCEPT'       => 'application/voucher-cms+json'
            }
 
       expect(response).to have_http_status(200)

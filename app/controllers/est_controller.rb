@@ -26,9 +26,7 @@ class EstController < ApiController
     media_type = media_types.first
 
     case
-    when ((media_type.mime_type  == 'application/pkcs7-mime' and
-           media_type.parameters == { 'smime-type' => 'voucher-request'} ) or
-          (media_type.mime_type == 'application/voucher-cms+json'))
+    when (media_type.mime_type == 'application/voucher-cms+json')
 
       binary_pkcs = Base64.decode64(request.body.read)
       @voucherreq = CmsVoucherRequest.from_pkcs7(binary_pkcs)
