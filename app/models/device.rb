@@ -7,6 +7,9 @@ class Device < ActiveRecord::Base
 
   attr_accessor :idevid, :dev_key
 
+  class CSRNotverified < Exception; end
+  class CSRSerialNumberDuplicated < Exception; end
+
   before_save :fill_in_pub_key
   before_save :serial_number_from_eui64
 
@@ -53,8 +56,7 @@ class Device < ActiveRecord::Base
   # also be ignored.
   def self.create_from_csr(csr)
     unless csr.verify(csr.public_key)
-      # raise bad CSR?
-      return nil
+      raise CSRNotVerified;
     end
 
     dev = self.find_by_PKey(csr.public_key)
@@ -80,8 +82,7 @@ class Device < ActiveRecord::Base
       if attributes["serialNumber"]
         odev = active.find_by_serial_number(attributes["serialNumber"])
         if odev
-          # raise duplicate?
-          return nil
+          raise CSRSerialNumberDuplicated.new("#{attributes["serialNumber"]} duplicated by #{odev.id}");
         end
       end
 
