@@ -35,15 +35,19 @@ class CmsVoucherRequest < VoucherRequest
   end
 
   def prior_voucher_request
-    @prior_voucher_request ||= Chariwt::VoucherRequest.from_pkcs7_withoutkey(pledge_request)
+    if pledge_request
+      @prior_voucher_request ||= Chariwt::VoucherRequest.from_pkcs7_withoutkey(pledge_request)
+    end
   end
 
   def extract_prior_signed_voucher_request(cvr)
     self.pledge_request    = cvr.priorSignedVoucherRequest
 
-    # save the decoded results into JSON bag.
-    self.details["prior-signed-voucher-request"] = pledge_json
-    if cvr.signing_cert
+    if pledge_request
+      # save the decoded results into JSON bag.
+      self.details["prior-signed-voucher-request"] = pledge_json
+    end
+    if cvr.signing_cert and pledge_request
       self.prior_signing_key = Base64.urlsafe_encode64(prior_voucher_request.signing_cert.public_key.to_der)
     end
 
