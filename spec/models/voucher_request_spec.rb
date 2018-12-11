@@ -77,7 +77,6 @@ RSpec.describe VoucherRequest, type: :model do
 
     it "should validate a voucher request, with unsigned prior" do
       req15 = voucher_requests(:voucher15)
-      byebug
       expect(req15.prior_voucher_request).to_not be_nil
       expect(req15.prior_voucher_request.proximityRegistrarCert).to_not be_nil
       owner = req15.lookup_owner
