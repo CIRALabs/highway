@@ -9,7 +9,7 @@ namespace :highway do
     verbose   = ENV['VERBOSE'].present?
 
     # where is the inventory stored?
-    inv_dir = SystemVariable.string(:inventory_dir)
+    inv_dir = Pathname.new(SystemVariable.string(:inventory_dir))
     unless inv_dir
       # set a sane default
       inv_dir = Rails.root.join('db/inventory')
@@ -19,7 +19,7 @@ namespace :highway do
     # make sure the directory exists.
     #FileUtils.mkdir_p(inv_dir)
 
-    sold_dir = File.join(inv_dir, "sold")
+    sold_dir = Pathname.new(inv_dir).join("sold")
     FileUtils.mkdir_p(sold_dir)
 
     # now count how many devices exist which have no owner.
@@ -58,7 +58,10 @@ namespace :highway do
         system("cp #{MasaKeys.masa.masa_pubkey} #{File.join(newdev.device_dir(tdir), "masa.crt")}")
 
         # now zip up the key.
-        zipfile = File.join(inv_dir, newdev.zipfilename)
+        zipfile = inv_dir.join(newdev.zipfilename)
+        unless zipfile.absolute?
+          zipfile=Rails.root.join(zipfile)
+        end
         cmd = "cd #{tdir} && zip -r #{zipfile} #{newdev.sanitized_eui64}"
         puts "Running: #{cmd}"
         system(cmd)
@@ -70,9 +73,9 @@ namespace :highway do
     # for download.
     puts "Found #{Device.owned.count} devices owned" if verbose
     Device.owned.each { |dev|
-      zipfile = File.join(inv_dir, dev.zipfilename)
+      zipfile = inv_dir.join(dev.zipfilename)
       if File.exists?(zipfile)
-        sold_zipfile = File.join(sold_dir, dev.zipfilename)
+        sold_zipfile = sold_dir.join(dev.zipfilename)
 
         puts "Marking #{zipfile} as sold"
         File.rename(zipfile, sold_zipfile)
