@@ -1,7 +1,7 @@
 class CmsVoucher < Voucher
 
   def voucher_type
-    "cose_voucher"
+    "cms_voucher"
   end
 
   def sign!(today = DateTime.now.utc)
