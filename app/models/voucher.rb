@@ -26,6 +26,11 @@ class Voucher < ActiveRecord::Base
     MasaKeys.masa.masakey
   end
 
+  def sign!
+    raise Exception
+  end
+
+  # sign! is implemented in subclass.
   def self.create_voucher(owner, device, effective_date, nonce = nil, expires = nil)
     voucher = create(owner: owner,
                      device: device,
