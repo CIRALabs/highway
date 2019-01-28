@@ -12,7 +12,7 @@ set :repo_url, "git@github.com:AnimaGUS-minerva/highway.git"
 set :deploy_to, "/data/highway/highway"
 
 set :rvm_type, :system
-set :rvm_ruby_version, '2.4.1'
+set :rvm_ruby_version, '2.6.0'
 set :rvm_roles,    [:app]
 set :bundle_roles, [:app]
 
