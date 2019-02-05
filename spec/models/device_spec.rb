@@ -122,6 +122,12 @@ RSpec.describe Device, type: :model do
       vizsla.sign_eui64
       expect(vizsla.idevid.serial).to eq(2)
 
+      vizsla.idevid.extensions.each { |ext|
+        case ext.oid
+        when "basicConstraints"
+          expect(ext.value).to eq("CA:FALSE")
+        end
+      }
     end
 
     it "should create a certificate with an interesting MASA url" do
