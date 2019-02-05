@@ -126,8 +126,11 @@ RSpec.describe Device, type: :model do
         case ext.oid
         when "basicConstraints"
           expect(ext.value).to eq("CA:FALSE")
+        when "keyUsage"
+          expect(ext.value).to eq("Digital Signature")
         end
       }
+      expect(vizsla.store_certificate).to be_truthy
     end
 
     it "should create a certificate with an interesting MASA url" do
