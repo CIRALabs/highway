@@ -1,1 +1,1 @@
-require 'config/environments/production'
+require_relative 'production'
