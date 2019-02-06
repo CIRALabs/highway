@@ -2,6 +2,21 @@
 
 namespace :highway do
 
+  desc "Given a device by PRODUCTID=xxx, resign the IDevID"
+  task :updatecert => :environment do
+    productid  = ENV['PRODUCTID']
+
+    device = Device.find_by_number(productid)
+    if device
+      device.gen_or_load_priv_key(HighwayKeys.ca.devicedir)
+      device.sign_eui64
+      device.store_certificate
+      puts "Device #{device.id} updated in #{device.device_dir}"
+    else
+      puts "Device #{productid} not found"
+    end
+  end
+
   desc "Maintain inventory of devices to buy, INVENTORY=count"
   task :inventory => :environment do
 
