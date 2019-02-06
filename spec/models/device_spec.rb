@@ -128,6 +128,8 @@ RSpec.describe Device, type: :model do
           expect(ext.value).to eq("CA:FALSE")
         when "keyUsage"
           expect(ext.value).to eq("Digital Signature")
+        when "extendedKeyUsage"
+          expect(ext.value).to eq("TLS Web Client Authentication")
         end
       }
       expect(vizsla.store_certificate).to be_truthy

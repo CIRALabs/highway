@@ -249,6 +249,7 @@ class Device < ActiveRecord::Base
     @idevid.add_extension(extension_factory.create_extension("subjectKeyIdentifier","hash",false))
     @idevid.add_extension(extension_factory.create_extension("basicConstraints","CA:FALSE",false))
     @idevid.add_extension(extension_factory.create_extension("keyUsage","digitalSignature",false))
+    @idevid.add_extension(extension_factory.create_extension("extendedKeyUsage","clientAuth",false))
 
     # the OID: 1.3.6.1.4.1.46930.1 is a Private Enterprise Number OID:
     #    iso.org.dod.internet.private.enterprise . SANDELMAN=46930 . 1
