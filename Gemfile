@@ -24,7 +24,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem "sentry-raven"
 
 gem 'uglifier'
-gem 'openssl', :git => 'https://github.com/mcr/ruby-openssl.git', :branch => 'dtls-coap-client'
+#gem 'openssl', :git => 'https://github.com/mcr/ruby-openssl.git', :branch => 'dtls-coap-client'
+gem 'openssl', :path => '../minerva/ruby-openssl'
 
 # for github warning
 gem "loofah", ">= 2.2.3"
@@ -52,8 +53,8 @@ gem 'multipart_body', :git => 'https://github.com/AnimaGUS-minerva/multipart_bod
 gem 'ecdsa',   :git => 'https://github.com/AnimaGUS-minerva/ruby_ecdsa.git', :branch => 'ecdsa_interface_openssl'
 #gem 'ecdsa',   :path => '../minerva/ruby_ecdsa'
 
-gem 'chariwt', :path => '../chariwt'
-#gem 'chariwt', :git => 'https://github.com/mcr/ChariWTs.git'
+#gem 'chariwt', :path => '../chariwt'
+gem 'chariwt', :git => 'https://github.com/mcr/ChariWTs.git'
 gem 'jwt'
 
 gem 'thin'
