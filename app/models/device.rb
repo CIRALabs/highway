@@ -61,8 +61,6 @@ class Device < ActiveRecord::Base
 
     dev = self.find_by_PKey(csr.public_key)
 
-
-
     # if no existing device, then look for one with the same serial number, and
     # reject if it exists.
     unless dev
@@ -237,7 +235,7 @@ class Device < ActiveRecord::Base
   def sign_eui64
     @idevid  = OpenSSL::X509::Certificate.new
     @idevid.version = 2
-    @idevid.serial = SystemVariable.nextval(:serialnumber)
+    @idevid.serial = SystemVariable.randomseq(:serialnumber)
     @idevid.issuer = HighwayKeys.ca.rootkey.issuer
     @idevid.public_key = self.public_key
     @idevid.subject = OpenSSL::X509::Name.new([["serialNumber", serial_number,12]])
