@@ -18,7 +18,9 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
       expect(response).to have_http_status(406)
     end
 
-    it "processes unsigned plege request from registrar" do
+    # when the pledge request is unsigned, the registrar does not forward
+    # any part of that request, so has no prior-signed-voucher-request
+    it "processes request from registrar without prior-signed-voucher-request" do
       token = File.read("spec/files/parboiled_vr_00-12-34-56-78-9A.vrq")
       post "/.well-known/est/requestvoucher", params: token, headers: {
              'CONTENT_TYPE' => 'application/voucher-cms+json',
