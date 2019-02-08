@@ -156,21 +156,21 @@ class Device < ActiveRecord::Base
     sprintf("product_%s.zip", sanitized_eui64)
   end
 
-  def store_priv_key(dir)
+  def vendorprivkey(dir = HighwayKeys.ca.devicedir)
+    @vendorprivkey ||= device_dir(dir).join("key.pem")
+  end
+
+  def store_priv_key(dir = HighwayKeys.ca.devicedir)
     FileUtils.mkpath(device_dir(dir))
 
-    vendorprivkey = device_dir(dir).join("key.pem")
-    File.open(vendorprivkey, "w", 0600) do |f| f.write @dev_key.to_pem end
-    File.chmod(0400, vendorprivkey)
+    File.open(vendorprivkey(dir), "w", 0600) do |f| f.write @dev_key.to_pem end
+    File.chmod(0400, vendorprivkey(dir))
   end
 
   def gen_or_load_priv_key(dir, curve = 'prime256v1')
-    devdir = dir.join(sanitized_eui64)
-    vendorprivkey = devdir.join("key.pem")
-
-    if File.exists?(vendorprivkey)
-      puts "Reused private key from #{vendorprivkey}"
-      @dev_key = OpenSSL::PKey.read(IO::read(vendorprivkey))
+    if File.exists?(vendorprivkey(dir))
+      puts "Reused private key from #{vendorprivkey(dir)}"
+      @dev_key = OpenSSL::PKey.read(IO::read(vendorprivkey(dir)))
     else
       gen_priv_key       # sets @dev_key
       store_priv_key(dir)
