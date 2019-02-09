@@ -112,7 +112,7 @@ RSpec.describe Device, type: :model do
 
       almec.gen_or_load_priv_key(HighwayKeys.ca.devicedir)
       almec.sign_eui64
-      expect(almec.idevid.serial).to eq(1)
+      expect(almec.idevid.serial).to be > 1
       almec.save!
       expect(almec.pub_key).to_not be_nil
 
@@ -120,19 +120,24 @@ RSpec.describe Device, type: :model do
 
       vizsla.gen_or_load_priv_key(HighwayKeys.ca.devicedir)
       vizsla.sign_eui64
-      expect(vizsla.idevid.serial).to eq(2)
+      expect(vizsla.idevid.serial).to_not eq(almec.idevid.serial)
 
+      keyUsage = false
+      eku      = false
       vizsla.idevid.extensions.each { |ext|
         case ext.oid
         when "basicConstraints"
           expect(ext.value).to eq("CA:FALSE")
         when "keyUsage"
-          expect(ext.value).to eq("Digital Signature")
+          keyUsage=(ext.value == "Digital Signature")
+
         when "extendedKeyUsage"
-          expect(ext.value).to eq("TLS Web Client Authentication")
+          eku=(ext.value == "TLS Web Client Authentication")
         end
       }
       expect(vizsla.store_certificate).to be_truthy
+      expect(eku).to      be false
+      expect(keyUsage).to be false
     end
 
     it "should create a certificate with an interesting MASA url" do
