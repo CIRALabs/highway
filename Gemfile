@@ -24,8 +24,11 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem "sentry-raven"
 
 gem 'uglifier'
-#gem 'openssl', :git => 'https://github.com/mcr/ruby-openssl.git', :branch => 'dtls-coap-client'
-gem 'openssl', :path => '../minerva/ruby-openssl'
+
+# need CMS code, but not DTLS code, so do not complicate life with
+# need for openssl 1.1.1 w/patches.
+gem 'openssl', :git => 'https://github.com/CIRALabs/ruby-openssl.git', :branch => 'cms-added'
+#gem 'openssl', :path => '../minerva/ruby-openssl'
 
 # for github warning
 gem "loofah", ">= 2.2.3"
