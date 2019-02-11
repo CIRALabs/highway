@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: shg-comet-h4-masa-server-cert
+  namespace: shg
+spec:
+  template:
+    spec:
+      containers:
+      - image: shg-comet:latest
+        name: shg-comet
+        command: ["bundle", "exec", "rake", "highway:h4_masa_server_cert"]
+        resources: 
+          requests:
+            memory: 128Mi
+            cpu: 100m
+      restartPolicy: Never

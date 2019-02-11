@@ -1,10 +1,18 @@
 production:
-  adapter: amalgalite
-  database: /app/highway/production.sqlite3
+  adapter: postgresql
+  encoding: unicode
+  database: comet
   pool: 5
   timeout: 5000
+  host: prodhost.example
+  user: <%= ENV['COMET_PROD_DB_USER'] %>
+  password: <%= ENV['COMET_PROD_DB_PASSWORD'] %>
 development:
-  adapter: amalgalite
-  database: /app/highway/development.sqlite3
+  adapter: postgresql
+  encoding: unicode
+  database: comet
   pool: 5
   timeout: 5000
+  host: devhost.example
+  user: <%= ENV['COMET_DEV_DB_USER'] %>
+  password: <%= ENV['COMET_DEV_DB_PASSWORD'] %>

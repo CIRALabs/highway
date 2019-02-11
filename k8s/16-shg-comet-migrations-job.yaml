@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: shg-comet-migrations
+  namespace: shg
+spec:
+  template:
+    spec:
+      containers:
+      - image: shg-comet:latest
+        name: shg-comet
+        command: ["bundle", "exec", "rake", "db:migrate"]
+        resources: 
+          requests:
+            memory: 128Mi
+            cpu: 100m
+      restartPolicy: Never

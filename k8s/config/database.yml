@@ -1,0 +1,9 @@
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: comet
+  pool: 5
+  timeout: 5000
+  host: prodhost.example
+  user: <%= ENV['COMET_DB_USER'] %>
+  password: <%= ENV['COMET_DB_PASSWORD'] %>
