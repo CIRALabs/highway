@@ -3,28 +3,28 @@ SystemVariable9:
   id: 9
   variable: hostname
   value: highway-test.example.com
-  number: 
+  number:
 ---
 SystemVariable10:
   id: 10
   variable: dnprefix
-  value: 
-  number: 
+  value:
+  number:
 ---
 SystemVariable11:
   id: 11
   variable: inventory_dir
   value: db/devices
-  number: 
+  number:
 ---
 SystemVariable12:
   id: 12
   variable: base_mac
   value: 00-D0-E5-F2-00-00
-  number: 
+  number:
 ---
 SystemVariable13:
   id: 13
-  variable: masa_url
-  value: https://highway-test.example.com
-  number: 
+  variable: masa_iauthority
+  value: highway-test.example.com
+  number:
