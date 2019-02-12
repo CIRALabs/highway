@@ -25,8 +25,17 @@ class HighwayKeys
     OpenSSL::Digest::SHA384.new
   end
 
+  def device_prefix
+    @deviceprefix ||= ""
+  end
+
   def devicedir
-    @devdir  ||= Rails.root.join('db').join('devices')
+    @devdir  ||= if ENV['DEVICEDIR']
+                   Pathname.new(ENV['DEVICEDIR'])
+                   @deviceprefix="product_"
+                 else
+                   Rails.root.join('db').join('devices')
+                 end
   end
 
   def certdir
