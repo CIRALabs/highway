@@ -36,6 +36,9 @@ namespace :highway do
     prompt_variable_value("Hostname for this instance",
                           :hostname)
 
+    prompt_variable_number("Port number this instance",
+                          :portnum)
+
     prompt_variable_value("DN prefix for certificates",
                           :dnprefix)
 
@@ -45,7 +48,9 @@ namespace :highway do
     prompt_variable_value("Setup inventory base mac address",
                           :base_mac)
 
-    SystemVariable.setvalue(:masa_url, "https://" + SystemVariable.string(:hostname))
+    SystemVariable.setvalue(:masa_iauthority, sprintf("%s:%u",
+                                                      SystemVariable.string(:hostname),
+                                                      SystemVariable.number(:portnum)))
 
     SystemVariable.dump_vars
   end
