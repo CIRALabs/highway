@@ -147,7 +147,7 @@ class Device < ActiveRecord::Base
   end
 
   def device_dir(dir)
-    @devdir ||= dir.join(HighwayKeys.ca.device_prefix + sanitized_eui64)
+    @devdir ||= dir.join(sanitized_eui64)
   end
 
   def zipfilename

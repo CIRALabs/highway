@@ -45,10 +45,16 @@ RSpec.describe Device, type: :model do
     it "should generate a new public/private key pair, and sign it" do
       almec = devices(:almec)
 
+      # use temporary directory for this test
+      olddir = HighwayKeys.ca.devdir
+      newdir = Rails.root.join("tmp").join("devices")
+      HighwayKeys.ca.devdir = newdir
+      FileUtils.remove_entry_secure(newdir)
       almec.gen_and_store_key
 
       expect(almec.idevid_cert).to_not be_nil
-      expect(File.exists?("db/devices/#{almec.sanitized_eui64}/device.crt")).to be true
+      expect(File.exists?(File.join(HighwayKeys.ca.devicedir, "#{almec.sanitized_eui64}/device.crt"))).to be true
+      HighwayKeys.ca.devdir = olddir
       # expect almec public key to verify with root key
     end
 
