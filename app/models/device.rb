@@ -146,7 +146,7 @@ class Device < ActiveRecord::Base
     @sanitized_eui64 ||= eui64.upcase.gsub(/[^0-9A-F-]/,"")
   end
 
-  def device_dir(dir)
+  def device_dir(dir = HighwayKeys.ca.devicedir)
     @devdir ||= dir.join(sanitized_eui64)
   end
 
