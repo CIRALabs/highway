@@ -17,6 +17,24 @@ namespace :highway do
     end
   end
 
+  desc "List all devices with their state"
+  task :list_dev => :environment do
+
+    puts sprintf("%22s  %26s %s",
+                 "PRODUCTID", "EUI64", "status")
+    Device.all.each { |dev|
+      if dev.owner
+        ownerstr = "owned by #{dev.name}"
+      else
+        ownerstr = "unowned"
+      end
+      puts sprintf("%22s: %26s %s",
+                   dev.serial_number,
+                   dev.eui64,
+                   ownerstr)
+    }
+  end
+
   desc "Maintain inventory of devices to buy, INVENTORY=count"
   task :inventory => :environment do
 
