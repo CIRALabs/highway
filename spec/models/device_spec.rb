@@ -147,13 +147,13 @@ RSpec.describe Device, type: :model do
     end
 
     it "should create a certificate with an interesting MASA url" do
-      SystemVariable.setvalue(:masa_url, "https://masa.example.com")
+      SystemVariable.setvalue(:masa_iauthority, "masa.example.com:1234")
 
       ndev = Device.new
       ndev.eui64 = '00-16-3e-ff-fe-d0-55-aa'
       ndev.gen_and_store_key
 
-      expect(system("openssl x509 -noout -text -in #{ndev.certificate_filename} | grep masa.example.com")).to be true
+      expect(system("openssl x509 -noout -text -in #{ndev.certificate_filename} | grep masa.example.com:1234")).to be true
     end
   end
 
