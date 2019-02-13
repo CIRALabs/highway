@@ -16,3 +16,4 @@ development:
   host: devhost.example
   user: <%= ENV['COMET_DEV_DB_USER'] %>
   password: <%= ENV['COMET_DEV_DB_PASSWORD'] %>
+

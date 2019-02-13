@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shg-comet-files
+  namespace: shg
+data:
+  config.yml: |
+    config:
+      cache_classes: false
+      eager_load: false
+      consider_all_requests_local: true
+      action_controller:
+        perform_caching: false
+      action_mailer:
+        smtp_settings:
+          address: localhost
+          port: 25
+          enable_starttls_auto: false
+          openssl_verify_mode: none
+        perform_deliveries: false
+        raise_delivery_errors: true
+        default_options:
+          from: mcr+minerva@sandelman.ca
+      active_support:
+        deprecation: :log
+      public_file_server:
+        enabled: false
+      active_record:
+        migration_error: :page_load
+      assets:
+        debug: true
+        digest: true
+        raise_runtime_errors: true
+  database.yml: |
+    production:
+      adapter: postgresql
+      encoding: unicode
+      database: comet
+      pool: 5
+      timeout: 5000
+      host: prodhost.example
+      user: <%= ENV['COMET_DB_USER'] %>
+      password: <%= ENV['COMET_DB_PASSWORD'] %>
+  secrets.yml: |
+    production:
+      secret_key_base: <%= ENV['COMET_SECRET_KEY_BASE'] %>
+      pepper: <%= ENV['COMET_SECRET_PEPPER'] %>
