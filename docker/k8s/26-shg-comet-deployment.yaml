@@ -15,11 +15,11 @@ spec:
     spec:
       containers:
       - image: shg-comet:latest
-        command: ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"] 
+        command: ["bin", "server"]
         name: shg-comet
         ports:
         - name: api-comet
-          port: 3000
+          port: 9443
           protocol: TCP
           envFrom:
           - configMapRef:

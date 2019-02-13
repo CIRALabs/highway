@@ -24,4 +24,5 @@ spec:
           - path: /
             backend:
               serviceName: shg-comet
-              servicePort: 3000
+              servicePort: 9443
+              
