@@ -54,5 +54,7 @@ end
 
 # in development mode, use the canned certificates from spec/files/cert,
 # which are also used for test.
-HighwayKeys.ca.certdir = Rails.root.join('spec','files','cert')
-MasaKeys.ca.certdir = Rails.root.join('spec','files','cert')
+unless ENV['CERTDIR']
+  HighwayKeys.ca.certdir = Rails.root.join('spec','files','cert')
+  MasaKeys.ca.certdir = Rails.root.join('spec','files','cert')
+end
