@@ -13,3 +13,4 @@ db/highway_test.sqlite
 /log/*
 !/log/.keep
 /tmp
+run
