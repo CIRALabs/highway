@@ -1,0 +1,66 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: shg
+  name: shg-comet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shg-comet
+  template:
+    metadata:
+      labels:
+        app: shg-comet
+    spec:
+      containers:
+      - image: shg-comet:latest
+        command: ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"] 
+        name: shg-comet
+        ports:
+        - name: api-comet
+          port: 3000
+          protocol: TCP
+          envFrom:
+          - configMapRef:
+            name: shg-comet-env
+          env:
+          - name: COMET_DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: shg-comet
+                key: comet-db-user
+          - name: COMET_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: shg-comet
+                key: comet-db-password
+          - name: COMET_SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: shg-comet
+                key: comet-secret-key-base
+          - name: COMET_SECRET_PEPPER
+            valueFrom:
+              secretKeyRef:
+                name: shg-comet
+                key: comet-secret-pepper
+        volumeMounts:
+        - name: certs
+          mountPath:  /etc/shg/certs
+        - name: config
+          mountPath: /config/shg/config.yml
+          subPath: config.yml
+        - name: config
+          mountPath: /config/shg/database.yml
+          subPath: database.yml
+        - name: config
+          mountPath: /config/shg/secret.yml
+          subPath: secret.yml
+      volumes:
+      - name: certs
+        secret: shg-comet-certs
+      - name: config
+        configMap:
+          name: shg-comet-files
+          defaultMode: 420
