@@ -7,7 +7,7 @@ Rails.application.initialize!
 $MASAUrl = 'https://highway.sandelman.ca/'
 $ADMINTERFACE = false
 
-$VERSION = "0.92"
+$VERSION = "0.93"
 
 # gets overritten by config/initializers/revision.rb by capistrano
 $REVISION= "devel"
