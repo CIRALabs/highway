@@ -25,6 +25,8 @@ namespace :highway do
     Device.all.each { |dev|
       if dev.owner
         ownerstr = "owned by #{dev.name}"
+      elsif dev.obsolete?
+        ownerstr = "obsolete"
       else
         ownerstr = "unowned"
       end
