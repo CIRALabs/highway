@@ -19,6 +19,7 @@ class Device < ActiveRecord::Base
   scope :unowned, -> { where(owner: nil) }
 
   def self.canonicalize_eui64(str)
+    return '' unless str
     nocolondash = str.downcase.gsub(/[\-\:]/,'')
     result=''
     filler=''
