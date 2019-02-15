@@ -32,7 +32,7 @@ GIT
 
 GIT
   remote: https://github.com/mcr/ChariWTs.git
-  revision: 6615513aee4479f334001dc4f720c7a144b3b3ef
+  revision: d019cdae37b82e7ede2a3ee3b63f65992a908cbe
   specs:
     chariwt (0.6.0)
       cbor (~> 0.5.0)
@@ -334,4 +334,4 @@ DEPENDENCIES
   uglifier
 
 BUNDLED WITH
-   1.17.2
+   1.17.3
