@@ -8,17 +8,13 @@ class EstController < ApiController
   def requestvoucher
 
     clientcert = nil
-    clientcert_pem   = request.env["SSL_CLIENT_CERT"]
-    clientcert_pem ||= request.env["rack.peer_cert"]
-    if clientcert_pem
-      clientcert = OpenSSL::X509::Certificate.new(Chariwt::Voucher.decode_pem(clientcert_pem))
-    end
-
     @replytype  = request.content_type
+    @clientcert = capture_client_certificate
 
     media_types = HTTP::Accept::MediaTypes.parse(request.env['CONTENT_TYPE'])
 
     if media_types == nil or media_types.length < 1
+      capture_bad_request
       head 406,
            text: "unknown voucher-request content-type: #{request.content_type}"
       return
@@ -33,30 +29,27 @@ class EstController < ApiController
 
     when (media_type.mime_type == 'application/voucher-cose+cbor')
       begin
-        @voucherreq = CoseVoucherRequest.from_cbor_cose_io(request.body, clientcert)
+        @voucherreq = CoseVoucherRequest.from_cbor_cose_io(request.body, @clientcert)
       rescue VoucherRequest::InvalidVoucherRequest
         DeviceNotifierMailer.invalid_voucher_request(request).deliver
+        capture_bad_request
         head 406,
              text: "voucher request was not signed with known public key"
         return
       end
     else
+      capture_bad_request
       head 406,
            text: "unknown voucher-request content-type: #{request.content_type}"
       return
     end
 
     unless @voucherreq
+      capture_bad_request
       head 404, text: 'missing voucher request'
       return
     end
 
-    if clientcert_pem
-      @voucherreq.tls_clientcert = clientcert_pem
-    end
-
-    # keep the raw encoded request.
-    @voucherreq.originating_ip = request.ip
 
     @voucherreq.save!
     @voucher,@reason = @voucherreq.issue_voucher
@@ -100,10 +93,12 @@ class EstController < ApiController
       }
 
       unless @answered
+        capture_bad_request
         head 406, text: "no acceptable HTTP_ACCEPT type found"
       end
 
     else
+      capture_bad_request
       logger.error "no voucher issued for #{request.ip}, reason: #{@reason.to_s}"
       head 404, text: @reason.to_s
     end
@@ -121,6 +116,31 @@ class EstController < ApiController
     else
       head 404, text: 'invalid device'
     end
+  end
+
+  private
+
+  def capture_client_certificate
+    clientcert_pem = request.env["SSL_CLIENT_CERT"]
+    clientcert_pem ||= request.env["rack.peer_cert"]
+    if @voucherreq
+      if clientcert_pem
+        @voucherreq.tls_clientcert = clientcert_pem
+      end
+      @voucherreq.originating_ip = request.ip
+    end
+    clientcert_pem
+  end
+
+  def capture_bad_request
+    token = Base64.decode64(request.body.read)
+    @voucherreq ||= VoucherRequest.create(:voucher_request => token,
+                                          :originating_ip => request.env["REMOTE_ADDR"])
+
+    capture_client_certificate
+    @voucherreq.save!
+    logger.info "Voucher request was not parsed, details in #{@voucherreq.id}, #{$!}"
+    head 406
   end
 
 end
