@@ -8,7 +8,7 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
     MasaKeys.masa.certdir = Rails.root.join('spec','files','cert')
   end
 
-  describe "voucher request" do
+  describe "CMS voucher request" do
     it "incorrectly receives an unsigned voucher request" do
       json = File.read("spec/files/raw_unsigned_vr-00-12-34-56-78-9A.json")
       post "/.well-known/est/requestvoucher", params: json, headers: {
@@ -77,7 +77,9 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
 
       expect(response).to have_http_status(406)
     end
+  end
 
+  describe "CBOR voucher request" do
     it "POST a constrained voucher request, without a client certificate" do
       token = IO::read("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
 
@@ -133,6 +135,25 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
       end
     end
 
+  end
+
+  describe "failing requests" do
+    it "with broken crypto should be stored to voucher request table" do
+
+      token = IO::read("spec/files/parboiled_vr_broken-00-D0-E5-F2-00-02.pkcs")
+      regfile= File.join("spec","files","jrc_prime256v1.crt")
+      pubkey_pem = IO::read(regfile)
+
+      expect {
+        post "/.well-known/est/requestvoucher", params: token, headers: {
+               'CONTENT_TYPE' => 'application/voucher-cms+json',
+               'ACCEPT'       => 'application/voucher-cms+json'
+             }
+      }.to change { VoucherRequest.count }.by(1)
+
+      expect(response).to have_http_status(406)
+      expect(assigns(:voucherreq).owner).to be_nil
+    end
   end
 
   describe "audit log request" do

@@ -21,27 +21,37 @@ class EstController < ApiController
     end
     media_type = media_types.first
 
-    case
-    when (media_type.mime_type == 'application/voucher-cms+json')
+    begin
+      case
+      when (media_type.mime_type == 'application/voucher-cms+json')
 
-      binary_pkcs = Base64.decode64(request.body.read)
-      @voucherreq = CmsVoucherRequest.from_pkcs7(binary_pkcs)
+        binary_pkcs = Base64.decode64(request.body.read)
+        begin
+          @voucherreq = CmsVoucherRequest.from_pkcs7(binary_pkcs)
+        rescue Chariwt::Voucher::RequestFailedValidation
+          DeviceNotifierMailer.invalid_voucher_request(request).deliver
+          capture_bad_request
+          head 406,
+               text: "voucher request corrupt or failed to validate"
+          return
+        end
 
-    when (media_type.mime_type == 'application/voucher-cose+cbor')
-      begin
-        @voucherreq = CoseVoucherRequest.from_cbor_cose_io(request.body, @clientcert)
-      rescue VoucherRequest::InvalidVoucherRequest
-        DeviceNotifierMailer.invalid_voucher_request(request).deliver
+      when (media_type.mime_type == 'application/voucher-cose+cbor')
+        begin
+          @voucherreq = CoseVoucherRequest.from_cbor_cose_io(request.body, @clientcert)
+        rescue VoucherRequest::InvalidVoucherRequest
+          DeviceNotifierMailer.invalid_voucher_request(request).deliver
+          capture_bad_request
+          head 406,
+               text: "voucher request was not signed with known public key"
+          return
+        end
+      else
         capture_bad_request
         head 406,
-             text: "voucher request was not signed with known public key"
+             text: "unknown voucher-request content-type: #{request.content_type}"
         return
       end
-    else
-      capture_bad_request
-      head 406,
-           text: "unknown voucher-request content-type: #{request.content_type}"
-      return
     end
 
     unless @voucherreq
@@ -49,7 +59,6 @@ class EstController < ApiController
       head 404, text: 'missing voucher request'
       return
     end
-
 
     @voucherreq.save!
     @voucher,@reason = @voucherreq.issue_voucher
