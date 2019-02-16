@@ -166,9 +166,9 @@ class Device < ActiveRecord::Base
     File.chmod(0400, vendorprivkey(dir))
   end
 
-  def gen_or_load_priv_key(dir, curve = 'prime256v1')
+  def gen_or_load_priv_key(dir, curve = 'prime256v1', verbose=true)
     if File.exists?(vendorprivkey(dir))
-      puts "Reused private key from #{vendorprivkey(dir)}"
+      puts "Reused private key from #{vendorprivkey(dir)}" if verbose
       @dev_key = OpenSSL::PKey.read(IO::read(vendorprivkey(dir)))
     else
       gen_priv_key       # sets @dev_key

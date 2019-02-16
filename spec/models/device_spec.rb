@@ -41,27 +41,43 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  def mk_empty_dir
+    newdir = Rails.root.join("tmp").join("devices")
+    FileUtils.remove_entry_secure(newdir)
+    FileUtils.mkdir_p(newdir)
+    newdir
+  end
+
+  def tmp_device_dir(copied=false)
+    olddir = HighwayKeys.ca.devicedir
+    newdir = mk_empty_dir
+    HighwayKeys.ca.devdir = newdir
+    if copied
+      system("cp -r #{olddir}/. #{newdir}/.")
+    end
+    yield
+    HighwayKeys.ca.devdir = olddir
+  end
+
   describe "key generation" do
     it "should generate a new public/private key pair, and sign it" do
       almec = devices(:almec)
 
-      # use temporary directory for this test
-      olddir = HighwayKeys.ca.devdir
-      newdir = Rails.root.join("tmp").join("devices")
-      HighwayKeys.ca.devdir = newdir
-      FileUtils.remove_entry_secure(newdir)
-      almec.gen_and_store_key
-
-      expect(almec.idevid_cert).to_not be_nil
-      expect(File.exists?(File.join(HighwayKeys.ca.devicedir, "#{almec.sanitized_eui64}/device.crt"))).to be true
-      HighwayKeys.ca.devdir = olddir
+      tmp_device_dir {
+        almec.gen_and_store_key
+        expect(almec.idevid_cert).to_not be_nil
+        expect(File.exists?(File.join(HighwayKeys.ca.devicedir, "#{almec.sanitized_eui64}/device.crt"))).to be true
+      }
       # expect almec public key to verify with root key
     end
 
     it "should generate a new private key, and store it" do
       almec = devices(:almec)
 
-      almec.gen_or_load_priv_key(HighwayKeys.ca.devicedir)
+      tmp_device_dir {
+        almec.gen_or_load_priv_key(HighwayKeys.ca.devicedir, 'prime256v1', false)
+      }
+
       expect(almec.dev_key).to_not be_nil
 
       # weirdly, PKey::EC is not actually subclass of PKey.
@@ -71,7 +87,9 @@ RSpec.describe Device, type: :model do
 
     it "should preserve public key in pub_key field" do
       almec = devices(:almec)
-      almec.gen_or_load_priv_key(HighwayKeys.ca.devicedir)
+      tmp_device_dir(true) {
+        almec.gen_or_load_priv_key(HighwayKeys.ca.devicedir, 'prime256v1', false)
+      }
       expect(almec.dev_key).to_not be_nil
 
       gen_pubkey = almec.public_key
@@ -116,7 +134,8 @@ RSpec.describe Device, type: :model do
     it "should create a certificate with a new issue " do
       almec = devices(:almec)
 
-      almec.gen_or_load_priv_key(HighwayKeys.ca.devicedir)
+      dd = mk_empty_dir
+      almec.gen_or_load_priv_key(dd)
       almec.sign_eui64
       expect(almec.idevid.serial).to be > 1
       almec.save!
@@ -124,7 +143,7 @@ RSpec.describe Device, type: :model do
 
       vizsla = devices(:vizsla)
 
-      vizsla.gen_or_load_priv_key(HighwayKeys.ca.devicedir)
+      vizsla.gen_or_load_priv_key(dd)
       vizsla.sign_eui64
       expect(vizsla.idevid.serial).to_not eq(almec.idevid.serial)
 
@@ -151,9 +170,10 @@ RSpec.describe Device, type: :model do
 
       ndev = Device.new
       ndev.eui64 = '00-16-3e-ff-fe-d0-55-aa'
-      ndev.gen_and_store_key
-
-      expect(system("openssl x509 -noout -text -in #{ndev.certificate_filename} | grep masa.example.com:1234")).to be true
+      tmp_device_dir {
+        ndev.gen_and_store_key
+        expect(system("openssl x509 -noout -text -in #{ndev.certificate_filename} | grep masa.example.com:1234 >/dev/null")).to be true
+      }
     end
   end
 
