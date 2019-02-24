@@ -130,5 +130,8 @@ class SystemVariable < ActiveRecord::Base
     end
   end
 
+  def self.masa_iauthority
+    SystemVariable.string("masa_iauthority")
+  end
 
 end

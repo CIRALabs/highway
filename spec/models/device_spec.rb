@@ -247,4 +247,15 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe "SmartPledge/DPP encoding" do
+    it "should generate a tagged set of values" do
+      zeb = devices(:zeb)
+
+      dpphash = zeb.dpphash
+      # URL to this MASA
+      expect(dpphash["S"]).to eq("highway-test.example.com")
+      expect(dpphash["M"]).to eq("00163E8D519B")    # MAC address
+    end
+  end
+
 end
