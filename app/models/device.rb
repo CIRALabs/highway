@@ -2,6 +2,8 @@ class Device < ActiveRecord::Base
   include FixtureSave
   has_many :vouchers
   belongs_to :owner
+  # will add device_type for multi-product vendors
+  #belongs_to :device_type
 
   has_many :owners, -> { order("vouchers.created_at DESC") }, through: :vouchers
 
