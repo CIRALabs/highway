@@ -217,7 +217,7 @@ RSpec.describe Device, type: :model do
     end
 
     it "should ignore obsolete devices when looking for unowned" do
-      expect(Device.active.unowned.count).to eq(2)
+      expect(Device.active.unowned.count).to eq(3)
       expect(Device.active.owned.count).to   eq(3)
       expect(Device.obsolete.count).to eq(1)
     end
@@ -244,6 +244,17 @@ RSpec.describe Device, type: :model do
       expect(device).to                be_present
 
       expect(pvch.verify_with_key(device.certificate)).to be_truthy
+    end
+  end
+
+  describe "SmartPledge/DPP encoding" do
+    it "should generate a tagged set of values" do
+      zeb = devices(:zeb)
+
+      dpphash = zeb.dpphash
+      # URL to this MASA
+      expect(dpphash["S"]).to eq("highway-test.example.com")
+      expect(dpphash["M"]).to eq("00163E8D519B")    # MAC address
     end
   end
 

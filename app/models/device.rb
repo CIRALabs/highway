@@ -149,6 +149,11 @@ class Device < ActiveRecord::Base
     @sanitized_eui64 ||= eui64.upcase.gsub(/[^0-9A-F-]/,"")
   end
 
+  # no dash or :
+  def compact_eui64
+    @compact_eui64 ||= eui64.upcase.gsub(/[^0-9A-F]/,"")
+  end
+
   def device_dir(dir = HighwayKeys.ca.devicedir)
     @devdir ||= dir.join(sanitized_eui64)
   end
@@ -313,6 +318,18 @@ class Device < ActiveRecord::Base
   def savefixturefw(fw)
     return if save_self_tofixture(fw)
     vouchers.each { |voucher| voucher.savefixturefw(fw)}
+  end
+
+  # for SmartPledge QR code creation
+  def dpphash_calc
+    dc = Hash.new
+    dc["S"] = SystemVariable.masa_iauthority
+    dc["M"] = compact_eui64
+    dc
+  end
+
+  def dpphash
+    @dpphash ||= dpphash_calc
   end
 
 end
