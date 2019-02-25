@@ -159,11 +159,17 @@ class Device < ActiveRecord::Base
   end
 
   def ulanet
-    @ulanet ||= ACPAddress.new(ula)
+    unless ula.blank?
+      @ulanet ||= ACPAddress.new(ula)
+    end
   end
 
   def short_ula
-    ulanet.ula_random_part_base[0..5]
+    if ulanet
+      ulanet.ula_random_part_base[0..5]
+    else
+      ""
+    end
   end
 
   def calc_fqdn
