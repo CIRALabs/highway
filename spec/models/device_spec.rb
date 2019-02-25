@@ -255,6 +255,12 @@ RSpec.describe Device, type: :model do
       # URL to this MASA
       expect(dpphash["S"]).to eq("highway-test.example.com")
       expect(dpphash["M"]).to eq("00163E8D519B")    # MAC address
+      expect(dpphash["K"]).to_not be_nil
+      expect(dpphash["K"]).to eq(zeb.pub_key)  # pub_key already base64
+      key = OpenSSL::PKey.read(Base64.decode64(dpphash["K"]))
+      expect(key).to_not be_nil
+
+      expect(dpphash["L"]).to eq("02163EFEFF8D519B")
     end
   end
 
