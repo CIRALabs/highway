@@ -355,7 +355,7 @@ class Device < ActiveRecord::Base
     dc = Hash.new
     dc["S"] = SystemVariable.masa_iauthority
     dc["M"] = compact_eui64
-    dc["K"] = pub_key
+    dc["K"] = Base64.strict_encode64(public_key.to_der)
     dc["L"] = linklocal_eui64.to_hex[-16..-1].upcase  # last 16 digits
     dc["E"] = essid
     dc
