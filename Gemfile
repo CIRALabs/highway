@@ -33,6 +33,9 @@ gem 'openssl', :git => 'https://github.com/CIRALabs/ruby-openssl.git', :branch =
 # for github warning
 gem "loofah", ">= 2.2.3"
 
+# used by IP address management in ANIMA ACP
+gem 'ipaddress'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
