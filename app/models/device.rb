@@ -154,6 +154,10 @@ class Device < ActiveRecord::Base
     @compact_eui64 ||= eui64.upcase.gsub(/[^0-9A-F]/,"")
   end
 
+  def linklocal_eui64
+    @linklocal_eui64 ||= ACPAddress.iid_from_eui(compact_eui64)
+  end
+
   def device_dir(dir = HighwayKeys.ca.devicedir)
     @devdir ||= dir.join(sanitized_eui64)
   end
@@ -325,6 +329,8 @@ class Device < ActiveRecord::Base
     dc = Hash.new
     dc["S"] = SystemVariable.masa_iauthority
     dc["M"] = compact_eui64
+    dc["K"] = pub_key
+    dc["L"] = linklocal_eui64.to_hex[-16..-1].upcase  # last 16 digits
     dc
   end
 
