@@ -127,6 +127,7 @@ f21003:
 zeb:
   id: 16
   eui64: 00-16-3e-8d-51-9b
+  ula: "fd3c:e618:51e2:0:a11:96ff:fe01:81e0"
   pub_key: |
     MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEujp6VXpEgkSkPFM+R5iETYQ4
     hTZiZDZPJKqJWJJmQ6nFC8tS6QjITod6LFZ22WrwJ4NK987wAeRNkh3XTtCD

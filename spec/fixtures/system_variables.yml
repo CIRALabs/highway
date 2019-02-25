@@ -27,3 +27,9 @@ SystemVariable13:
   variable: masa_iauthority
   value: highway-test.example.com
   number:
+
+SystemVariable14:
+  id: 14
+  variable: routerfqdn
+  value: "router.securehomegateway.ca"
+  number:

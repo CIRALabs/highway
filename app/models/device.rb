@@ -102,7 +102,7 @@ class Device < ActiveRecord::Base
   end
 
   def self.find_by_PKey(pkey)
-    b64 = Base64::encode64(pkey.to_der)
+    b64 = Base64::strict_encode64(pkey.to_der)
     find_by_pub_key(b64)
   end
 
@@ -112,7 +112,7 @@ class Device < ActiveRecord::Base
       pub.public_key = key
       key = pub
     end
-    self.pub_key = Base64::encode64(key.to_der)
+    self.pub_key = Base64::strict_encode64(key.to_der)
   end
 
   def public_key
@@ -156,6 +156,26 @@ class Device < ActiveRecord::Base
 
   def linklocal_eui64
     @linklocal_eui64 ||= ACPAddress.iid_from_eui(compact_eui64)
+  end
+
+  def ulanet
+    @ulanet ||= ACPAddress.new(ula)
+  end
+
+  def short_ula
+    ulanet.ula_random_part_base[0..5]
+  end
+
+  def calc_fqdn
+    "n#{short_ula}.#{SystemVariable.routerfqdn}"
+  end
+
+  def fqdn
+    self[:fqdn] ||= calc_fqdn
+  end
+
+  def essid
+    self[:essid] ||= ("SHG"+short_ula)
   end
 
   def device_dir(dir = HighwayKeys.ca.devicedir)
@@ -331,6 +351,7 @@ class Device < ActiveRecord::Base
     dc["M"] = compact_eui64
     dc["K"] = pub_key
     dc["L"] = linklocal_eui64.to_hex[-16..-1].upcase  # last 16 digits
+    dc["E"] = essid
     dc
   end
 

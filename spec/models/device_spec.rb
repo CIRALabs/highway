@@ -252,6 +252,9 @@ RSpec.describe Device, type: :model do
       zeb = devices(:zeb)
 
       dpphash = zeb.dpphash
+
+      expect(zeb.fqdn).to eq("n3CE618.router.securehomegateway.ca")
+
       # URL to this MASA
       expect(dpphash["S"]).to eq("highway-test.example.com")
       expect(dpphash["M"]).to eq("00163E8D519B")    # MAC address
@@ -261,6 +264,8 @@ RSpec.describe Device, type: :model do
       expect(key).to_not be_nil
 
       expect(dpphash["L"]).to eq("02163EFEFF8D519B")
+      expect(dpphash["E"]).to eq("SHG3CE618")
+
     end
   end
 
