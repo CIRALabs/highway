@@ -365,4 +365,22 @@ class Device < ActiveRecord::Base
     @dpphash ||= dpphash_calc
   end
 
+  def dpp_component(a)
+    if dpphash[a]
+      a + ":" + dpphash[a] + ";"
+    else
+      ""
+    end
+  end
+
+  def dppstring
+    "DPP:" +
+      dpp_component("M") +
+      dpp_component("I") +
+      dpp_component("K") +
+      dpp_component("L") +
+      dpp_component("S") +
+      dpp_component("E")
+  end
+
 end
