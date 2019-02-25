@@ -178,6 +178,12 @@ class Device < ActiveRecord::Base
     self[:essid] ||= ("SHG"+short_ula)
   end
 
+  def extrapolate_from_ula
+    self.fqdn = fqdn
+    self.essid= essid
+    save!
+  end
+
   def device_dir(dir = HighwayKeys.ca.devicedir)
     @devdir ||= dir.join(sanitized_eui64)
   end
