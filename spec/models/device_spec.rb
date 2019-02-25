@@ -248,6 +248,16 @@ RSpec.describe Device, type: :model do
   end
 
   describe "SmartPledge/DPP encoding" do
+    it "should default essid and fqdn from ULA" do
+      zeb = devices(:zeb)
+
+      zeb.extrapolate_from_ula
+
+      zeb.reload
+      expect(zeb.essid).to eq("SHG3CE618")
+      expect(zeb.fqdn).to  eq("n3CE618.router.securehomegateway.ca")
+    end
+
     it "should generate a tagged set of values" do
       zeb = devices(:zeb)
 
