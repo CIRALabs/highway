@@ -83,6 +83,7 @@ namespace :highway do
     dn = sprintf("%s/CN=%s IDevID CA", dnprefix, SystemVariable.string(:hostname))
     puts "issuer is now: #{dn}"
     dnobj = OpenSSL::X509::Name.parse dn
+    outfile=IDevIDKeys.ca.idevid_pub_keyfile
 
     HighwayKeys.ca.sign_certificate("IDevID", nil,
                                     IDevIDKeys.ca.idevid_priv_keyfile,
