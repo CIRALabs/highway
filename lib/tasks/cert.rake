@@ -75,6 +75,27 @@ namespace :highway do
     puts "MASA SERVER certificate writtten to: #{outfile}"
   end
 
+  desc "Create an intermediate CA for signing SmartPledge IDevID devices"
+  task :h5_idevid_ca => :environment do
+
+    curve             = IDevIDKeys.ca.curve
+    dnprefix          = SystemVariable.string(:dnprefix) || "/DC=ca/DC=sandelman"
+    dn = sprintf("%s/CN=%s IDevID CA", dnprefix, SystemVariable.string(:hostname))
+    puts "issuer is now: #{dn}"
+    dnobj = OpenSSL::X509::Name.parse dn
+
+    HighwayKeys.ca.sign_certificate("IDevID", nil,
+                                    IDevIDKeys.ca.idevid_priv_keyfile,
+                                    IDevIDKeys.ca.idevid_pub_keyfile,
+                                    dnobj) { |cert, ef|
+      cert.add_extension(ef.create_extension("basicConstraints","CA:TRUE",true))
+      cert.add_extension(ef.create_extension("keyUsage","keyCertSign, cRLSign", true))
+      cert.add_extension(ef.create_extension("subjectKeyIdentifier","hash",false))
+      cert.add_extension(ef.create_extension("authorityKeyIdentifier","keyid:always",false))
+    }
+    puts "IDevID Certificate writtten to: #{outfile}"
+  end
+
   desc "Sign a IDevID certificate for a new device, EUI64=xx"
   task :signmic => :environment do
 
