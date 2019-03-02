@@ -35,7 +35,7 @@ namespace :highway do
     dn = sprintf("%s/CN=%s MASA", dnprefix, SystemVariable.string(:hostname))
     dnobj = OpenSSL::X509::Name.parse dn
 
-    root_ca = HighwayKeys.ca.sign_certificate("CA", nil,
+    root_ca = HighwayKeys.ca.sign_certificate("MASA", nil,
                                               masaprivkeyfile,
                                               outfile, dnobj) { |cert, ef|
       cert.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
@@ -46,53 +46,19 @@ namespace :highway do
   desc "Create a certificate for the MASA to sign MUD objects"
   task :h3_bootstrap_mud => :environment do
 
-    curve = MudKeys.ca.curve
-
+    curve   = MudKeys.ca.curve
     certdir = HighwayKeys.ca.certdir
-    FileUtils.mkpath(certdir)
-
-    mudprivkey=certdir.join("mud_#{curve}.key")
-    if File.exists?(mudprivkey)
-      puts "MUD using existing key at: #{mudprivkey}"
-      mud_key = OpenSSL::PKey.read(File.open(mudprivkey))
-    else
-      # the MUD's public/private key - 3*1024 + 8
-      mud_key = OpenSSL::PKey::EC.new(curve)
-      mud_key.generate_key
-      File.open(mudprivkey, "w", 0600) do |f| f.write mud_key.to_pem end
-    end
-
-    mud_crt  = OpenSSL::X509::Certificate.new
-    # cf. RFC 5280 - to make it a "v3" certificate
-    mud_crt.version = 2
-
+    mudprivkeyfile = certdir.join("mud_#{curve}.key")
+    outfile=certdir.join("mud_#{curve}.crt")
     dnprefix = SystemVariable.string(:dnprefix) || "/DC=ca/DC=sandelman"
     dn = sprintf("%s/CN=%s MUD", dnprefix, SystemVariable.string(:hostname))
-    mud_crt.subject = OpenSSL::X509::Name.parse dn
+    dnobj = OpenSSL::X509::Name.parse dn
 
-    root_ca = HighwayKeys.ca.rootkey
-
-    mud_crt.serial     = HighwayKeys.ca.serial
-    # masa is signed by root_ca
-    mud_crt.issuer = root_ca.subject
-    mud_crt.public_key = mud_key
-    mud_crt.not_before = Time.now
-
-    # 2 years validity
-    mud_crt.not_after = mud_crt.not_before + 2 * 365 * 24 * 60 * 60
-
-    # Extension Factory
-    ef = OpenSSL::X509::ExtensionFactory.new
-    ef.subject_certificate = mud_crt
-    ef.issuer_certificate  = root_ca
-    mud_crt.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
-    puts "Signing with CA key at #{HighwayKeys.ca.root_priv_key_file}"
-    mud_crt.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
-
-    outfile=certdir.join("mud_#{curve}.crt")
-    File.open(outfile,'w') do |f|
-      f.write mud_crt.to_pem
-    end
+    mud_cert = HighwayKeys.ca.sign_certificate("MUD", nil,
+                                               mudprivkeyfile,
+                                               outfile, dnobj) { |cert,ef|
+      cert.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
+    }
     puts "MUD file signing certificate writtten to: #{outfile}"
   end
 
