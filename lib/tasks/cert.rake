@@ -13,9 +13,9 @@ namespace :highway do
     puts "issuer is now: #{dn}"
     dnobj = OpenSSL::X509::Name.parse dn
 
-    root_ca = HighwayKeys.ca.sign_certificate("CA", dnobj,
-                                              vendorprivkeyfile,
-                                              outfile, dnobj) { |cert, ef|
+    HighwayKeys.ca.sign_certificate("CA", dnobj,
+                                    vendorprivkeyfile,
+                                    outfile, dnobj) { |cert, ef|
       cert.add_extension(ef.create_extension("basicConstraints","CA:TRUE",true))
       cert.add_extension(ef.create_extension("keyUsage","keyCertSign, cRLSign", true))
       cert.add_extension(ef.create_extension("subjectKeyIdentifier","hash",false))
@@ -33,13 +33,10 @@ namespace :highway do
     outfile        = certdir.join("masa_#{curve}.crt")
     dnprefix = SystemVariable.string(:dnprefix) || "/DC=ca/DC=sandelman"
     dn = sprintf("%s/CN=%s MASA", dnprefix, SystemVariable.string(:hostname))
-    dnobj = OpenSSL::X509::Name.parse dn
 
-    root_ca = HighwayKeys.ca.sign_certificate("MASA", nil,
-                                              masaprivkeyfile,
-                                              outfile, dnobj) { |cert, ef|
-      cert.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
-    }
+    HighwayKeys.ca.sign_end_certificate("MASA",
+                                        masaprivkeyfile,
+                                        outfile, dn)
     puts "MASA voucher signing certificate writtten to: #{outfile}"
   end
 
@@ -52,13 +49,10 @@ namespace :highway do
     outfile=certdir.join("mud_#{curve}.crt")
     dnprefix = SystemVariable.string(:dnprefix) || "/DC=ca/DC=sandelman"
     dn = sprintf("%s/CN=%s MUD", dnprefix, SystemVariable.string(:hostname))
-    dnobj = OpenSSL::X509::Name.parse dn
 
-    mud_cert = HighwayKeys.ca.sign_certificate("MUD", nil,
-                                               mudprivkeyfile,
-                                               outfile, dnobj) { |cert,ef|
-      cert.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
-    }
+    HighwayKeys.ca.sign_end_certificate("MUD",
+                                        mudprivkeyfile,
+                                        outfile, dn)
     puts "MUD file signing certificate writtten to: #{outfile}"
   end
 

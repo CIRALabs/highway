@@ -59,6 +59,15 @@ class HighwayKeys
     @vendorprivkey ||= File.join(certdir, "vendor_#{curve}.key")
   end
 
+  def sign_end_certificate(certname, privkeyfile, pubkeyfile, dnstr)
+    dnobj = OpenSSL::X509::Name.parse dnstr
+
+    sign_certificate(certname, nil, privkeyfile,
+                     pubkeyfile, dnobj, 2*365*60*60) { |cert,ef|
+      cert.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
+    }
+  end
+
   def sign_certificate(certname, issuer, privkeyfile, pubkeyfile, dnobj, duration=(2*365*60*60), &efblock)
     FileUtils.mkpath(certdir)
 
@@ -102,6 +111,7 @@ class HighwayKeys
     File.open(pubkeyfile,'w') do |f|
       f.write ncert.to_pem
     end
+    ncert
   end
 
   protected
