@@ -6,14 +6,16 @@ namespace :highway do
   task :h1_bootstrap_ca => :environment do
 
     curve = HighwayKeys.ca.curve
-    vendorprivkey = HighwayKeys.ca.certdir.join("vendor_#{curve}.key")
+    vendorprivkeyfile = HighwayKeys.ca.certdir.join("vendor_#{curve}.key")
     outfile       = HighwayKeys.ca.certdir.join("vendor_#{curve}.crt")
     dnprefix = SystemVariable.string(:dnprefix) || "/DC=ca/DC=sandelman"
     dn = sprintf("%s/CN=%s CA", dnprefix, SystemVariable.string(:hostname))
     puts "issuer is now: #{dn}"
     dnobj = OpenSSL::X509::Name.parse dn
 
-    root_ca = HighwayKeys.ca.sign_certificate(vendorprivkey, outfile, dnobj) {|cert, ef|
+    root_ca = HighwayKeys.ca.sign_certificate("CA", dnobj,
+                                              vendorprivkeyfile,
+                                              outfile, dnobj) { |cert, ef|
       cert.add_extension(ef.create_extension("basicConstraints","CA:TRUE",true))
       cert.add_extension(ef.create_extension("keyUsage","keyCertSign, cRLSign", true))
       cert.add_extension(ef.create_extension("subjectKeyIdentifier","hash",false))
@@ -26,52 +28,18 @@ namespace :highway do
   task :h2_bootstrap_masa => :environment do
 
     curve = MasaKeys.ca.curve
-
-    certdir = HighwayKeys.ca.certdir
-    FileUtils.mkpath(certdir)
-
-    masaprivkey=certdir.join("masa_#{curve}.key")
-    if File.exists?(masaprivkey)
-      puts "MASA using existing key at: #{masaprivkey}"
-      masa_key = OpenSSL::PKey.read(File.open(masaprivkey))
-    else
-      # the MASA's public/private key - 3*1024 + 8
-      masa_key = OpenSSL::PKey::EC.new(curve)
-      masa_key.generate_key
-      File.open(masaprivkey, "w", 0600) do |f| f.write masa_key.to_pem end
-    end
-
-    masa_crt  = OpenSSL::X509::Certificate.new
-    # cf. RFC 5280 - to make it a "v3" certificate
-    masa_crt.version = 2
-
+    certdir = MasaKeys.ca.certdir
+    masaprivkeyfile= certdir.join("masa_#{curve}.key")
+    outfile        = certdir.join("masa_#{curve}.crt")
     dnprefix = SystemVariable.string(:dnprefix) || "/DC=ca/DC=sandelman"
     dn = sprintf("%s/CN=%s MASA", dnprefix, SystemVariable.string(:hostname))
-    masa_crt.subject = OpenSSL::X509::Name.parse dn
+    dnobj = OpenSSL::X509::Name.parse dn
 
-    root_ca = HighwayKeys.ca.rootkey
-
-    # masa is signed by root_ca
-    masa_crt.issuer = root_ca.subject
-    masa_crt.serial     = HighwayKeys.ca.serial
-    masa_crt.public_key = masa_key
-    masa_crt.not_before = Time.now
-
-    # 2 years validity
-    masa_crt.not_after = masa_crt.not_before + 2 * 365 * 24 * 60 * 60
-
-    # Extension Factory
-    ef = OpenSSL::X509::ExtensionFactory.new
-    ef.subject_certificate = masa_crt
-    ef.issuer_certificate  = root_ca
-    masa_crt.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
-    puts "Signing with CA key at #{HighwayKeys.ca.root_priv_key_file}"
-    masa_crt.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
-
-    outfile=certdir.join("masa_#{curve}.crt")
-    File.open(outfile,'w') do |f|
-      f.write masa_crt.to_pem
-    end
+    root_ca = HighwayKeys.ca.sign_certificate("CA", nil,
+                                              masaprivkeyfile,
+                                              outfile, dnobj) { |cert, ef|
+      cert.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
+    }
     puts "MASA voucher signing certificate writtten to: #{outfile}"
   end
 
