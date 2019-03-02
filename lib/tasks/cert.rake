@@ -65,54 +65,20 @@ namespace :highway do
   desc "Create a certificate for the MASA web interface (EST) to answer requests"
   task :h4_masa_server_cert => :environment do
 
-    curve = HighwayKeys.ca.client_curve
-
+    curve   = HighwayKeys.ca.client_curve
     certdir = HighwayKeys.ca.certdir
-    FileUtils.mkpath(certdir)
-
-    serverprivkey=certdir.join("server_#{curve}.key")
-    if File.exists?(serverprivkey)
-      puts "Server using existing key at: #{serverprivkey}"
-      server_key = OpenSSL::PKey.read(File.open(serverprivkey))
-    else
-      # the MASA's public/private key - 3*1024 + 8
-      server_key = OpenSSL::PKey::EC.new(curve)
-      server_key.generate_key
-      File.open(serverprivkey, "w", 0600) do |f| f.write server_key.to_pem end
-    end
-
+    serverprivkeyfile = certdir.join("server_#{curve}.key")
+    outfile=certdir.join("server_#{curve}.crt")
     dnprefix = SystemVariable.string(:dnprefix) || "/DC=ca/DC=sandelman"
     dn = sprintf("%s/CN=%s", dnprefix, SystemVariable.string(:hostname))
+    dnobj = OpenSSL::X509::Name.parse dn
 
-    server_crt  = OpenSSL::X509::Certificate.new
-    # cf. RFC 5280 - to make it a "v3" certificate
-    server_crt.version = 2
-    server_crt.serial  = HighwayKeys.ca.serial
-    server_crt.subject = OpenSSL::X509::Name.parse dn
-
-    root_ca = HighwayKeys.ca.rootkey
-    # masa is signed by root_ca
-    server_crt.issuer = root_ca.subject
-    #root_ca.public_key = root_key.public_key
-    server_crt.public_key = server_key
-    server_crt.not_before = Time.now
-
-    # 2 years validity
-    server_crt.not_after = server_crt.not_before + 2 * 365 * 24 * 60 * 60
-
-    # Extension Factory
-    ef = OpenSSL::X509::ExtensionFactory.new
-    ef.subject_certificate = server_crt
-    ef.issuer_certificate  = root_ca
-    server_crt.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
-    puts "Signing with CA key at #{HighwayKeys.ca.root_priv_key_file}"
-    server_crt.sign(HighwayKeys.ca.rootprivkey, HighwayKeys.ca.digest)
-
-    outfile=certdir.join("server_#{curve}.crt")
-    File.open(outfile,'w') do |f|
-      f.write server_crt.to_pem
-    end
-    puts "MASA server certificate writtten to: #{outfile}"
+    mud_cert = HighwayKeys.ca.sign_certificate("SERVER", nil,
+                                               serverprivkeyfile,
+                                               outfile, dnobj) { |cert,ef|
+      cert.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
+    }
+    puts "MASA SERVER certificate writtten to: #{outfile}"
   end
 
   desc "Sign a IDevID certificate for a new device, EUI64=xx"
