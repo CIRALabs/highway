@@ -233,7 +233,7 @@ RSpec.describe Device, type: :model do
       # validate that the registry was nearby
       ownercert = pvch.attributes["proximity-registrar-cert"]
       expect(ownercert).to_not be_nil
-      owner = Owner.find_by_public_key(ownercert)
+      owner = Owner.find_by_encoded_public_key(ownercert)
       expect(owner).to                 be_present
 
       # validate that the voucher was signed by a device
