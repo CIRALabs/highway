@@ -14,6 +14,10 @@ Rails.application.routes.draw do
   post '/.well-known/est/requestvoucher',  to: 'est#requestvoucher'
   post '/.well-known/est/requestauditlog', to: 'est#requestauditlog'
 
+  # EST processing of smartpledge URLs
+  post '/.well-known/est/smartpledge',  to: 'smartpledge#enroll'
+  post '/smartpledge/enroll',           to: 'smartpledge#enroll'
+
   resources :status,  :only => [:index ]
   resources :version, :only => [:index ]
 
