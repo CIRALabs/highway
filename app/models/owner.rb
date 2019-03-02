@@ -72,27 +72,18 @@ class Owner < ActiveRecord::Base
     Base64.strict_encode64(registrarID)
   end
 
-  def self.find_by_public_key(decoded)
-    # if failed to decode, then do not look anything up.
-    return nil unless decoded
-
-    # must canonicalize the key by decode and then der.
+  def self.find_by_base64_certificate(encoded)
     begin
-      # try decoding it as a public key
-      pkey = OpenSSL::PKey.read(decoded)
-    rescue OpenSSL::PKey::PKeyError
-      pkey = nil
+      cert = OpenSSL::X509::Certificate.new(Base64.decode64(encoded))
+    rescue OpenSSL::X509::CertificateError
+      cert = OpenSSL::X509::Certificate.new(Base64.urlsafe_decode64(encoded))
     end
-
-    unless pkey
-      begin
-        cert = OpenSSL::X509::Certificate.new(decoded)
-        pkey = cert.public_key
-      rescue OpenSSL::X509::CertificateError
-        return nil
-      end
+    if cert
+      find_by_public_key_obj(cert.public_key, cert)
     end
+  end
 
+  def self.find_by_public_key_obj(pkey, cert = nil)
     # use explicit base64 encoding to avoid BEGIN/END construct of to_pem.
     pkey_pem = Base64.urlsafe_encode64(pkey.to_der)
 
@@ -102,6 +93,35 @@ class Owner < ActiveRecord::Base
     end
     key.save
     key
+  end
+
+  # this will take a DER encoded Public key *OR* certificate,
+  # attempting to turn it into an object, and then finding
+  # the public key inside to look up the owner.
+  def self.find_by_encoded_public_key(encoded)
+    # if failed to decode, then do not look anything up.
+    return nil unless encoded
+
+    cert = nil
+    # must canonicalize the key by decode and then der.
+    begin
+      # try decoding it as a public key
+      pkey = OpenSSL::PKey.read(encoded)
+    rescue OpenSSL::PKey::PKeyError
+      pkey = nil
+    end
+
+    unless pkey
+      begin
+        cert = OpenSSL::X509::Certificate.new(encoded)
+        pkey = cert.public_key
+      rescue OpenSSL::X509::CertificateError
+        return nil
+      end
+    end
+
+    find_by_public_key_obj(pkey, cert)
+
   end
 
 end

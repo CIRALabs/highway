@@ -37,7 +37,7 @@ class CoseVoucherRequest < VoucherRequest
     proximity = pledge_cbor["proximity-registrar-cert"]
     if proximity
       # it is already binary, no pem/base64 decoding needed.
-      self.owner = Owner.find_by_public_key(proximity)
+      self.owner = Owner.find_by_encoded_public_key(proximity)
     end
     self.owner
   end

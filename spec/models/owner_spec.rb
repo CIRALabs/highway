@@ -41,4 +41,11 @@ RSpec.describe Owner, type: :model do
     end
   end
 
+  describe "finding" do
+    it "should look up an owner by public key" do
+      o2 = Owner.find_by_base64_certificate("MIIBkTCCARegAwIBAgIEWY2RTzAKBggqhkjOPQQDAjAyMQ8wDQYDVQQGEwZDYW5hZGExHzAdBgNVBAsMFlNtYXJ0UGxlZGdlLTE1MDI0NDk5OTkwHhcNMTkwMjI2MjI1NjU4WhcNMjEwMjI1MjI1NjU4WjAyMQ8wDQYDVQQGEwZDYW5hZGExHzAdBgNVBAsMFlNtYXJ0UGxlZGdlLTE1MDI0NDk5OTkwdjAQBgcqhkjOPQIBBgUrgQQAIgNiAASVk-3g44k4GX8MK7la8dais01j3KDxUEXIQ8RW44OfP_VLjfNoBwEIiO3SPXnIyw4wDcDavcpTs6W10Q87xtN1c2ZkPfkDyogNGy0nmxPLpUkoUCvgrMZ1C89LGs6g9LowCgYIKoZIzj0EAwIDaAAwZQIwFjWxibqz0-eVlVbfIvEfK3VbTiGKb-eWyYaalE_yLNplaCL0EWBRqDiLEzoqy7_EAjEAiO-72GN2AJbb0aRPzZcld-SelEkPRamCdWU81f_IjHiZ84_A9XkYVVzIZ-3DcKq2")
+      expect(o2).to_not be_nil
+    end
+  end
+
 end
