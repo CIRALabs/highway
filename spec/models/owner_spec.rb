@@ -48,4 +48,10 @@ RSpec.describe Owner, type: :model do
     end
   end
 
+  describe "signing" do
+    it "should generate an IDevID from a self-signed certificate" do
+
+    end
+  end
+
 end
