@@ -53,6 +53,49 @@ class HighwayKeys
     @vendorprivkey ||= File.join(certdir, "vendor_#{curve}.key")
   end
 
+  def sign_certificate(privkeyfile, pubkeyfile, dnobj, duration=(2*365*60*60), &efblock)
+    FileUtils.mkpath(certdir)
+
+    if File.exists?(privkeyfile)
+      puts "CA using existing key at: #{privkeyfile}"
+      root_key = OpenSSL::PKey.read(File.open(privkeyfile))
+    else
+      # the CA's public/private key - 3*1024 + 8
+      root_key = OpenSSL::PKey::EC.new(curve)
+      root_key.generate_key
+      File.open(privkeyfile, "w", 0600) do |f| f.write root_key.to_pem end
+    end
+
+    ncert  = OpenSSL::X509::Certificate.new
+    # cf. RFC 5280 - to make it a "v3" certificate
+    ncert.version = 2
+    ncert.serial  = SystemVariable.randomseq(:serialnumber)
+    ncert.subject = dnobj
+
+    # root CA's are "self-signed"
+    ncert.issuer = ncert.subject
+    #ncert.public_key = root_key.public_key
+    ncert.public_key = root_key
+    ncert.not_before = Time.now
+
+    # 2 years validity
+    ncert.not_after = ncert.not_before + duration
+
+    # Extension Factory
+    ef = OpenSSL::X509::ExtensionFactory.new
+    ef.subject_certificate = ncert
+    ef.issuer_certificate  = ncert
+
+    if efblock
+      efblock.call(ncert, ef)
+    end
+    ncert.sign(root_key, OpenSSL::Digest::SHA256.new)
+
+    File.open(pubkeyfile,'w') do |f|
+      f.write ncert.to_pem
+    end
+  end
+
   protected
   def load_root_priv_key
     File.open(root_priv_key_file) do |f|

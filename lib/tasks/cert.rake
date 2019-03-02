@@ -5,58 +5,20 @@ namespace :highway do
   desc "Create initial self-signed CA certificate, or resign existing one"
   task :h1_bootstrap_ca => :environment do
 
-    # X25519 is for key-agreement only.
-    #curve='X25519'
-    #curve='secp384r1'
     curve = HighwayKeys.ca.curve
-
-    certdir = HighwayKeys.ca.certdir
-    FileUtils.mkpath(certdir)
-
-    vendorprivkey=certdir.join("vendor_#{curve}.key")
-    if File.exists?(vendorprivkey)
-      puts "CA using existing key at: #{vendorprivkey}"
-      root_key = OpenSSL::PKey.read(File.open(vendorprivkey))
-    else
-      # the CA's public/private key - 3*1024 + 8
-      root_key = OpenSSL::PKey::EC.new(curve)
-      root_key.generate_key
-      File.open(vendorprivkey, "w", 0600) do |f| f.write root_key.to_pem end
-    end
-
-    root_ca  = OpenSSL::X509::Certificate.new
-    # cf. RFC 5280 - to make it a "v3" certificate
-    root_ca.version = 2
-    root_ca.serial  = SystemVariable.randomseq(:serialnumber)
-
+    vendorprivkey = HighwayKeys.ca.certdir.join("vendor_#{curve}.key")
+    outfile       = HighwayKeys.ca.certdir.join("vendor_#{curve}.crt")
     dnprefix = SystemVariable.string(:dnprefix) || "/DC=ca/DC=sandelman"
     dn = sprintf("%s/CN=%s CA", dnprefix, SystemVariable.string(:hostname))
     puts "issuer is now: #{dn}"
-    root_ca.subject = OpenSSL::X509::Name.parse dn
+    dnobj = OpenSSL::X509::Name.parse dn
 
-    # root CA's are "self-signed"
-    root_ca.issuer = root_ca.subject
-    #root_ca.public_key = root_key.public_key
-    root_ca.public_key = root_key
-    root_ca.not_before = Time.now
-
-    # 2 years validity
-    root_ca.not_after = root_ca.not_before + 2 * 365 * 24 * 60 * 60
-
-    # Extension Factory
-    ef = OpenSSL::X509::ExtensionFactory.new
-    ef.subject_certificate = root_ca
-    ef.issuer_certificate  = root_ca
-    root_ca.add_extension(ef.create_extension("basicConstraints","CA:TRUE",true))
-    root_ca.add_extension(ef.create_extension("keyUsage","keyCertSign, cRLSign", true))
-    root_ca.add_extension(ef.create_extension("subjectKeyIdentifier","hash",false))
-    root_ca.add_extension(ef.create_extension("authorityKeyIdentifier","keyid:always",false))
-    root_ca.sign(root_key, OpenSSL::Digest::SHA256.new)
-
-    outfile=certdir.join("vendor_#{curve}.crt")
-    File.open(outfile,'w') do |f|
-      f.write root_ca.to_pem
-    end
+    root_ca = HighwayKeys.ca.sign_certificate(vendorprivkey, outfile, dnobj) {|cert, ef|
+      cert.add_extension(ef.create_extension("basicConstraints","CA:TRUE",true))
+      cert.add_extension(ef.create_extension("keyUsage","keyCertSign, cRLSign", true))
+      cert.add_extension(ef.create_extension("subjectKeyIdentifier","hash",false))
+      cert.add_extension(ef.create_extension("authorityKeyIdentifier","keyid:always",false))
+    }
     puts "CA Certificate writtten to: #{outfile}"
   end
 
