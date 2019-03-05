@@ -13,7 +13,7 @@ RSpec.describe Owner, type: :model do
       expect(o1.certificate).to_not be_nil
 
       expect(o1.certder).to_not be_nil
-      expect(o1.certder.subject.to_s).to eq("/DC=ca/DC=sandelman/CN=localhost")
+      expect(o1.certder.subject.to_s).to eq("/DC=ca/DC=sandelman/CN=fountain-test.example.com domain authority")
     end
 
     it "should have a nname" do
@@ -31,7 +31,7 @@ RSpec.describe Owner, type: :model do
     it "should have a registarID" do
       o1 = owners(:owner1)
       expect(o1.registrarID).to_not be_nil
-      expect(o1.registrarID.unpack("H*").first).to eq("cbaf9dfca611bc967d15252f54d90fad116d7a0c")
+      expect(o1.registrarID.unpack("H*").first).to eq("a4bec67ef05266502b3da130e78e0badf7291286")
     end
 
     it "should generate a pubkey from a public key only owner" do
@@ -42,9 +42,26 @@ RSpec.describe Owner, type: :model do
   end
 
   describe "finding" do
-    it "should look up an owner by public key" do
-      o2 = Owner.find_by_base64_certificate("MIIBkTCCARegAwIBAgIEWY2RTzAKBggqhkjOPQQDAjAyMQ8wDQYDVQQGEwZDYW5hZGExHzAdBgNVBAsMFlNtYXJ0UGxlZGdlLTE1MDI0NDk5OTkwHhcNMTkwMjI2MjI1NjU4WhcNMjEwMjI1MjI1NjU4WjAyMQ8wDQYDVQQGEwZDYW5hZGExHzAdBgNVBAsMFlNtYXJ0UGxlZGdlLTE1MDI0NDk5OTkwdjAQBgcqhkjOPQIBBgUrgQQAIgNiAASVk-3g44k4GX8MK7la8dais01j3KDxUEXIQ8RW44OfP_VLjfNoBwEIiO3SPXnIyw4wDcDavcpTs6W10Q87xtN1c2ZkPfkDyogNGy0nmxPLpUkoUCvgrMZ1C89LGs6g9LowCgYIKoZIzj0EAwIDaAAwZQIwFjWxibqz0-eVlVbfIvEfK3VbTiGKb-eWyYaalE_yLNplaCL0EWBRqDiLEzoqy7_EAjEAiO-72GN2AJbb0aRPzZcld-SelEkPRamCdWU81f_IjHiZ84_A9XkYVVzIZ-3DcKq2")
+    it "should create a new owner by public key" do
+      o2 = Owner.find_or_create_by_base64_certificate("MIIBkTCCARegAwIBAgIEWY2RTzAKBggqhkjOPQQDAjAyMQ8wDQYDVQQGEwZDYW5hZGExHzAdBgNVBAsMFlNtYXJ0UGxlZGdlLTE1MDI0NDk5OTkwHhcNMTkwMjI2MjI1NjU4WhcNMjEwMjI1MjI1NjU4WjAyMQ8wDQYDVQQGEwZDYW5hZGExHzAdBgNVBAsMFlNtYXJ0UGxlZGdlLTE1MDI0NDk5OTkwdjAQBgcqhkjOPQIBBgUrgQQAIgNiAASVk-3g44k4GX8MK7la8dais01j3KDxUEXIQ8RW44OfP_VLjfNoBwEIiO3SPXnIyw4wDcDavcpTs6W10Q87xtN1c2ZkPfkDyogNGy0nmxPLpUkoUCvgrMZ1C89LGs6g9LowCgYIKoZIzj0EAwIDaAAwZQIwFjWxibqz0-eVlVbfIvEfK3VbTiGKb-eWyYaalE_yLNplaCL0EWBRqDiLEzoqy7_EAjEAiO-72GN2AJbb0aRPzZcld-SelEkPRamCdWU81f_IjHiZ84_A9XkYVVzIZ-3DcKq2")
       expect(o2).to_not be_nil
+      expect(o2.name).to eq("/C=Canada/OU=SmartPledge-1502449999")
+      expect(o2.fqdn).to be_nil
+    end
+
+    it "should find an existing owner by public key" do
+      o4 = Owner.find_by_base64_certificate("MIIBrjCCATOgAwIBAgIBAzAKBggqhkjOPQQDAzBOMRIwEAYKCZImiZPyLGQBGRYC
+    Y2ExGTAXBgoJkiaJk/IsZAEZFglzYW5kZWxtYW4xHTAbBgNVBAMMFFVuc3RydW5n
+    IEZvdW50YWluIENBMB4XDTE3MDkwNTAxMTI0NVoXDTE5MDkwNTAxMTI0NVowQzES
+    MBAGCgmSJomT8ixkARkWAmNhMRkwFwYKCZImiZPyLGQBGRYJc2FuZGVsbWFuMRIw
+    EAYDVQQDDAlsb2NhbGhvc3QwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQ1ZA7N
+    w0xSM/Q2u194FzQMktZ94waAIV0i/oVTPgOJ8zW6MwF5z+Dpb8/puhObJMZ0U6H/
+    wfApR6svlumd4ryyow0wCzAJBgNVHRMEAjAAMAoGCCqGSM49BAMDA2kAMGYCMQC3
+    /iTQJ3evYYcgbXhbmzrp64t3QC6qjIeY2jkDx062nuNifVKtyaara3F30AIkKSEC
+    MQDi29efbTLbdtDk3tecY/rD7V77XaJ6nYCmdDCR54TrSFNLgxvt1lyFM+0fYpYR
+    c3o=")
+      expect(o4).to_not be_nil
+      expect(o4.name).to eq("owner4")
     end
   end
 

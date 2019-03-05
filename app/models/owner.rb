@@ -72,18 +72,46 @@ class Owner < ActiveRecord::Base
     Base64.strict_encode64(registrarID)
   end
 
-  def self.find_by_base64_certificate(encoded)
+  def self.decode_to_cert(encoded)
     begin
       cert = OpenSSL::X509::Certificate.new(Base64.decode64(encoded))
     rescue OpenSSL::X509::CertificateError
       cert = OpenSSL::X509::Certificate.new(Base64.urlsafe_decode64(encoded))
     end
+    return cert
+  end
+
+  def self.find_or_create_by_base64_certificate(encoded)
+    cert = decode_to_cert(encoded)
+    if cert
+      find_or_create_by_public_key_obj(cert.public_key, cert)
+    end
+  end
+
+  def self.find_by_base64_certificate(encoded)
+    cert = decode_to_cert(encoded)
+    byebug
     if cert
       find_by_public_key_obj(cert.public_key, cert)
     end
   end
 
   def self.find_by_public_key_obj(pkey, cert = nil)
+    # use explicit base64 encoding to avoid BEGIN/END construct of to_pem.
+    pkey_pem = Base64.urlsafe_encode64(pkey.to_der)
+
+    key = where(pubkey: pkey_pem).take
+    return nil unless key
+
+    byebug
+    if cert and key.certificate.blank?
+      key.certificate = cert.to_pem
+    end
+    key.save
+    key
+  end
+
+  def self.find_or_create_by_public_key_obj(pkey, cert = nil)
     # use explicit base64 encoding to avoid BEGIN/END construct of to_pem.
     pkey_pem = Base64.urlsafe_encode64(pkey.to_der)
 
@@ -120,8 +148,7 @@ class Owner < ActiveRecord::Base
       end
     end
 
-    find_by_public_key_obj(pkey, cert)
-
+    find_or_create_by_public_key_obj(pkey, cert)
   end
 
 end
