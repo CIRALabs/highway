@@ -42,7 +42,7 @@ gem "loofah", ">= 2.2.3"
 gem 'therubyracer'
 gem 'sass'
 gem 'sass-rails'
-gem 'devise', git: 'https://github.com/plataformatec/devise.git', branch: 'master'
+gem 'devise'
 
 # use this to get full decoding of HTTP Accept: headers, to be able to
 # split off smime-type=voucher in pkcs7-mime, and other parameters
@@ -56,7 +56,7 @@ gem 'ecdsa',   :git => 'https://github.com/AnimaGUS-minerva/ruby_ecdsa.git', :br
 #gem 'ecdsa',   :path => '../minerva/ruby_ecdsa'
 
 #gem 'chariwt', :path => '../chariwt'
-gem 'chariwt', :git => 'https://github.com/mcr/ChariWTs.git'
+gem 'chariwt', :git => 'https://github.com/mcr/ChariWTs.git', :branch => 'v0.6.0'
 gem 'jwt'
 
 gem 'thin'
