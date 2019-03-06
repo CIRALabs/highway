@@ -28,4 +28,25 @@ RSpec.describe HighwayKeys do
     expect(cert.subject.to_s).to eq("/C=CA/CN=testingcert1")
   end
 
+  it "should generate and sign private end-certificate from IDevID CA" do
+    curve   = IDevIDKeys.ca.curve
+
+    # set up to use test signing keys
+    IDevIDKeys.ca.certdir = Rails.root.join('spec','files','cert')
+    tmpdir = mk_empty_dir
+
+    ee_privkeyfile = tmpdir.join("cert2_#{curve}.key")
+    outfile        = tmpdir.join("cert2_#{curve}.crt")
+
+    dn = "/C=CA/CN=testingidevid1"
+
+    cert = IDevIDKeys.ca.sign_end_certificate("cert1",
+                                               ee_privkeyfile,
+                                               outfile, dn)
+
+    expect(cert.subject.to_s).to eq("/C=CA/CN=testingidevid1")
+  end
+
+
+
 end

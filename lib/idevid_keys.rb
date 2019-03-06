@@ -2,9 +2,16 @@ class IDevIDKeys < HighwayKeys
   def idevidkey
     @idevidkey ||= load_idevid_pub_key
   end
+  def cacert
+    idevidkey
+  end
+
 
   def idevidprivkey
     @idevidprivkey ||= load_idevid_priv_key
+  end
+  def ca_signing_key
+    idevidprivkey
   end
 
   def curve
