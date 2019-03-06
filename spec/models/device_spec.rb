@@ -217,7 +217,7 @@ RSpec.describe Device, type: :model do
     end
 
     it "should ignore obsolete devices when looking for unowned" do
-      expect(Device.active.unowned.count).to eq(2)
+      expect(Device.active.unowned.count).to eq(3)
       expect(Device.active.owned.count).to   eq(3)
       expect(Device.obsolete.count).to eq(1)
     end
