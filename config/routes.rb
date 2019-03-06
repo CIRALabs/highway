@@ -2,12 +2,10 @@ Rails.application.routes.draw do
 
   if $ADMININTERFACE or Rails.env == 'test'
   devise_for :admins
-  concern :active_scaffold_association, ActiveScaffold::Routing::Association.new
-  concern :active_scaffold, ActiveScaffold::Routing::Basic.new(association: true)
-  resources :voucher_requests, concerns: :active_scaffold
-  resources :owners,   concerns: :active_scaffold
-  resources :vouchers, concerns: :active_scaffold
-  resources :devices,  concerns: :active_scaffold
+  resources :voucher_requests
+  resources :owners
+  resources :vouchers
+  resources :devices
   end
 
   # EST processing at well known URLs

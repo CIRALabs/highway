@@ -39,7 +39,6 @@ gem "loofah", ">= 2.2.3"
 # Use Unicorn as the app server
 # gem 'unicorn'
 
-gem 'active_scaffold', :git => 'https://github.com/activescaffold/active_scaffold.git'
 gem 'therubyracer'
 gem 'sass'
 gem 'sass-rails'
