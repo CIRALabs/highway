@@ -19,6 +19,15 @@ class Owner < ActiveRecord::Base
       @cert = ""
     end
   end
+  def cert
+   certder
+  end
+  def cert=(x)
+    @cert = x
+    self.certificate = x.to_pem
+    # do not update pubkey, as it should remain the same.
+    x
+  end
 
   def pubkey_object
     unless self[:pubkey].blank?
@@ -53,6 +62,12 @@ class Owner < ActiveRecord::Base
 
   def name
     @name ||= subject.to_s
+  end
+
+  def sign_with_idevid_ca
+    dnobj = OpenSSL::X509::Name.parse "OU=#{simplename}"
+    self.cert = IDevIDKeys.ca.sign_pubkey(nil, dnobj,
+                                          self.pubkey_object)
   end
 
   def registrarID
@@ -103,7 +118,6 @@ class Owner < ActiveRecord::Base
     key = where(pubkey: pkey_pem).take
     return nil unless key
 
-    byebug
     if cert and key.certificate.blank?
       key.certificate = cert.to_pem
     end

@@ -67,7 +67,13 @@ RSpec.describe Owner, type: :model do
 
   describe "signing" do
     it "should generate an IDevID from a self-signed certificate" do
-
+      IDevIDKeys.ca.certdir = Rails.root.join('spec','files','cert')
+      o0 = owners(:owner4)
+      orig_issuer = o0.cert.issuer.to_s
+      o0.sign_with_idevid_ca
+      new_issuer = o0.cert.issuer.to_s
+      expect(new_issuer).to eq(IDevIDKeys.ca.cacert.subject.to_s)
+      expect(new_issuer).to_not eq(orig_issuer)
     end
   end
 
