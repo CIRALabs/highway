@@ -32,7 +32,6 @@ gem 'openssl', :path => '/gems/highway/ruby-openssl'
 # Use Unicorn as the app server
 # gem 'unicorn'
 
-gem 'active_scaffold', :path => '/gems/highway/active_scaffold'
 gem 'therubyracer'
 gem 'sass'
 gem 'sass-rails'
