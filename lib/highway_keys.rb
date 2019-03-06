@@ -68,7 +68,10 @@ class HighwayKeys
     }
   end
 
-  def sign_pubkey(issuer, dnobj, pubkey, duration=(2*365*60*60), efblock)
+  def sign_pubkey(issuer, dnobj, pubkey, duration=(2*365*60*60), efblock = nil)
+    # note, root CA's are "self-signed", so pass dnobj.
+    issuer ||= cacert.subject
+
     ncert  = OpenSSL::X509::Certificate.new
     # cf. RFC 5280 - to make it a "v3" certificate
     ncert.version = 2
@@ -105,9 +108,6 @@ class HighwayKeys
       key.generate_key
       File.open(privkeyfile, "w", 0600) do |f| f.write key.to_pem end
     end
-
-    # note, root CA's are "self-signed", so pass dnobj.
-    issuer ||= cacert.subject
 
     ncert = sign_pubkey(issuer, dnobj, key, duration, efblock)
 
