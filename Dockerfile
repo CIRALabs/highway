@@ -13,10 +13,7 @@ RUN git clone https://github.com/CIRALabs/ruby-openssl.git && \
     git clone --single-branch --branch master https://github.com/plataformatec/devise.git && \
     git clone --single-branch --branch binary_http_multipart https://github.com/AnimaGUS-minerva/multipart_body.git && \
     git clone --single-branch --branch ecdsa_interface_openssl https://github.com/AnimaGUS-minerva/ruby_ecdsa.git && \
-    git clone https://github.com/mcr/ChariWTs.git && \
-    git clone --single-branch --branch per-host-deploy-to https://github.com/mcr/capistrano.git && \
-    git clone --single-branch --branch per-host-deploy-to https://github.com/mcr/bundler.git && \
-    git clone --single-branch --branch per-host-deploy-to https://github.com/mcr/passenger.git 
+    git clone https://github.com/mcr/ChariWTs.git 
 
 WORKDIR /app/highway
 ADD ./docker/Gemfile /app/highway/Gemfile
@@ -38,7 +35,7 @@ FROM docker-registry.infra.01.k-ciralabs.ca/lestienne/distroless-ruby:2.6.1
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libgmp* /usr/lib/x86_64-linux-gnu/
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle /usr/local/bundle
-#COPY --from=builder /gems/highway/active_scaffold /gems/highway/active_scaffold
+COPY --from=builder /gems/highway /gems/highway
 ENV PATH="/usr/local/bundle/bin:${PATH}"
 
 WORKDIR /app/highway
