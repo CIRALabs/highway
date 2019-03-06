@@ -17,9 +17,6 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 
-# bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0', group: :doc
-
 # raven for sentry.io
 gem "sentry-raven"
 
@@ -28,8 +25,8 @@ gem 'openssl', :path => '/gems/highway/ruby-openssl'
 gem 'therubyracer'
 gem 'sass'
 gem 'sass-rails'
-gem 'devise', path: '/gems/highway/devise'
-
+gem 'warden', '~> 1.2.3'
+gem 'devise', '~> 4.2.0'
 # use this to get full decoding of HTTP Accept: headers, to be able to
 # split off smime-type=voucher in pkcs7-mime, and other parameters
 gem 'http-accept'
@@ -41,3 +38,5 @@ gem 'chariwt', :path => '/gems/highway/ChariWTs'
 gem 'jwt'
 
 gem 'thin'
+gem 'rake', '~> 12.3.2'
+gem 'concurrent-ruby', '~> 1.1.4'

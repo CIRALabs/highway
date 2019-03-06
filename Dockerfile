@@ -10,7 +10,6 @@ RUN mkdir -p /gems/highway
 WORKDIR /gems/highway
 RUN git config --global http.sslVerify "false"
 RUN git clone https://github.com/CIRALabs/ruby-openssl.git && \
-    git clone --single-branch --branch master https://github.com/plataformatec/devise.git && \
     git clone --single-branch --branch binary_http_multipart https://github.com/AnimaGUS-minerva/multipart_body.git && \
     git clone --single-branch --branch ecdsa_interface_openssl https://github.com/AnimaGUS-minerva/ruby_ecdsa.git && \
     git clone https://github.com/mcr/ChariWTs.git 
@@ -21,6 +20,7 @@ ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
 ADD ./docker/Rakefile /app/highway/Rakefile
 
 RUN bundle install --system --gemfile=/app/highway/Gemfile && bundle check
+RUN cat /app/highway/Gemfile.lock
 
 COPY . /app/highway
 # Has to be duplicated, for reasons.
