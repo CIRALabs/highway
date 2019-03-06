@@ -14,6 +14,7 @@ class SmartpledgeController < ApiController
     # to do anything.
     # the posted certificate will in most cases be identical
     # to the TLS Client Certificate.
+    # note: the lookup is by *PUBLIC KEY*, not certificate.
 
     if params[:cert]
       @owner = Owner.find_by_base64_certificate(params[:cert])
