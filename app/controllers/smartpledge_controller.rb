@@ -17,10 +17,10 @@ class SmartpledgeController < ApiController
     # note: the lookup is by *PUBLIC KEY*, not certificate.
 
     if params[:cert]
-      @owner = Owner.find_by_base64_certificate(params[:cert])
+      @owner = Owner.find_or_create_by_base64_certificate(params[:cert])
 
       @cert = @owner.sign_with_idevid_ca
-      render :data => @cert.to_der, :content_type => 'application/pkcs7'
+      send_data @cert.to_der, :type => 'application/pkcs7'
 
     else
       capture_bad_request

@@ -105,7 +105,6 @@ class Owner < ActiveRecord::Base
 
   def self.find_by_base64_certificate(encoded)
     cert = decode_to_cert(encoded)
-    byebug
     if cert
       find_by_public_key_obj(cert.public_key, cert)
     end
