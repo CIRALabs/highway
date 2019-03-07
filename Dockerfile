@@ -1,15 +1,12 @@
 FROM ruby:2.6.1 as builder
 
-RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libgmp10
-RUN apt-get remove -y git
-RUN apt-get install -y git
-
-RUN mkdir -p /app/highway
-RUN mkdir -p /gems/highway
-
-WORKDIR /gems/highway
-RUN git config --global http.sslVerify "false"
-RUN git clone https://github.com/CIRALabs/ruby-openssl.git && \
+RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libgmp10 && \ 
+    apt-get remove -y git && \ 
+    apt-get install -y git && \
+    mkdir -p /app/highway && \
+    mkdir -p /gems/highway && cd /gems/highway && \
+    git config --global http.sslVerify "false" && \
+    git clone https://github.com/CIRALabs/ruby-openssl.git && \
     git clone --single-branch --branch binary_http_multipart https://github.com/AnimaGUS-minerva/multipart_body.git && \
     git clone --single-branch --branch ecdsa_interface_openssl https://github.com/AnimaGUS-minerva/ruby_ecdsa.git && \
     git clone --single-branch --branch v0.6.0 https://github.com/mcr/ChariWTs.git 
@@ -19,8 +16,9 @@ ADD ./docker/Gemfile /app/highway/Gemfile
 ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
 ADD ./docker/Rakefile /app/highway/Rakefile
 
-RUN bundle install --system --gemfile=/app/highway/Gemfile && bundle check
-RUN cat /app/highway/Gemfile.lock
+RUN bundle update && \
+    bundle install --system --no-deployment --gemfile=/app/highway/Gemfile && \
+    bundle check
 
 COPY . /app/highway
 # Has to be duplicated, for reasons.
