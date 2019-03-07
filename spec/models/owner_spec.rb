@@ -61,7 +61,7 @@ RSpec.describe Owner, type: :model do
     MQDi29efbTLbdtDk3tecY/rD7V77XaJ6nYCmdDCR54TrSFNLgxvt1lyFM+0fYpYR
     c3o=")
       expect(o4).to_not be_nil
-      expect(o4.name).to eq("owner4")
+      expect(o4.name).to eq("/DC=ca/DC=sandelman/CN=localhost")
     end
   end
 
