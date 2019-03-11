@@ -28,6 +28,20 @@ namespace :highway do
                                             SystemVariable.string(variable)))
   end
 
+  def set_iauthority
+    SystemVariable.setvalue(:masa_iauthority, sprintf("%s:%u",
+                                                      SystemVariable.string(:hostname),
+                                                      SystemVariable.number(:portnum)))
+  end
+
+  desc "Do initial setup of system variables, non-interactively, HOSTNAME=foo"
+  task :h0_set_hostname => :environment do
+    SystemVariable.setvalue(:hostname, ENV['HOSTNAME'])
+    SystemVariable.setnumber(:portnum, ENV['PORT'])
+    set_iauthority
+    puts "MASA URL is #{SystemVariable.string(:masa_iauthority)}"
+  end
+
   desc "Do initial setup of sytem variables"
   task :h0_setup_masa => :environment do
 
@@ -48,10 +62,7 @@ namespace :highway do
     prompt_variable_value("Setup inventory base mac address",
                           :base_mac)
 
-    SystemVariable.setvalue(:masa_iauthority, sprintf("%s:%u",
-                                                      SystemVariable.string(:hostname),
-                                                      SystemVariable.number(:portnum)))
-
+    set_iauthority
     SystemVariable.dump_vars
   end
 
