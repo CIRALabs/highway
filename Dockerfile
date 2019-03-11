@@ -32,11 +32,16 @@ COPY --from=builder /usr/bin/strace /usr/bin/strace
 COPY --from=builder /usr/bin/env  /usr/bin/env
 ENV PATH="/usr/local/bundle/bin:${PATH}"
 ENV GEM_HOME="/usr/local/bundle"
+ENV CERTDIR=/app/certificates
 
 COPY . /app/highway
 
 WORKDIR /app/highway
 
-EXPOSE 3000
+EXPOSE 9443
 
-CMD ["bundle", "_2.0.1_", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+CMD ["bundle", "_2.0.1_", "exec", "thin", "start", "--ssl",      \
+    "--address", "::", "--port", "9443",                         \
+    "--ssl-cert-file", "/app/certificates/server_prime256v1.crt",\
+    "--ssl-key-file",  "/app/certificates/server_prime256v1.key" ]
+
