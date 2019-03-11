@@ -19,7 +19,7 @@ RUN gem install bundler
 RUN bundle _2.0.1_ install --system --no-deployment --gemfile=/app/highway/Gemfile && \
     bundle _2.0.1_ check
 
-COPY . /app/highway
+RUN apt-get install strace
 
 RUN rm -f /app/highway/tmp/pids/server.pid
 

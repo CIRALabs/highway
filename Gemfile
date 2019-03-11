@@ -20,9 +20,9 @@ gem 'jbuilder', '~> 2.0'
 # raven for sentry.io
 gem "sentry-raven"
 
-gem 'uglifier'
+#gem 'uglifier'
 gem 'openssl', :path => '/gems/highway/ruby-openssl'
-gem 'therubyracer'
+#gem 'therubyracer'
 gem 'sass'
 gem 'sass-rails'
 gem 'warden', '~> 1.2.3'
