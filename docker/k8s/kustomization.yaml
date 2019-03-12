@@ -1,18 +1,16 @@
-apiVersion: v1beta1
+apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: shg
 commonLabels:
   app: shg-comet
+images:
+- name: docker-registry.infra.01.k-ciralabs.ca/ciralabs/shg-highway
+  newTag: comet-0.9.3
 resources:
 - 00-shg-comet-pvc.yaml
 - 06-shg-comet-certs-sealedsecret.yaml
-- 07-shg-comer-sealedsecret.yaml
-- 11-shg-comet-env-config.yaml
+- 07-shg-comet-sealedsecret.yaml
 - 16-shg-comet-migrations-job.yaml
-- 17-shg-comet-h1-bootstrap-ca-job.yaml
-- 18-shg-comet-h2-bootstrap-masa-job.yaml
-- 19-shg-comet-h3-bootstrap-mud-job.yaml
-- 20-shg-comet-h4-masa-server-cert-job.yaml
 - 26-shg-comet-deployment.yaml
 - 31-shg-comet-service.yaml
 - 36-shg-comet-ingress.yaml
@@ -24,3 +22,8 @@ configMapGenerator:
     - config/config.yml
     - config/database.yml
     - config/secrets.yml
+- name: shg-comet-env
+  literals:
+    - RAILS_ENV=production
+    - MASA_URL=https://shg-comet.shg.01.k-ciralabs.ca/
+    - ADMIN_INTERFACE=false

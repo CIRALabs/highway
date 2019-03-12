@@ -7,7 +7,8 @@ spec:
   template:
     spec:
       containers:
-      - image: shg-comet:latest
+      - image: docker-registry.infra.01.k-ciralabs.ca/ciralabs/shg-highway:comet-0.9.3
+        imagePullPolicy: Always
         name: shg-comet
         command: ["bundle", "exec", "rake", "db:migrate"]
         resources: 
