@@ -41,7 +41,7 @@ WORKDIR /app/highway
 EXPOSE 9443
 
 CMD ["bundle", "_2.0.1_", "exec", "thin", "start", "--ssl",      \
-    "--address", "::", "--port", "9443",                         \
+    "--address", "0.0.0.0", "--port", "9443",                         \
     "--ssl-cert-file", "/app/certificates/server_prime256v1.crt",\
     "--ssl-key-file",  "/app/certificates/server_prime256v1.key" ]
 
