@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/AnimaGUS-minerva/multipart_body.git
-  revision: 47654456f0dcf47f2d9ca2b6e4064e2ec6f2328b
+  revision: 84d15429301e614793a9fb51eb8b400326fe7b6d
   branch: binary_http_multipart
   specs:
     multipart_body (0.2.0)
@@ -22,7 +22,7 @@ GIT
 
 GIT
   remote: https://github.com/activescaffold/active_scaffold.git
-  revision: 202ef818083ead75117f12f91718fc0bb2784de8
+  revision: 85eeae08ee340b37555a388ab8624dcce7c3e2cd
   specs:
     active_scaffold (3.5.99)
       cow_proxy (~> 0.2.0)
@@ -33,6 +33,7 @@ GIT
 GIT
   remote: https://github.com/mcr/ChariWTs.git
   revision: d019cdae37b82e7ede2a3ee3b63f65992a908cbe
+  branch: v0.6.0
   specs:
     chariwt (0.6.0)
       cbor (~> 0.5.0)
@@ -60,7 +61,7 @@ GIT
 
 GIT
   remote: https://github.com/mcr/cow_proxy.git
-  revision: 315f46265e9a4cc4a8cf0c75541937b5b6b1e091
+  revision: 7c7d68393a3d9e3a47daea12c466cf49d8e63016
   specs:
     cow_proxy (0.2.1)
 
@@ -74,10 +75,10 @@ GIT
 
 GIT
   remote: https://github.com/plataformatec/devise.git
-  revision: a921c10e6ab0b96b7f2d9e880ef7842376b053da
+  revision: 11026007206226c1189f6050ab05d2284f47a669
   branch: master
   specs:
-    devise (4.5.0)
+    devise (4.6.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 4.1.0, < 6.0)
@@ -133,7 +134,7 @@ GEM
     arel (9.0.0)
     bcrypt (3.1.12)
     builder (3.2.3)
-    byebug (10.0.2)
+    byebug (11.0.0)
     capistrano-rails (1.4.0)
       capistrano (~> 3.1)
       capistrano-bundler (~> 1.1)
@@ -141,7 +142,7 @@ GEM
       capistrano (~> 3.0)
       sshkit (~> 1.2)
     cbor (0.5.9.3)
-    concurrent-ruby (1.1.4)
+    concurrent-ruby (1.1.5)
     crass (1.0.4)
     daemons (1.3.1)
     diff-lcs (1.3)
@@ -185,7 +186,7 @@ GEM
     multipart-post (2.0.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
-    net-ssh (5.1.0)
+    net-ssh (5.2.0)
     nio4r (2.3.1)
     nokogiri (1.10.1)
       mini_portile2 (~> 2.4.0)
@@ -267,12 +268,9 @@ GEM
       rdoc (~> 4.0)
     sentry-raven (2.9.0)
       faraday (>= 0.7.6, < 1.0)
-    shoulda (3.6.0)
-      shoulda-context (~> 1.0, >= 1.0.1)
-      shoulda-matchers (~> 3.0)
-    shoulda-context (1.2.2)
-    shoulda-matchers (3.1.3)
-      activesupport (>= 4.0.0)
+    shoulda (2.11.3)
+    shoulda-matchers (4.0.1)
+      activesupport (>= 4.2.0)
     spring (2.0.2)
       activesupport (>= 4.2)
     sprockets (3.7.2)
