@@ -3,7 +3,7 @@ require 'multipart_body'
 # use of ActionController::Metal means that JSON parameters are
 # not automatically parsed, which reduces cases of processing bad
 # JSON when no JSON is acceptable anyway.
-class SmartpledgeController < ApiController
+class SmarkaklinkController < ApiController
 
   def enroll
     clientcert  = nil

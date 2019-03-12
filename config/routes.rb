@@ -13,8 +13,8 @@ Rails.application.routes.draw do
   post '/.well-known/est/requestauditlog', to: 'est#requestauditlog'
 
   # EST processing of smartpledge URLs
-  post '/.well-known/est/smartpledge',  to: 'smartpledge#enroll'
-  post '/smartpledge/enroll',           to: 'smartpledge#enroll'
+  post '/.well-known/est/smarkaklink',  to: 'smarkaklink#enroll'
+  post '/smarkaklink/enroll',           to: 'smarkaklink#enroll'
 
   resources :status,  :only => [:index ]
   resources :version, :only => [:index ]

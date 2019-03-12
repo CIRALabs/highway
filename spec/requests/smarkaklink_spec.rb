@@ -1,7 +1,7 @@
 # spec/requests/todos_spec.rb
 require 'rails_helper'
 
-RSpec.describe 'SmartPledge MASA API', type: :request do
+RSpec.describe 'SmarKaKlink MASA API', type: :request do
 
   before(:each) do
     FileUtils::mkdir_p("tmp")
@@ -9,11 +9,11 @@ RSpec.describe 'SmartPledge MASA API', type: :request do
     IDevIDKeys.ca.certdir = Rails.root.join('spec','files','cert')
   end
 
-  describe "smartpledge IDevID enrollment" do
+  describe "smarkaklink IDevID enrollment" do
     it "POST a smartpledge voucher request, using correct content_type" do
       token = IO::read("spec/files/enroll1.json")
 
-      post "/.well-known/est/smartpledge", params: token, headers: {
+      post "/.well-known/est/smarkaklink", params: token, headers: {
              'CONTENT_TYPE' => 'application/json',
              'ACCEPT'       => 'application/pkcs7',
            }
@@ -27,10 +27,10 @@ RSpec.describe 'SmartPledge MASA API', type: :request do
       expect(cert.subject.to_s).to include(owner.simplename)
     end
 
-    it "POST a smartpledge voucher request, with an invalid content_type" do
+    it "POST a smarkaklink voucher request, with an invalid content_type" do
       token = IO::read("spec/files/enroll1.json")
 
-      post "/.well-known/est/smartpledge", params: token, headers: {
+      post "/.well-known/est/smarkaklink", params: token, headers: {
              'CONTENT_TYPE' => 'application/pkcs10',
              'ACCEPT'       => 'application/pkcs7',
            }
