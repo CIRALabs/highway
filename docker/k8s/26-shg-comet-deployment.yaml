@@ -58,7 +58,7 @@ spec:
               key: comet-secret-pepper
         volumeMounts:
         - name: certs
-          mountPath:  /etc/shg/certs
+          mountPath: /app/certificates
         - name: config
           mountPath: /config/shg/config.yml
           subPath: config.yml
