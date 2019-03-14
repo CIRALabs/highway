@@ -235,8 +235,12 @@ class Device < ActiveRecord::Base
     File.open(certificate_filename(dir), "w") do |f| f.write self.idevid_cert end
   end
 
+  def calc_certificate
+    OpenSSL::X509::Certificate.new(self.idevid_cert) unless idevid_cert.blank?
+  end
+
   def certificate
-    @certificate ||= OpenSSL::X509::Certificate.new(self.idevid_cert)
+    @certificate ||= calc_certificate
   end
 
   def pubkey
