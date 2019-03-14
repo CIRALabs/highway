@@ -142,6 +142,20 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe "provisioning" do
+    it "should generate a directory from the device id" do
+      expect(devices(:zeb).tgz_filename).to eq(Rails.root.join('tmp','shg','dev_16.tgz').to_s)
+    end
+
+    it "should generate a tgz file with new certificate" do
+      zeb = devices(:zeb)
+      filename = zeb.generate_tgz_for_shg
+      expect(File.exist?(filename)).to be true
+      files = IO::popen("tar tzf #{filename}").readlines
+      expect(files).to include("./etc/shg/idevid_cert.pem\n")
+    end
+  end
+
   describe "certificate creation" do
     it "should create a certificate with a new issue " do
       almec = devices(:almec)

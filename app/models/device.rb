@@ -124,6 +124,32 @@ class Device < ActiveRecord::Base
     sign_eui64
   end
 
+  def tgz_name
+    @tgz ||= $TGZ_FILE_LOCATION.join('shg', "dev_#{self.id}")
+  end
+  def tgz_filename
+    "#{tgz_name.to_s}.tgz"
+  end
+
+  # this creates a tgz file for installation in a SecureHomeGateway.ca
+  # the file name is returned.
+  def generate_tgz_for_shg
+    FileUtils.mkdir_p(tgz_name)
+
+    # write out the certificate
+    certdir = tgz_name.join("etc", "shg")
+    FileUtils.mkdir_p(certdir)
+    File.open(certdir.join("idevid_cert.pem"), "w") { |f|
+      f.write certificate.to_pem
+    }
+
+    # invoke tar to collect it all, but avoid invoking a shell.
+    #puts ["tar", "-C", tgz_name.to_s, "-c", "-z", "-f", tgz_filename, "."].join(' ')
+    system("tar", "-C", tgz_name.to_s, "-c", "-z", "-f", tgz_filename, ".")
+    FileUtils.remove_entry_secure(tgz_name)
+    tgz_filename
+  end
+
   def set_public_key(key)
     if key.kind_of?(OpenSSL::PKey::EC::Point)
       pub = OpenSSL::PKey::EC.new(key.group)

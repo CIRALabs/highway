@@ -7,6 +7,8 @@ Rails.application.initialize!
 $MASAUrl = 'https://highway.sandelman.ca/'
 $ADMINTERFACE = false
 
+$TGZ_FILE_LOCATION = Rails.root.join("tmp")
+
 $VERSION = "0.9.5"
 
 # gets overritten by config/initializers/revision.rb by capistrano
