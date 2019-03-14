@@ -12,12 +12,19 @@ RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libg
     git clone --single-branch --branch v0.6.0 https://github.com/mcr/ChariWTs.git
 
 WORKDIR /app/highway
-COPY . /app/highway
+RUN gem install bundler --source=http://rubygems.org
+
+# install gems with extensions explicitely so that layers are cached.
+RUN gem install -v1.10.1 nokogiri && \
+    gem install -v1.2.7 eventmachine && \
+    gem install -v2.3.1 nio4r && \
+    gem install -v3.1.12 bcrypt && \
+    gem install -v1.10.0 ffi && \
+    gem install -v0.21.0 pg && \
+    gem install -v1.7.2 thin
 ADD ./docker/Gemfile /app/highway/Gemfile
 ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
 ADD ./docker/Rakefile /app/highway/Rakefile
-
-RUN gem install bundler --source=http://rubygems.org
 RUN bundle _2.0.1_ install --system --no-deployment --gemfile=/app/highway/Gemfile && \
     bundle _2.0.1_ check
 
