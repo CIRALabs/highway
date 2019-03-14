@@ -29,6 +29,43 @@ class SmarkaklinkController < ApiController
     end
   end
 
+  def provision
+    if devnum=params['wan-mac']
+      @device = Device.find_by_number(devnum) || Device.find_by_second_eui64(devnum)
+    end
+    if !@device and devnum=params['switch-mac']
+      devnum  = Device.canonicalize_eui64(devnum)
+      @device = Device.find_by_number(devnum) || Device.find_by_second_eui64(devnum)
+    end
+    unless @device
+      num = ''
+      if $TOFU_DEVICE_REGISTER
+        attrs = Hash.new
+        attrs['register_ip'] = request.env["REMOTE_ADDR"]
+        attrs['tofu_register'] = true
+        @device = Device.create(eui64: Device.canonicalize_eui64(params['wan-mac']),
+                      second_eui64: Device.canonicalize_eui64(params['switch-mac']),
+                      obsolete: true,        # mark it has not valid.
+                      extra_attrs: attrs)
+        num = @device.id
+      end
+      head 404, text: "device not known here #{num}"
+      return
+    end
+
+    # found a device, collect the information about it!
+    @device.eui64 = params['wan-mac']
+    @device.second_eui64 = params['switch-mac']
+    @device.ula   = params['ula']
+    @csr64 = params['csr']
+
+    # now create a private certificate from this CSR.
+    @device.sign_from_base64_csr(@csr64)
+
+    tgzfile = @device.generate_tgz_for_shg
+    send_file tgzfile, :type => 'application/tar+gzip'
+  end
+
   private
 
   def capture_client_certificate

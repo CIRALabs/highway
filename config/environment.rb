@@ -6,6 +6,7 @@ Rails.application.initialize!
 
 $MASAUrl = 'https://highway.sandelman.ca/'
 $ADMINTERFACE = false
+$TOFU_DEVICE_REGISTER = true
 
 $TGZ_FILE_LOCATION = Rails.root.join("tmp")
 

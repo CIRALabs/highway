@@ -242,6 +242,16 @@ RSpec.describe Device, type: :model do
       expect(b1).to_not be_nil
     end
 
+    it "should find a device by colon-eui64" do
+      b1 = Device.find_by_number('00:D0:E5:F2:00:02')
+      expect(b1).to_not be_nil
+    end
+
+    it "should find a device by lower-case colon-eui64" do
+      b1 = Device.find_by_number('00:d0:e5:f2:00:02')
+      expect(b1).to_not be_nil
+    end
+
     it "should ignore obsolete devices when looking for unowned" do
       expect(Device.active.unowned.count).to be >= 3
       expect(Device.active.owned.count).to   be >= 3

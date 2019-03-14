@@ -39,7 +39,7 @@ vizsla:
 
 device11:
   id: 11
-  eui64: '08:11:96:ff:fe:01:81:e0'
+  eui64: '08-11-96-ff-fe-01-81-e0'
   idevid_cert: |
     -----BEGIN CERTIFICATE-----
     MIICLjCCAbWgAwIBAgIBCzAKBggqhkjOPQQDAjBNMRIwEAYKCZImiZPyLGQBGRYC
@@ -163,6 +163,6 @@ zeb:
 
 heranew:
   id: 17
-  eui64: D8-58-D7-00-8D-0F
+  eui64: d8-58-d7-00-8d-0f
 
 
