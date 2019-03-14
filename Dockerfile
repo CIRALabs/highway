@@ -30,6 +30,7 @@ COPY --from=builder /gems/highway /gems/highway
 COPY --from=builder /bin/sash     /bin/sash
 COPY --from=builder /usr/bin/strace /usr/bin/strace
 COPY --from=builder /usr/bin/env  /usr/bin/env
+COPY --from=builder /bin/busybox  /bin/busybox
 ENV PATH="/usr/local/bundle/bin:${PATH}"
 ENV GEM_HOME="/usr/local/bundle"
 ENV CERTDIR=/app/certificates
