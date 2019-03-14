@@ -6,8 +6,11 @@ Rails.application.initialize!
 
 $MASAUrl = 'https://highway.sandelman.ca/'
 $ADMINTERFACE = false
+$TOFU_DEVICE_REGISTER = true
 
-$VERSION = "0.9.5"
+$TGZ_FILE_LOCATION = Rails.root.join("tmp")
+
+$VERSION = "0.9.6"
 
 # gets overritten by config/initializers/revision.rb by capistrano
 $REVISION= "devel"

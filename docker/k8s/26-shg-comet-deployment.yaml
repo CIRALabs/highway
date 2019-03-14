@@ -14,40 +14,51 @@ spec:
         app: shg-comet
     spec:
       containers:
-      - image: shg-comet:latest
-        command: ["bin", "server"]
+      - image: docker-registry.infra.01.k-ciralabs.ca/ciralabs/shg-highway:comet-0.9.3
+        imagePullPolicy: Always
+        command: 
+          - bundle
+          - exec 
+          - thin 
+          - start 
+          - --ssl
+          - '--address ::'
+          - '--port 9443'
+          - '--ssl-cert-file /etc/shg/certs/server_prime256v1.crt'
+          - '--ssl-key-file /etc/shg/certs/server_prime256v1.key'
+#["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"] 
         name: shg-comet
         ports:
         - name: api-comet
-          port: 9443
+          containerPort: 3000
           protocol: TCP
-          envFrom:
-          - configMapRef:
+        envFrom:
+        - configMapRef:
             name: shg-comet-env
-          env:
-          - name: COMET_DB_USER
-            valueFrom:
-              secretKeyRef:
-                name: shg-comet
-                key: comet-db-user
-          - name: COMET_DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: shg-comet
-                key: comet-db-password
-          - name: COMET_SECRET_KEY_BASE
-            valueFrom:
-              secretKeyRef:
-                name: shg-comet
-                key: comet-secret-key-base
-          - name: COMET_SECRET_PEPPER
-            valueFrom:
-              secretKeyRef:
-                name: shg-comet
-                key: comet-secret-pepper
+        env:
+        - name: COMET_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: shg-comet
+              key: comet-db-user
+        - name: COMET_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: shg-comet
+              key: comet-db-password
+        - name: COMET_SECRET_KEY_BASE
+          valueFrom:
+            secretKeyRef:
+              name: shg-comet
+              key: comet-secret-key-base
+        - name: COMET_SECRET_PEPPER
+          valueFrom:
+            secretKeyRef:
+              name: shg-comet
+              key: comet-secret-pepper
         volumeMounts:
         - name: certs
-          mountPath:  /etc/shg/certs
+          mountPath: /app/certificates
         - name: config
           mountPath: /config/shg/config.yml
           subPath: config.yml
@@ -59,8 +70,9 @@ spec:
           subPath: secret.yml
       volumes:
       - name: certs
-        secret: shg-comet-certs
+        secret: 
+          secretName: shg-comet-certs
       - name: config
         configMap:
-          name: shg-comet-files
+          name: 'shg-comet-files'
           defaultMode: 420

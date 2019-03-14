@@ -1,30 +1,35 @@
----
 SystemVariable9:
   id: 9
   variable: hostname
   value: highway-test.example.com
   number:
----
+
 SystemVariable10:
   id: 10
   variable: dnprefix
   value:
   number:
----
+
 SystemVariable11:
   id: 11
   variable: inventory_dir
   value: db/devices
   number:
----
+
 SystemVariable12:
   id: 12
   variable: base_mac
   value: 00-D0-E5-F2-00-00
   number:
----
+
 SystemVariable13:
   id: 13
   variable: masa_iauthority
   value: highway-test.example.com
+  number:
+
+SystemVariable14:
+  id: 14
+  variable: routerfqdn
+  value: "router.securehomegateway.ca"
   number:

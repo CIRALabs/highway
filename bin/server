@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # see if rvm already initialized
-if [ -z "${MY_RIBY_HOME}" ]; then
+if [ -z "${MY_RUBY_HOME}" ]; then
   . /etc/profile.d/rvm.sh
-  rvm use 2.5.1
+  rvm use 2.6.1
 fi
 
 echo RUNNING in `pwd`
@@ -15,22 +15,25 @@ export RAILS_ENV
 certdir=${dir}/db/cert
 if [ -n "${CERTDIR}" ]; then
     certdir=${CERTDIR}
+    priv=${CERTDIR}/server_prime256v1.key;
+    cert=${CERTDIR}/server_prime256v1.cert;
+else
+    case $RAILS_ENV in
+        production) priv=${certdir}/server_prime256v1.key;
+                    cert=${certdir}/server_prime256v1.crt;;
+
+        *) priv=${dir}/spec/files/cert/server_prime256v1.key;
+           cert=${dir}/spec/files/cert/server_prime256v1.crt;
+           export CERTDIR=${dir}/spec/files/cert;;
+    esac
 fi
 
-case $RAILS_ENV in
-    production) priv=${certdir}/server_prime256v1.key;
-                cert=${certdir}/server_prime256v1.crt;;
-
-    *) priv=${dir}/spec/files/cert/server_prime256v1.key;
-       cert=${dir}/spec/files/cert/server_prime256v1.crt;
-       export CERTDIR=${dir}/spec/files/cert;;
-esac
-
-
-touch log/${RAILS_ENV}.log
-tail -f log/${RAILS_ENV}.log &
-TAIL_PID=$!
-trap "kill $TAIL_PID; exit 0" 1 2 3 15
+if [ -n "$TAIL" ]; then
+    touch log/${RAILS_ENV}.log
+    tail -f log/${RAILS_ENV}.log &
+    TAIL_PID=$!
+    trap "kill $TAIL_PID; exit 0" 1 2 3 15
+fi
 
 bundle exec thin start --ssl \
   --address ::  \

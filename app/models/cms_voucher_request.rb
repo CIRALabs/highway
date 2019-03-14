@@ -30,7 +30,7 @@ class CmsVoucherRequest < VoucherRequest
     proximity = pledge_json["proximity-registrar-cert"]
     if proximity
       cooked_key = Chariwt::Voucher.decode_pem(proximity)
-      self.owner = Owner.find_by_public_key(cooked_key)
+      self.owner = Owner.find_by_encoded_public_key(cooked_key)
     end
     self.owner
   end

@@ -128,6 +128,32 @@ RSpec.describe Device, type: :model do
       expect(dev.idevid_cert).to_not   be_nil
       expect(dev.certificate.subject.to_s).to eq("/serialNumber=IOTRUS-0123456789")
     end
+
+    it "should accept CSR for an existing device" do
+      dev = devices(:heranew)
+      expect(dev.certificate).to be_nil
+
+      # grab the CSR from the hera machine, and extract the CSR and use it.
+      provision1 = IO::read("spec/files/hera.provision.json")
+      atts = JSON::parse(provision1)
+      dev.sign_from_base64_csr(atts['csr'])
+
+      expect(dev.certificate).to_not be_nil
+    end
+  end
+
+  describe "provisioning" do
+    it "should generate a directory from the device id" do
+      expect(devices(:zeb).tgz_filename).to eq(Rails.root.join('tmp','shg','dev_16.tgz').to_s)
+    end
+
+    it "should generate a tgz file with new certificate" do
+      zeb = devices(:zeb)
+      filename = zeb.generate_tgz_for_shg
+      expect(File.exist?(filename)).to be true
+      files = IO::popen("tar tzf #{filename}").readlines
+      expect(files).to include("./etc/shg/idevid_cert.pem\n")
+    end
   end
 
   describe "certificate creation" do
@@ -216,9 +242,19 @@ RSpec.describe Device, type: :model do
       expect(b1).to_not be_nil
     end
 
+    it "should find a device by colon-eui64" do
+      b1 = Device.find_by_number('00:D0:E5:F2:00:02')
+      expect(b1).to_not be_nil
+    end
+
+    it "should find a device by lower-case colon-eui64" do
+      b1 = Device.find_by_number('00:d0:e5:f2:00:02')
+      expect(b1).to_not be_nil
+    end
+
     it "should ignore obsolete devices when looking for unowned" do
-      expect(Device.active.unowned.count).to eq(3)
-      expect(Device.active.owned.count).to   eq(3)
+      expect(Device.active.unowned.count).to be >= 3
+      expect(Device.active.owned.count).to   be >= 3
       expect(Device.obsolete.count).to eq(1)
     end
   end
@@ -233,7 +269,7 @@ RSpec.describe Device, type: :model do
       # validate that the registry was nearby
       ownercert = pvch.attributes["proximity-registrar-cert"]
       expect(ownercert).to_not be_nil
-      owner = Owner.find_by_public_key(ownercert)
+      owner = Owner.find_by_encoded_public_key(ownercert)
       expect(owner).to                 be_present
 
       # validate that the voucher was signed by a device
@@ -245,6 +281,46 @@ RSpec.describe Device, type: :model do
 
       expect(pvch.verify_with_key(device.certificate)).to be_truthy
     end
+  end
+
+  describe "SmartPledge/DPP encoding" do
+    it "should default essid and fqdn from ULA" do
+      zeb = devices(:zeb)
+
+      zeb.extrapolate_from_ula
+
+      zeb.reload
+      expect(zeb.essid).to eq("SHG3CE618")
+      expect(zeb.fqdn).to  eq("n3CE618.router.securehomegateway.ca")
+    end
+
+    it "should generate a tagged set of values" do
+      zeb = devices(:zeb)
+
+      dpphash = zeb.dpphash
+
+      expect(zeb.fqdn).to eq("n3CE618.router.securehomegateway.ca")
+
+      # URL to this MASA
+      expect(dpphash["S"]).to eq("highway-test.example.com")
+      expect(dpphash["M"]).to eq("00163E8D519B")    # MAC address
+      expect(dpphash["K"]).to_not be_nil
+
+      key = OpenSSL::PKey.read(Base64.decode64(dpphash["K"]))
+      expect(key.class).to be OpenSSL::PKey::EC
+      key = OpenSSL::PKey.read(Base64.decode64(dpphash["K"]))
+      expect(key).to_not be_nil
+
+      expect(dpphash["L"]).to eq("02163EFEFF8D519B")
+      expect(dpphash["E"]).to eq("SHG3CE618")
+    end
+
+    it "should generate a DPP string" do
+      zeb = devices(:zeb)
+
+      expect(zeb.dppstring).to eq("DPP:M:00163E8D519B;K:MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEujp6VXpEgkSkPFM+R5iETYQ4hTZiZDZPJKqJWJJmQ6nFC8tS6QjITod6LFZ22WrwJ4NK987wAeRNkh3XTtCD5w==;L:02163EFEFF8D519B;S:highway-test.example.com;E:SHG3CE618;")
+    end
+
   end
 
 end

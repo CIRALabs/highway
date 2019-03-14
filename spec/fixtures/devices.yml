@@ -39,7 +39,7 @@ vizsla:
 
 device11:
   id: 11
-  eui64: '08:11:96:ff:fe:01:81:e0'
+  eui64: '08-11-96-ff-fe-01-81-e0'
   idevid_cert: |
     -----BEGIN CERTIFICATE-----
     MIICLjCCAbWgAwIBAgIBCzAKBggqhkjOPQQDAjBNMRIwEAYKCZImiZPyLGQBGRYC
@@ -127,6 +127,7 @@ f21003:
 zeb:
   id: 16
   eui64: 00-16-3e-8d-51-9b
+  ula: "fd3c:e618:51e2:0:a11:96ff:fe01:81e0"
   pub_key: |
     MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEujp6VXpEgkSkPFM+R5iETYQ4
     hTZiZDZPJKqJWJJmQ6nFC8tS6QjITod6LFZ22WrwJ4NK987wAeRNkh3XTtCD
@@ -159,5 +160,9 @@ zeb:
     SX8vVPSC02cPd8Cejs8iODINMmiy65PR35EMQ2Tcw3QFjyy610TIBxY9fYf4AjBh
     Qiy8K4tx3fAZ9vGq0WryCfFlULWsAcCXHnzw8A7Jj0Jz/u5PVdDoLbrYeK5BtQo=
     -----END CERTIFICATE-----
+
+heranew:
+  id: 17
+  eui64: d8-58-d7-00-8d-0f
 
 

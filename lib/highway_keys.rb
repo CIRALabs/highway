@@ -4,9 +4,15 @@ class HighwayKeys
   def rootkey
     @rootkey ||= load_root_pub_key
   end
+  def cacert
+    rootkey
+  end
 
   def rootprivkey
     @rootprivkey ||= load_root_priv_key
+  end
+  def ca_signing_key
+    rootprivkey
   end
 
   def curve
@@ -51,6 +57,64 @@ class HighwayKeys
 
   def root_priv_key_file
     @vendorprivkey ||= File.join(certdir, "vendor_#{curve}.key")
+  end
+
+  def sign_end_certificate(certname, privkeyfile, pubkeyfile, dnstr)
+    dnobj = OpenSSL::X509::Name.parse dnstr
+
+    sign_certificate(certname, nil, privkeyfile,
+                     pubkeyfile, dnobj, 2*365*60*60) { |cert,ef|
+      cert.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
+    }
+  end
+
+  def sign_pubkey(issuer, dnobj, pubkey, duration=(2*365*60*60), efblock = nil)
+    # note, root CA's are "self-signed", so pass dnobj.
+    issuer ||= cacert.subject
+
+    ncert  = OpenSSL::X509::Certificate.new
+    # cf. RFC 5280 - to make it a "v3" certificate
+    ncert.version = 2
+    ncert.serial  = SystemVariable.randomseq(:serialnumber)
+    ncert.subject = dnobj
+
+    ncert.issuer = issuer
+    ncert.public_key = pubkey
+    ncert.not_before = Time.now
+
+    # 2 years validity
+    ncert.not_after = ncert.not_before + duration
+
+    # Extension Factory
+    ef = OpenSSL::X509::ExtensionFactory.new
+    ef.subject_certificate = ncert
+    ef.issuer_certificate  = ncert
+
+    if efblock
+      efblock.call(ncert, ef)
+    end
+    ncert.sign(ca_signing_key, OpenSSL::Digest::SHA256.new)
+  end
+
+  def sign_certificate(certname, issuer, privkeyfile, pubkeyfile, dnobj, duration=(2*365*60*60), &efblock)
+    FileUtils.mkpath(certdir)
+
+    if File.exists?(privkeyfile)
+      puts "#{certname} using existing key at: #{privkeyfile}"
+      key = OpenSSL::PKey.read(File.open(privkeyfile))
+    else
+      # the CA's public/private key - 3*1024 + 8
+      key = OpenSSL::PKey::EC.new(curve)
+      key.generate_key
+      File.open(privkeyfile, "w", 0600) do |f| f.write key.to_pem end
+    end
+
+    ncert = sign_pubkey(issuer, dnobj, key, duration, efblock)
+
+    File.open(pubkeyfile,'w') do |f|
+      f.write ncert.to_pem
+    end
+    ncert
   end
 
   protected

@@ -130,5 +130,12 @@ class SystemVariable < ActiveRecord::Base
     end
   end
 
+  def self.masa_iauthority
+    SystemVariable.string("masa_iauthority")
+  end
+
+  def self.routerfqdn
+    SystemVariable.string("routerfqdn")
+  end
 
 end

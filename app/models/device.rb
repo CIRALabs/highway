@@ -2,6 +2,8 @@ class Device < ActiveRecord::Base
   include FixtureSave
   has_many :vouchers
   belongs_to :owner
+  # will add device_type for multi-product vendors
+  #belongs_to :device_type
 
   has_many :owners, -> { order("vouchers.created_at DESC") }, through: :vouchers
 
@@ -100,8 +102,52 @@ class Device < ActiveRecord::Base
   end
 
   def self.find_by_PKey(pkey)
-    b64 = Base64::encode64(pkey.to_der)
+    b64 = Base64::strict_encode64(pkey.to_der)
     find_by_pub_key(b64)
+  end
+
+  def sign_from_base64_csr(csr64)
+    # chop off any base64 literal prefix.
+    if csr64[0..6]=='base64:'
+      csr64 = csr64[7..-1]
+    end
+    csrio = Base64.decode64(csr64)
+    csr = OpenSSL::X509::Request.new(csrio)
+    sign_from_csr(csr)
+  end
+
+  def sign_from_csr(csr)
+    unless csr.verify(csr.public_key)
+      raise CSRNotVerified;
+    end
+    set_public_key(csr.public_key)
+    sign_eui64
+  end
+
+  def tgz_name
+    @tgz ||= $TGZ_FILE_LOCATION.join('shg', "dev_#{self.id}")
+  end
+  def tgz_filename
+    "#{tgz_name.to_s}.tgz"
+  end
+
+  # this creates a tgz file for installation in a SecureHomeGateway.ca
+  # the file name is returned.
+  def generate_tgz_for_shg
+    FileUtils.mkdir_p(tgz_name)
+
+    # write out the certificate
+    certdir = tgz_name.join("etc", "shg")
+    FileUtils.mkdir_p(certdir)
+    File.open(certdir.join("idevid_cert.pem"), "w") { |f|
+      f.write certificate.to_pem
+    }
+
+    # invoke tar to collect it all, but avoid invoking a shell.
+    #puts ["tar", "-C", tgz_name.to_s, "-c", "-z", "-f", tgz_filename, "."].join(' ')
+    system("tar", "-C", tgz_name.to_s, "-c", "-z", "-f", tgz_filename, ".")
+    FileUtils.remove_entry_secure(tgz_name)
+    tgz_filename
   end
 
   def set_public_key(key)
@@ -110,7 +156,7 @@ class Device < ActiveRecord::Base
       pub.public_key = key
       key = pub
     end
-    self.pub_key = Base64::encode64(key.to_der)
+    self.pub_key = Base64::strict_encode64(key.to_der)
   end
 
   def public_key
@@ -145,6 +191,47 @@ class Device < ActiveRecord::Base
 
   def sanitized_eui64
     @sanitized_eui64 ||= eui64.upcase.gsub(/[^0-9A-F-]/,"")
+  end
+
+  # no dash or :
+  def compact_eui64
+    @compact_eui64 ||= eui64.upcase.gsub(/[^0-9A-F]/,"")
+  end
+
+  def linklocal_eui64
+    @linklocal_eui64 ||= ACPAddress.iid_from_eui(compact_eui64)
+  end
+
+  def ulanet
+    unless ula.blank?
+      @ulanet ||= ACPAddress.new(ula)
+    end
+  end
+
+  def short_ula
+    if ulanet
+      ulanet.ula_random_part_base[0..5]
+    else
+      ""
+    end
+  end
+
+  def calc_fqdn
+    "n#{short_ula}.#{SystemVariable.routerfqdn}"
+  end
+
+  def fqdn
+    self[:fqdn] ||= calc_fqdn
+  end
+
+  def essid
+    self[:essid] ||= ("SHG"+short_ula)
+  end
+
+  def extrapolate_from_ula
+    self.fqdn = fqdn
+    self.essid= essid
+    save!
   end
 
   def device_dir(dir = HighwayKeys.ca.devicedir)
@@ -192,8 +279,12 @@ class Device < ActiveRecord::Base
     File.open(certificate_filename(dir), "w") do |f| f.write self.idevid_cert end
   end
 
+  def calc_certificate
+    OpenSSL::X509::Certificate.new(self.idevid_cert) unless idevid_cert.blank?
+  end
+
   def certificate
-    @certificate ||= OpenSSL::X509::Certificate.new(self.idevid_cert)
+    @certificate ||= calc_certificate
   end
 
   def pubkey
@@ -311,6 +402,39 @@ class Device < ActiveRecord::Base
   def savefixturefw(fw)
     return if save_self_tofixture(fw)
     vouchers.each { |voucher| voucher.savefixturefw(fw)}
+  end
+
+  # for SmartPledge QR code creation
+  def dpphash_calc
+    dc = Hash.new
+    dc["S"] = SystemVariable.masa_iauthority
+    dc["M"] = compact_eui64
+    dc["K"] = Base64.strict_encode64(public_key.to_der)
+    dc["L"] = linklocal_eui64.to_hex[-16..-1].upcase  # last 16 digits
+    dc["E"] = essid
+    dc
+  end
+
+  def dpphash
+    @dpphash ||= dpphash_calc
+  end
+
+  def dpp_component(a)
+    if dpphash[a]
+      a + ":" + dpphash[a] + ";"
+    else
+      ""
+    end
+  end
+
+  def dppstring
+    "DPP:" +
+      dpp_component("M") +
+      dpp_component("I") +
+      dpp_component("K") +
+      dpp_component("L") +
+      dpp_component("S") +
+      dpp_component("E")
   end
 
 end

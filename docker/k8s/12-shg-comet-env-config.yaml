@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: shg-comet-env
-  namespace: shg
-data:
-  RAILS_ENV: production
-  MASA_URL: https://highway.sandelman.ca/
-  ADMIN_INTERFACE: false

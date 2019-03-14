@@ -55,3 +55,5 @@ Rails.application.configure do
   config.action_mailer.default_options = {from: 'mcr+minerva@sandelman.ca'}
 
 end
+
+$TGZ_FILE_LOCATION = Pathname.new("/var/tmp/tgz")
