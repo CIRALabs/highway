@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 2019_03_12_230246) do
     t.text "fqdn"
     t.text "essid"
     t.text "ula"
-    t.json "attributes"
+    t.json "extra_attrs"
     t.text "second_eui64"
   end
 
