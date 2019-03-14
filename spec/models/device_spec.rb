@@ -128,6 +128,18 @@ RSpec.describe Device, type: :model do
       expect(dev.idevid_cert).to_not   be_nil
       expect(dev.certificate.subject.to_s).to eq("/serialNumber=IOTRUS-0123456789")
     end
+
+    it "should accept CSR for an existing device" do
+      dev = devices(:heranew)
+      expect(dev.certificate).to be_nil
+
+      # grab the CSR from the hera machine, and extract the CSR and use it.
+      provision1 = IO::read("spec/files/hera.provision.json")
+      atts = JSON::parse(provision1)
+      dev.sign_from_base64_csr(atts['csr'])
+
+      expect(dev.certificate).to_not be_nil
+    end
   end
 
   describe "certificate creation" do

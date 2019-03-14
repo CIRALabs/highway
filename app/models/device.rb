@@ -106,6 +106,24 @@ class Device < ActiveRecord::Base
     find_by_pub_key(b64)
   end
 
+  def sign_from_base64_csr(csr64)
+    # chop off any base64 literal prefix.
+    if csr64[0..6]=='base64:'
+      csr64 = csr64[7..-1]
+    end
+    csrio = Base64.decode64(csr64)
+    csr = OpenSSL::X509::Request.new(csrio)
+    sign_from_csr(csr)
+  end
+
+  def sign_from_csr(csr)
+    unless csr.verify(csr.public_key)
+      raise CSRNotVerified;
+    end
+    set_public_key(csr.public_key)
+    sign_eui64
+  end
+
   def set_public_key(key)
     if key.kind_of?(OpenSSL::PKey::EC::Point)
       pub = OpenSSL::PKey::EC.new(key.group)
