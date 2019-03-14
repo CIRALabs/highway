@@ -68,6 +68,7 @@ ENV PATH="/usr/local/bundle/bin:${PATH}"
 COPY . /app/highway
 ADD ./docker/Gemfile /app/highway/Gemfile
 ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
+ENV GEM_HOME="/usr/local/bundle"
 
 WORKDIR /app/highway
 
