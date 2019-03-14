@@ -26,7 +26,7 @@ gem "sentry-raven"
 #gem 'therubyracer'
 
 gem 'warden', '~> 1.2.3'
-gem 'devise', '~> 4.2.0'
+gem 'devise', '~> 4.6.0'
 
 # need CMS code, but not DTLS code, so do not complicate life with
 # need for openssl 1.1.1 w/patches.
@@ -40,16 +40,9 @@ gem 'rake', '~> 12.3.2'
 # used by IP address management in ANIMA ACP
 gem 'ipaddress'
 
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
-# Use Unicorn as the app server
-# gem 'unicorn'
-
 gem 'active_scaffold', :git => 'https://github.com/activescaffold/active_scaffold.git'
 gem 'sass'
 gem 'sass-rails'
-gem 'devise', git: 'https://github.com/plataformatec/devise.git', branch: 'master'
 
 # use this to get full decoding of HTTP Accept: headers, to be able to
 # split off smime-type=voucher in pkcs7-mime, and other parameters
