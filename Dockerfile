@@ -59,6 +59,8 @@ COPY --from=builder /bin/busybox  /bin/busybox
 ENV PATH="/usr/local/bundle/bin:${PATH}"
 
 COPY . /app/highway
+ADD ./docker/Gemfile /app/highway/Gemfile
+ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
 
 WORKDIR /app/highway
 
