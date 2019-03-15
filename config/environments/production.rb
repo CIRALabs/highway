@@ -57,3 +57,4 @@ Rails.application.configure do
 end
 
 $TGZ_FILE_LOCATION = Pathname.new("/var/tmp/tgz")
+$ACME_SERVER = "https://acme-v02.api.letsencrypt.org/directory"

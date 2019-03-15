@@ -52,3 +52,6 @@ Rails.application.configure do
   config.action_mailer.default_options = {from: 'mcr+minerva@sandelman.ca'}
 
 end
+
+# always use staging server for tests, ideally mock them as well.
+AcmeKeys.acme.server="https://acme-staging-v02.api.letsencrypt.org/directory"

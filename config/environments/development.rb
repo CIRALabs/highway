@@ -57,4 +57,7 @@ end
 unless ENV['CERTDIR']
   HighwayKeys.ca.certdir = Rails.root.join('spec','files','cert')
   MasaKeys.ca.certdir = Rails.root.join('spec','files','cert')
+  AcmeKeys.acme.certdir=Rails.root.join('spec','files','cert')
 end
+AcmeKeys.acme.server="https://acme-staging-v02.api.letsencrypt.org/directory"
+
