@@ -44,6 +44,22 @@ RSpec.describe 'SmarKaKlink MASA API', type: :request do
 
   describe "provision of a new device" do
     it "should provision a new device when mac address already loaded" do
+      $INTERNAL_CA_SHG_DEVICE=true
+      $LETSENCRYPT_CA_SHG_DEVICE=false
+      provision1 = IO::read("spec/files/hera.provision.json")
+
+      post "/shg-provision", params: provision1, headers: {
+             'CONTENT_TYPE' => 'application/json',
+             'ACCEPT'       => 'application/tgz',
+           }
+      expect(response).to have_http_status(200)
+      device = assigns(:device)
+      expect(device).to eq(devices(:heranew))
+    end
+
+    it "should provision via LetsEncrypt, a new device when mac address already loaded" do
+      $INTERNAL_CA_SHG_DEVICE=false
+      $LETSENCRYPT_CA_SHG_DEVICE=true
       provision1 = IO::read("spec/files/hera.provision.json")
 
       post "/shg-provision", params: provision1, headers: {
@@ -56,6 +72,8 @@ RSpec.describe 'SmarKaKlink MASA API', type: :request do
     end
 
     it "should refuse a device when no mac address can be found" do
+      $INTERNAL_CA_SHG_DEVICE=true
+      $LETSENCRYPT_CA_SHG_DEVICE=false
       $TOFU_DEVICE_REGISTER=false
       token = '{ "wan-mac" : "11-22-ba-dd-ba-dd" }'
       post "/shg-provision", params: token, headers: {
@@ -68,6 +86,8 @@ RSpec.describe 'SmarKaKlink MASA API', type: :request do
     end
 
     it "should refuse a device, but remember it when in TOFU mode" do
+      $INTERNAL_CA_SHG_DEVICE=true
+      $LETSENCRYPT_CA_SHG_DEVICE=false
       $TOFU_DEVICE_REGISTER=true
       token = '{ "wan-mac" : "11-22-ba-dd-ba-dd" }'
       post "/shg-provision", params: token, headers: {

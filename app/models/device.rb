@@ -117,6 +117,15 @@ class Device < ActiveRecord::Base
   end
 
   def sign_from_csr(csr)
+    case
+    when $INTERNAL_CA_SHG_DEVICE
+      sign_from_csr_internal(csr)
+    when $LETSENCRYPT_CA_SHG_DEVICE
+      sign_from_csr_letsencrypt(csr)
+    end
+  end
+
+  def sign_from_csr_internal(csr)
     unless csr.verify(csr.public_key)
       raise CSRNotVerified;
     end

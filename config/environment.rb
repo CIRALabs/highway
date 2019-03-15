@@ -6,7 +6,11 @@ Rails.application.initialize!
 
 $MASAUrl = 'https://highway.sandelman.ca/'
 $ADMINTERFACE = false
+
+# SHG-provisioning controls... replace with appropriate yaml file?
 $TOFU_DEVICE_REGISTER = true
+$INTERNAL_CA_SHG_DEVICE=false
+$LETENCRYPT_CA_SHG_DEVICE=true
 
 $TGZ_FILE_LOCATION = Rails.root.join("tmp")
 
