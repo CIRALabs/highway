@@ -13,15 +13,17 @@ namespace :highway do
     puts "issuer is now: #{dn}"
     dnobj = OpenSSL::X509::Name.parse dn
 
-    HighwayKeys.ca.sign_certificate("CA", dnobj,
-                                    vendorprivkeyfile,
-                                    outfile, dnobj) { |cert, ef|
-      cert.add_extension(ef.create_extension("basicConstraints","CA:TRUE",true))
-      cert.add_extension(ef.create_extension("keyUsage","keyCertSign, cRLSign", true))
-      cert.add_extension(ef.create_extension("subjectKeyIdentifier","hash",false))
-      cert.add_extension(ef.create_extension("authorityKeyIdentifier","keyid:always",false))
-    }
-    puts "CA Certificate writtten to: #{outfile}"
+    if !File.exist?(outfile) or ENV['RESIGN']
+      HighwayKeys.ca.sign_certificate("CA", dnobj,
+                                      vendorprivkeyfile,
+                                      outfile, dnobj) { |cert, ef|
+        cert.add_extension(ef.create_extension("basicConstraints","CA:TRUE",true))
+        cert.add_extension(ef.create_extension("keyUsage","keyCertSign, cRLSign", true))
+        cert.add_extension(ef.create_extension("subjectKeyIdentifier","hash",false))
+        cert.add_extension(ef.create_extension("authorityKeyIdentifier","keyid:always",false))
+      }
+      puts "CA Certificate writtten to: #{outfile}"
+    end
   end
 
   desc "Create a certificate for the MASA to sign vouchers with"
@@ -34,10 +36,12 @@ namespace :highway do
     dnprefix = SystemVariable.string(:dnprefix) || "/DC=ca/DC=sandelman"
     dn = sprintf("%s/CN=%s MASA", dnprefix, SystemVariable.string(:hostname))
 
-    HighwayKeys.ca.sign_end_certificate("MASA",
-                                        masaprivkeyfile,
-                                        outfile, dn)
-    puts "MASA voucher signing certificate writtten to: #{outfile}"
+    if !File.exist?(outfile) or ENV['RESIGN']
+      HighwayKeys.ca.sign_end_certificate("MASA",
+                                          masaprivkeyfile,
+                                          outfile, dn)
+      puts "MASA voucher signing certificate writtten to: #{outfile}"
+    end
   end
 
   desc "Create a certificate for the MASA to sign MUD objects"
@@ -50,10 +54,12 @@ namespace :highway do
     dnprefix = SystemVariable.string(:dnprefix) || "/DC=ca/DC=sandelman"
     dn = sprintf("%s/CN=%s MUD", dnprefix, SystemVariable.string(:hostname))
 
-    HighwayKeys.ca.sign_end_certificate("MUD",
-                                        mudprivkeyfile,
-                                        outfile, dn)
-    puts "MUD file signing certificate writtten to: #{outfile}"
+    if !File.exist?(outfile) or ENV['RESIGN']
+      HighwayKeys.ca.sign_end_certificate("MUD",
+                                          mudprivkeyfile,
+                                          outfile, dn)
+      puts "MUD file signing certificate writtten to: #{outfile}"
+    end
   end
 
   desc "Create a certificate for the MASA web interface (EST) to answer requests"
@@ -67,12 +73,14 @@ namespace :highway do
     dn = sprintf("%s/CN=%s", dnprefix, SystemVariable.string(:hostname))
     dnobj = OpenSSL::X509::Name.parse dn
 
-    mud_cert = HighwayKeys.ca.sign_certificate("SERVER", nil,
-                                               serverprivkeyfile,
-                                               outfile, dnobj) { |cert,ef|
-      cert.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
-    }
-    puts "MASA SERVER certificate writtten to: #{outfile}"
+    if !File.exist?(outfile) or ENV['RESIGN']
+      mud_cert = HighwayKeys.ca.sign_certificate("SERVER", nil,
+                                                 serverprivkeyfile,
+                                                 outfile, dnobj) { |cert,ef|
+        cert.add_extension(ef.create_extension("basicConstraints","CA:FALSE",true))
+      }
+      puts "MASA SERVER certificate writtten to: #{outfile}"
+    end
   end
 
   desc "Create an intermediate CA for signing SmartPledge IDevID devices"
@@ -85,16 +93,18 @@ namespace :highway do
     dnobj = OpenSSL::X509::Name.parse dn
     outfile=IDevIDKeys.ca.idevid_pub_keyfile
 
-    HighwayKeys.ca.sign_certificate("IDevID", nil,
-                                    IDevIDKeys.ca.idevid_priv_keyfile,
-                                    IDevIDKeys.ca.idevid_pub_keyfile,
-                                    dnobj) { |cert, ef|
-      cert.add_extension(ef.create_extension("basicConstraints","CA:TRUE",true))
-      cert.add_extension(ef.create_extension("keyUsage","keyCertSign, cRLSign", true))
-      cert.add_extension(ef.create_extension("subjectKeyIdentifier","hash",false))
-      cert.add_extension(ef.create_extension("authorityKeyIdentifier","keyid:always",false))
-    }
-    puts "IDevID Certificate writtten to: #{outfile}"
+    if !File.exist?(outfile) or ENV['RESIGN']
+      HighwayKeys.ca.sign_certificate("IDevID", nil,
+                                      IDevIDKeys.ca.idevid_priv_keyfile,
+                                      IDevIDKeys.ca.idevid_pub_keyfile,
+                                      dnobj) { |cert, ef|
+        cert.add_extension(ef.create_extension("basicConstraints","CA:TRUE",true))
+        cert.add_extension(ef.create_extension("keyUsage","keyCertSign, cRLSign", true))
+        cert.add_extension(ef.create_extension("subjectKeyIdentifier","hash",false))
+        cert.add_extension(ef.create_extension("authorityKeyIdentifier","keyid:always",false))
+      }
+      puts "IDevID Certificate writtten to: #{outfile}"
+    end
   end
 
   desc "Sign a IDevID certificate for a new device, EUI64=xx"
