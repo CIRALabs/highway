@@ -71,3 +71,22 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 end
+
+def mk_empty_dir
+  newdir = Rails.root.join("tmp").join("devices")
+  FileUtils.remove_entry_secure(newdir) if Dir.exists?(newdir)
+  FileUtils.mkdir_p(newdir)
+  newdir
+end
+
+def tmp_device_dir(copied=false)
+  olddir = HighwayKeys.ca.devicedir
+  newdir = mk_empty_dir
+  HighwayKeys.ca.devdir = newdir
+  if copied
+    system("cp -r #{olddir}/. #{newdir}/.")
+  end
+  yield
+  HighwayKeys.ca.devdir = olddir
+end
+

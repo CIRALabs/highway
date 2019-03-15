@@ -41,24 +41,6 @@ RSpec.describe Device, type: :model do
     end
   end
 
-  def mk_empty_dir
-    newdir = Rails.root.join("tmp").join("devices")
-    FileUtils.remove_entry_secure(newdir) if Dir.exists?(newdir)
-    FileUtils.mkdir_p(newdir)
-    newdir
-  end
-
-  def tmp_device_dir(copied=false)
-    olddir = HighwayKeys.ca.devicedir
-    newdir = mk_empty_dir
-    HighwayKeys.ca.devdir = newdir
-    if copied
-      system("cp -r #{olddir}/. #{newdir}/.")
-    end
-    yield
-    HighwayKeys.ca.devdir = olddir
-  end
-
   describe "key generation" do
     it "should generate a new public/private key pair, and sign it" do
       almec = devices(:almec)
