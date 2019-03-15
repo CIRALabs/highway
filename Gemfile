@@ -37,6 +37,9 @@ gem 'openssl', :git => 'https://github.com/CIRALabs/ruby-openssl.git', :branch =
 gem "loofah", ">= 2.2.3"
 gem 'rake', '~> 12.3.2'
 
+# for LetsEncrypt
+gem 'acme-client'
+
 # used by IP address management in ANIMA ACP
 gem 'ipaddress'
 
