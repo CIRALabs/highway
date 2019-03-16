@@ -1,3 +1,5 @@
+source 'https://rubygems.org'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.0'
 gem 'cow_proxy', :git => 'https://github.com/mcr/cow_proxy.git'
@@ -39,6 +41,7 @@ gem 'rake', '~> 12.3.2'
 
 # for LetsEncrypt
 gem 'acme-client'
+gem 'dns-update', :git => 'https://github.com/CIRALabs/dns-update.git', :branch => 'txt_rr'
 
 # used by IP address management in ANIMA ACP
 gem 'ipaddress'

@@ -1,5 +1,5 @@
 class AcmeKeys < HighwayKeys
-  attr_accessor :server
+  attr_accessor :server, :update_options
 
   def acmekey
     @acmekey ||= load_acme_pub_key

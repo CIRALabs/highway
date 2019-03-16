@@ -5,10 +5,12 @@ RSpec.describe AcmeKeys do
   before(:each) do
     HighwayKeys.ca.certdir = Rails.root.join('spec','files','cert')
     MasaKeys.ca.certdir = Rails.root.join('spec','files','cert')
+    AcmeKeys.acme.certdir=Rails.root.join('spec','files','cert')
   end
 
   it "should reuse an ACME key already generated" do
     tmp_device_dir(true) {
+      # something wrong with authenticating the SSL key for staging server.
       OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
       AcmeKeys.acme.acme_maybe_make_keys
       client = Acme::Client.new(private_key: AcmeKeys.acme.acmeprivkey,
