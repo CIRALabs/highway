@@ -63,7 +63,11 @@ class SmarkaklinkController < ApiController
     @device.sign_from_base64_csr(@csr64)
 
     tgzfile = @device.generate_tgz_for_shg
-    send_file tgzfile, :type => 'application/tar+gzip'
+    unless tgzfile
+      head 404
+    else
+      send_file tgzfile, :type => 'application/tar+gzip'
+    end
   end
 
   private

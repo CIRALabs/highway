@@ -148,6 +148,8 @@ class Device < ActiveRecord::Base
     # write out the certificate
     certdir = tgz_name.join("etc", "shg")
     FileUtils.mkdir_p(certdir)
+    return nil unless certificate
+
     File.open(certdir.join("idevid_cert.pem"), "w") { |f|
       f.write certificate.to_pem
     }
