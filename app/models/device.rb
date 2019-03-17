@@ -41,6 +41,9 @@ class Device < ActiveRecord::Base
   def self.create_by_number(number)
     find_by_number(number) || create(eui64: canonicalize_eui64(number))
   end
+  def self.find_obsolete_or_create_by_eui64(number)
+    where(eui64: number).take || where(second_eui64: number) || create(eui64: canonicalize_eui64(number))
+  end
 
   def self.create_from_csr_io(csrio)
     create_from_csr(OpenSSL::X509::Request.new(csrio))
@@ -174,6 +177,10 @@ class Device < ActiveRecord::Base
     @public_key ||= OpenSSL::PKey.read(Base64::decode64(pub_key))
   end
 
+  def activated!
+    self.obsolete = false
+    save!
+  end
   def obsoleted!
     self.obsolete = true
     save!

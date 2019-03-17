@@ -19,10 +19,12 @@ namespace :shg do
   task :valid => :environment do
 
     productid = ENV['PRODUCTID']
-    device = Device.create_by_number(productid)
+    device = Device.find_obsolete_or_create_by_eui64(productid)
     device.activated!
     puts "Marked #{device.id} #{device.notes} as active"
-    puts "Activated from #{device.extra_attrs['register_ip'] || "unknown"}"
+    if device.extra_attrs
+      puts "Activated from #{device.extra_attrs['register_ip'] || "unknown"}"
+    end
   end
 
 end
