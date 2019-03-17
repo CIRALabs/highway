@@ -78,13 +78,10 @@ end
 
 group :development do
   # Deploy with Capistrano
-  gem 'capistrano', :git => 'https://github.com/mcr/capistrano.git', branch: 'per-host-deploy-to'
-  #gem 'capistrano', :path => '../capistrano'
-  gem 'capistrano-bundler', :git => 'https://github.com/mcr/bundler.git', branch: 'per-host-deploy-to'
-  #gem 'capistrano-bundler', :path => '../bundler'
+  gem 'capistrano'
+  gem 'capistrano-bundler'
   gem 'capistrano-rails'
-  gem 'capistrano-passenger', :git => 'https://github.com/mcr/passenger.git', branch: 'per-host-deploy-to'
-  #gem 'capistrano-passenger', :path => '../passenger'
+  gem 'capistrano-passenger'
   gem 'capistrano-rvm'
 
   # Spring speeds up development by keeping your application running
