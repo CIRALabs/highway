@@ -26,3 +26,4 @@ This will create a signed certificate in db/cert/masa_*
 This is necessary for rake spec as well.  A future effort will generate
 all certificates needed for the tests.
 
+There are some setup instructions in [[doc/SETUP.md]]
