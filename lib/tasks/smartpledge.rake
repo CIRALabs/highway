@@ -15,4 +15,14 @@ namespace :shg do
     end
   end
 
+  desc "Mark a device PRODUCTID= as being valid for provisioning"
+  task :valid => :environment do
+
+    productid = ENV['PRODUCTID']
+    device = Device.create_by_number(productid)
+    device.activated!
+    puts "Marked #{device.id} #{device.notes} as active"
+    puts "Activated from #{device.extra_attrs['register_ip'] || "unknown"}"
+  end
+
 end
