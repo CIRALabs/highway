@@ -24,7 +24,7 @@ namespace :highway do
                  "PRODUCTID", "EUI64", "status")
     Device.all.each { |dev|
       if dev.owner
-        ownerstr = "owned by #{dev.name}"
+        ownerstr = "owned by #{dev.owner.name}"
       elsif dev.obsolete?
         ownerstr = "obsolete"
       else
