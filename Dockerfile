@@ -6,10 +6,21 @@ RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libg
     mkdir -p /app/highway && \
     mkdir -p /gems/highway && cd /gems/highway && \
     git config --global http.sslVerify "false" && \
-    git clone https://github.com/CIRALabs/ruby-openssl.git && \
+    git clone --single-branch --branch cms-added https://github.com/CIRALabs/ruby-openssl.git && \
     git clone --single-branch --branch binary_http_multipart https://github.com/AnimaGUS-minerva/multipart_body.git && \
     git clone --single-branch --branch ecdsa_interface_openssl https://github.com/AnimaGUS-minerva/ruby_ecdsa.git && \
     git clone --single-branch --branch v0.6.0 https://github.com/mcr/ChariWTs.git
+
+# build custom openssl with ruby-openssl patches
+
+# remove directory with broken opensslconf.h, build in /src, as we do not need openssl once installed
+RUN rm -rf /usr/include/x86_64-linux-gnu/openssl
+RUN mkdir -p /src/highway
+RUN cd /src/highway && git clone -b dtls-listen-refactor-1.1.1b git://github.com/mcr/openssl.git
+RUN cd /src/highway/openssl && ./Configure --prefix=/usr --openssldir=/usr/lib/ssl --libdir=lib/linux-x86_64 no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test linux-x86_64 && id && make
+RUN cd /src/highway/openssl && make install_sw
+RUN gem install rake-compiler
+RUN cd /gems/highway/ruby-openssl && rake compile
 
 WORKDIR /app/highway
 RUN gem install bundler --source=http://rubygems.org
@@ -21,7 +32,9 @@ RUN gem install -v1.10.1 nokogiri && \
     gem install -v3.1.12 bcrypt && \
     gem install -v1.10.0 ffi && \
     gem install -v0.21.0 pg && \
-    gem install -v1.7.2 thin
+    gem install -v1.7.2 thin && \
+    gem install -v0.1.3 websocket-extensions && \
+    gem install -v0.5.9.3 cbor
 ADD ./docker/Gemfile /app/highway/Gemfile
 ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
 ADD ./docker/Rakefile /app/highway/Rakefile
@@ -37,6 +50,9 @@ COPY --from=builder ["/lib/x86_64-linux-gnu/liblzma*", \
         "/lib/x86_64-linux-gnu/libkeyutils*", \
         "/lib/x86_64-linux-gnu/libgcc_s.so*", \
         "/lib/x86_64-linux-gnu/libidn.so*", \
+        "/lib/x86_64-linux-gnu/libtinfo.so.5*", \
+        "/lib/x86_64-linux-gnu/libncurses*", \
+        "/lib/x86_64-linux-gnu/libreadline.so.7*", \
         "/lib/x86_64-linux-gnu/"]
 COPY --from=builder ["/usr/lib/x86_64-linux-gnu/libgmp*", \
      "/usr/lib/x86_64-linux-gnu/libpq*", \
