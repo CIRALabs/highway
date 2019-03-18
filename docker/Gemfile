@@ -20,8 +20,7 @@ gem 'jbuilder', '~> 2.0'
 # raven for sentry.io
 gem "sentry-raven"
 
-gem 'openssl', :git => 'https://github.com/CIRALabs/ruby-openssl.git', :branch => 'cms-added'
-#gem 'openssl', :path => '/gems/highway/ruby-openssl'
+gem 'openssl', :path => '/gems/highway/ruby-openssl'
 gem 'sass'
 gem 'sass-rails'
 gem 'warden', '~> 1.2.3'
