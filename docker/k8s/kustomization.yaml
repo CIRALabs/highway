@@ -5,7 +5,7 @@ commonLabels:
   app: shg-comet
 images:
 - name: docker-registry.infra.01.k-ciralabs.ca/ciralabs/shg-highway
-  newTag: comet-0.9.5
+  newTag: comet-0.9.7
 resources:
 - 00-shg-comet-pvc.yaml
 - 06-shg-comet-certs-sealedsecret.yaml
