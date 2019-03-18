@@ -5,15 +5,5 @@ production:
   pool: 5
   timeout: 5000
   host: prodhost.example
-  user: <%= ENV['COMET_PROD_DB_USER'] %>
-  password: <%= ENV['COMET_PROD_DB_PASSWORD'] %>
-development:
-  adapter: postgresql
-  encoding: unicode
-  database: comet
-  pool: 5
-  timeout: 5000
-  host: devhost.example
-  user: <%= ENV['COMET_DEV_DB_USER'] %>
-  password: <%= ENV['COMET_DEV_DB_PASSWORD'] %>
-
+  user: <%= ENV['COMET_DB_USER'] %>
+  password: <%= ENV['COMET_DB_PASSWORD'] %>
