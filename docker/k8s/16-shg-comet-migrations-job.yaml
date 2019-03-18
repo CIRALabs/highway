@@ -7,7 +7,7 @@ spec:
   template:
     spec:
       containers:
-      - image: docker-registry.infra.01.k-ciralabs.ca/ciralabs/shg-highway:comet-0.9.3
+      - image: docker-registry.infra.01.k-ciralabs.ca/ciralabs/shg-highway:comet-0.9.7
         imagePullPolicy: Always
         name: shg-comet
         command: ["bundle", "exec", "rake", "db:migrate"]
@@ -15,4 +15,24 @@ spec:
           requests:
             memory: 128Mi
             cpu: 100m
+        volumeMounts:
+        - name: certs
+          mountPath: /app/certificates
+        - name: config
+          mountPath: /app/highway/config/config.yml
+          subPath: config.yml
+        - name: config
+          mountPath: /app/highway/config/database.yml
+          subPath: database.yml
+        - name: config
+          mountPath: /app/highway/config/secret.yml
+          subPath: secret.yml
+        - name: config
+          mountPath: /app/highway/config/initializers/acme.rb
+          subPath: acme.rb
+      volumes:
+      - name: config
+        configMap:
+          name: 'shg-comet-files'
+          defaultMode: 420
       restartPolicy: Never
