@@ -29,9 +29,13 @@ namespace :highway do
   end
 
   def set_iauthority
-    SystemVariable.setvalue(:masa_iauthority, sprintf("%s:%u",
+    port = SystemVariable.number(:portnum)
+    portinfo = sprintf(":%u", port)
+    portinfo = "" if port == 443
+    SystemVariable.setvalue(:masa_iauthority, sprintf("%s%s",
                                                       SystemVariable.string(:hostname),
-                                                      SystemVariable.number(:portnum)))
+                                                      portinfo))
+
   end
 
   desc "Do initial setup of system variables, non-interactively, HOSTNAME=foo"
