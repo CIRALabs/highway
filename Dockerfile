@@ -45,7 +45,9 @@ ADD ./docker/Rakefile /app/highway/Rakefile
 RUN bundle _2.0.1_ install --system --no-deployment --gemfile=/app/highway/Gemfile && \
     bundle _2.0.1_ check
 
-RUN rm -f /app/highway/tmp/pids/server.pid
+RUN rm -f /app/highway/tmp/pids/server.pid && \
+    rm -f /app/highway/config/{config,database,secret}.yml && \
+    rm -f /app/highway/config/initializers/acme.rb
 
 FROM docker-registry.infra.01.k-ciralabs.ca/lestienne/distroless-ruby:2.6.1-dnsutils
 

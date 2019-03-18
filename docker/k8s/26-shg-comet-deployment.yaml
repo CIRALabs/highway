@@ -60,14 +60,17 @@ spec:
         - name: certs
           mountPath: /app/certificates
         - name: config
-          mountPath: /config/shg/config.yml
+          mountPath: /app/highway/config/config.yml
           subPath: config.yml
         - name: config
-          mountPath: /config/shg/database.yml
+          mountPath: /app/highway/config/database.yml
           subPath: database.yml
         - name: config
-          mountPath: /config/shg/secret.yml
+          mountPath: /app/highway/config/secret.yml
           subPath: secret.yml
+        - name: config
+          mountPath: /app/highway/config/initializers/acme.rb
+          subPath: acme.rb
       volumes:
       - name: certs
         secret: 
