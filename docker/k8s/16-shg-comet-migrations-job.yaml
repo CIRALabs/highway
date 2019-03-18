@@ -16,8 +16,6 @@ spec:
             memory: 128Mi
             cpu: 100m
         volumeMounts:
-        - name: certs
-          mountPath: /app/certificates
         - name: config
           mountPath: /app/highway/config/config.yml
           subPath: config.yml
