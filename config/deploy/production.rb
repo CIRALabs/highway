@@ -7,17 +7,21 @@
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
 
+if false
 server "masa.wheezes.sandelman.ca",
        user: "wheezes",
        roles: %w{app db web},
        deploy_to: '/wheezes/app/highway',
        git_wrapper_path: '/wheezes/app/tmp'
+end
 
 # connect the hook directly
-after :publishing, :'passenger:restart'
+#after :publishing, :'passenger:restart'
 
 if true
-server "masa.honeydukes.sandelman.ca",
+  set :deploy_to, '/honeydukes/app/highway'
+
+  server "masa.honeydukes.sandelman.ca",
        user: "honeydukes",
        roles: %w{app db web},
        deploy_to: '/honeydukes/app/highway',
