@@ -30,6 +30,12 @@ SystemVariable13:
 
 SystemVariable14:
   id: 14
-  variable: routerfqdn
-  value: "router.securehomegateway.ca"
+  variable: shg_suffix
+  value: "router"
+  number:
+
+SystemVariable15:
+  id: 15
+  variable: shg_zone
+  value: "securehomegateway.ca"
   number:

@@ -138,8 +138,4 @@ class SystemVariable < ActiveRecord::Base
     SystemVariable.string("hostname")
   end
 
-  def self.routerfqdn
-    SystemVariable.string("routerfqdn")
-  end
-
 end

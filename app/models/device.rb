@@ -120,19 +120,25 @@ class Device < ActiveRecord::Base
   end
 
   def sign_from_csr(csr)
+    unless csr.verify(csr.public_key)
+      raise CSRNotVerified;
+    end
+    set_public_key(csr.public_key)
     case
     when $INTERNAL_CA_SHG_DEVICE
-      sign_from_csr_internal(csr)
+      sign_eui64
     when $LETSENCRYPT_CA_SHG_DEVICE
       sign_from_csr_letsencrypt(csr)
     end
   end
 
+  def sign_from_csr_letsencrypt(csr)
+    names = [shg_basename, "mud." + shg_basename]
+
+
+  end
+
   def sign_from_csr_internal(csr)
-    unless csr.verify(csr.public_key)
-      raise CSRNotVerified;
-    end
-    set_public_key(csr.public_key)
     sign_eui64
   end
 
@@ -234,12 +240,25 @@ class Device < ActiveRecord::Base
     end
   end
 
-  def calc_fqdn
-    "n#{short_ula}.#{SystemVariable.routerfqdn}"
+  def shg_suffix
+    @shg_suffix ||= SystemVariable.string(:shg_suffix)
+  end
+  def shg_zone
+    @shg_zone   ||= SystemVariable.string(:shg_zone)
+  end
+
+  # return a textual form of the ULA address
+  def ula_str
+    ula        # stored as string in DB for now.
+  end
+  def shg_basename
+    return nil unless ula_str
+    @shg_basename ||= ['n' + short_ula,
+                       shg_suffix, shg_zone].join('.')
   end
 
   def fqdn
-    self[:fqdn] ||= calc_fqdn
+    self[:fqdn] ||= shg_basename
   end
 
   def essid
