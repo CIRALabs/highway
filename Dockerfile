@@ -1,6 +1,6 @@
 FROM ruby:2.6.1 as builder
 
-RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libgmp10 sash busybox && \
+RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libgmp10 sash busybox dnsutils && \
     apt-get remove -y git &&  \
     apt-get install -y git && \
     mkdir -p /app/highway && \
@@ -13,7 +13,8 @@ RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libg
 
 # build custom openssl with ruby-openssl patches
 
-# remove directory with broken opensslconf.h, build in /src, as we do not need openssl once installed
+# remove directory with broken opensslconf.h,
+# build in /src, as we do not need openssl once installed
 RUN rm -rf /usr/include/x86_64-linux-gnu/openssl
 RUN mkdir -p /src/highway
 RUN cd /src/highway && git clone -b dtls-listen-refactor-1.1.1b git://github.com/mcr/openssl.git
@@ -53,22 +54,38 @@ COPY --from=builder ["/lib/x86_64-linux-gnu/liblzma*", \
         "/lib/x86_64-linux-gnu/libtinfo.so.5*", \
         "/lib/x86_64-linux-gnu/libncurses*", \
         "/lib/x86_64-linux-gnu/libreadline.so.7*", \
+	"/lib/x86_64-linux-gnu/libjson-c.so.3*", \
+	"/lib/x86_64-linux-gnu/libkeyutils.so*", \
+	"/lib/x86_64-linux-gnu/liblzma.so*", \
         "/lib/x86_64-linux-gnu/"]
 COPY --from=builder ["/usr/lib/x86_64-linux-gnu/libgmp*", \
-     "/usr/lib/x86_64-linux-gnu/libpq*", \
-     "/usr/lib/x86_64-linux-gnu/libgss*", \
-     "/usr/lib/x86_64-linux-gnu/libldap*", \
-     "/usr/lib/x86_64-linux-gnu/libk5crypto*", \
-     "/usr/lib/x86_64-linux-gnu/liblber-2.4*", \
-     "/usr/lib/x86_64-linux-gnu/libsasl2.so*", \
-     "/usr/lib/x86_64-linux-gnu/libgnutls.so*", \
-     "/usr/lib/x86_64-linux-gnu/libp11-kit*", \
-     "/usr/lib/x86_64-linux-gnu/libkrb*", \
-     "/usr/lib/x86_64-linux-gnu/libtasn1*", \
-     "/usr/lib/x86_64-linux-gnu/libnettle.so*", \
-     "/usr/lib/x86_64-linux-gnu/libhogweed.so*", \
-     "/usr/lib/x86_64-linux-gnu/libstdc++.so*", \
+     "/usr/lib/x86_64-linux-gnu/libbind9.so*", \
+     "/usr/lib/x86_64-linux-gnu/libcrypto.so*", \
+     "/usr/lib/x86_64-linux-gnu/libdns.so*", \
      "/usr/lib/x86_64-linux-gnu/libffi.so*", \
+     "/usr/lib/x86_64-linux-gnu/libGeoIP.so*", \
+     "/usr/lib/x86_64-linux-gnu/libgnutls.so*", \
+     "/usr/lib/x86_64-linux-gnu/libgss*", \
+     "/usr/lib/x86_64-linux-gnu/libgssapi_krb5.so*", \
+     "/usr/lib/x86_64-linux-gnu/libhogweed.so*", \
+     "/usr/lib/x86_64-linux-gnu/libicudata.so*", \
+     "/usr/lib/x86_64-linux-gnu/libicuuc.so*", \
+     "/usr/lib/x86_64-linux-gnu/libisccfg.so*", \
+     "/usr/lib/x86_64-linux-gnu/libisc.so*", \
+     "/usr/lib/x86_64-linux-gnu/libk5crypto*", \
+     "/usr/lib/x86_64-linux-gnu/libkrb*", \
+     "/usr/lib/x86_64-linux-gnu/libkrb5.so*", \
+     "/usr/lib/x86_64-linux-gnu/libkrb5support.so*", \
+     "/usr/lib/x86_64-linux-gnu/liblber-2.4*", \
+     "/usr/lib/x86_64-linux-gnu/libldap*", \
+     "/usr/lib/x86_64-linux-gnu/liblwres.so*", \
+     "/usr/lib/x86_64-linux-gnu/libnettle.so*", \
+     "/usr/lib/x86_64-linux-gnu/libp11-kit*", \
+     "/usr/lib/x86_64-linux-gnu/libpq*", \
+     "/usr/lib/x86_64-linux-gnu/libsasl2.so*", \
+     "/usr/lib/x86_64-linux-gnu/libstdc++.so*", \
+     "/usr/lib/x86_64-linux-gnu/libtasn1*", \
+     "/usr/lib/x86_64-linux-gnu/libxml2.so*", \
      "/usr/lib/x86_64-linux-gnu/"]
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle /usr/local/bundle
