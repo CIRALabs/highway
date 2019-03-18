@@ -30,7 +30,7 @@ spec:
         name: shg-comet
         ports:
         - name: api-comet
-          containerPort: 3000
+          containerPort: 9443
           protocol: TCP
         envFrom:
         - configMapRef:
