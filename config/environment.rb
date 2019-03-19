@@ -14,7 +14,7 @@ $LETENCRYPT_CA_SHG_DEVICE=true
 
 $TGZ_FILE_LOCATION = Rails.root.join("tmp")
 
-$VERSION = "0.9.7"
+$VERSION = "0.9.8"
 
 # gets overritten by config/initializers/revision.rb by capistrano
 $REVISION= "devel"

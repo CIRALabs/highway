@@ -9,6 +9,10 @@ Rails.application.configure do
   # Do not eager load code on boot.
   config.eager_load = false
 
+  # there are no significant assets here, but a few images and redirects
+  # do exist.
+  config.public_file_server.enabled = true
+
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true

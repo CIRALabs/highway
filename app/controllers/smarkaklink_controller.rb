@@ -30,6 +30,7 @@ class SmarkaklinkController < ApiController
   end
 
   def provision
+    ip = request.env["REMOTE_ADDR"]
     if devnum=params['wan-mac']
       @device = Device.find_by_number(devnum) || Device.find_by_second_eui64(devnum)
     end
@@ -41,7 +42,7 @@ class SmarkaklinkController < ApiController
       num = ''
       if $TOFU_DEVICE_REGISTER
         attrs = Hash.new
-        attrs['register_ip'] = request.env["REMOTE_ADDR"]
+        attrs['register_ip'] = ip
         attrs['tofu_register'] = true
         @device = Device.create(eui64: Device.canonicalize_eui64(params['wan-mac']),
                       second_eui64: Device.canonicalize_eui64(params['switch-mac']),
@@ -61,6 +62,8 @@ class SmarkaklinkController < ApiController
 
     # now create a private certificate from this CSR.
     @device.sign_from_base64_csr(@csr64)
+
+    logger.info "Enrolled new device from #{ip}"
 
     tgzfile = @device.generate_tgz_for_shg
     unless tgzfile
