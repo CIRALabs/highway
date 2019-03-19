@@ -126,8 +126,10 @@ class Device < ActiveRecord::Base
     set_public_key(csr.public_key)
     case
     when $INTERNAL_CA_SHG_DEVICE
+      logger.info "Signing CSR with internal CA"
       sign_eui64
     when $LETSENCRYPT_CA_SHG_DEVICE
+      logger.info "Signing CSR with LetsEncrypt"
       sign_from_csr_letsencrypt(csr)
     end
   end
