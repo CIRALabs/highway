@@ -29,6 +29,10 @@ gem 'devise', '~> 4.6.0'
 # split off smime-type=voucher in pkcs7-mime, and other parameters
 gem 'http-accept'
 
+# for LetsEncrypt
+gem 'acme-client'
+gem 'dns-update', :path => '/gems/highway/dns-update.git'
+
 # used to generate multipart bodies
 gem 'multipart_body', :path => '/gems/highway/multipart_body'
 gem 'ecdsa',   :path => '/gems/highway/ruby_ecdsa'
