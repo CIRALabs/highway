@@ -18,6 +18,27 @@ spec:
         envFrom:
         - configMapRef:
             name: shg-comet-env
+        env:
+        - name: COMET_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: shg-comet
+              key: comet-db-user
+        - name: COMET_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: shg-comet
+              key: comet-db-password
+        - name: COMET_SECRET_KEY_BASE
+          valueFrom:
+            secretKeyRef:
+              name: shg-comet
+              key: comet-secret-key-base
+        - name: COMET_SECRET_PEPPER
+          valueFrom:
+            secretKeyRef:
+              name: shg-comet
+              key: comet-secret-pepper
         volumeMounts:
         - name: config
           mountPath: /app/highway/config/database.yml
