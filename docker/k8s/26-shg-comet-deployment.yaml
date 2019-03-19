@@ -70,6 +70,9 @@ spec:
         - name: config
           mountPath: /app/highway/config/initializers/acme.rb
           subPath: acme.rb
+        - name: config
+          mountPath: /app/highway/config/environments/production.rb
+          subPath: production.rb
       volumes:
       - name: certs
         secret: 
