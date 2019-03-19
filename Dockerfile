@@ -1,4 +1,4 @@
-FROM ruby:2.6.1 as builder
+FROM ruby:2.6.2 as builder
 
 RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libgmp10 sash busybox dnsutils && \
     apt-get remove -y git &&  \
@@ -48,9 +48,10 @@ RUN bundle _2.0.1_ install --system --no-deployment --gemfile=/app/highway/Gemfi
 
 RUN rm -f /app/highway/tmp/pids/server.pid && \
     rm -f /app/highway/config/{config,database,secret}.yml && \
-    rm -f /app/highway/config/initializers/acme.rb
+    rm -f /app/highway/config/initializers/acme.rb && \
+    rm -f /app/highway/config/environments/production.rb
 
-FROM docker-registry.infra.01.k-ciralabs.ca/lestienne/distroless-ruby:2.6.1-dnsutils
+FROM docker-registry.infra.01.k-ciralabs.ca/lestienne/distroless-ruby:2.6.2-dnsutils
 
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle /usr/local/bundle
