@@ -59,9 +59,6 @@ spec:
         - name: certs
           mountPath: /app/certificates
         - name: config
-          mountPath: /app/highway/config/config.yml
-          subPath: config.yml
-        - name: config
           mountPath: /app/highway/config/database.yml
           subPath: database.yml
         - name: config

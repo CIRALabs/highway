@@ -20,9 +20,6 @@ spec:
             name: shg-comet-env
         volumeMounts:
         - name: config
-          mountPath: /app/highway/config/config.yml
-          subPath: config.yml
-        - name: config
           mountPath: /app/highway/config/database.yml
           subPath: database.yml
         - name: config

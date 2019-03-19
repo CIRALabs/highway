@@ -19,7 +19,6 @@ generatorOptions:
 configMapGenerator:
 - name: shg-comet-files
   files:
-    - config/config.yml
     - config/database.yml
     - config/secrets.yml
     - config/initializers/acme.rb
