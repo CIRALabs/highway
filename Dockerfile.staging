@@ -1,0 +1,16 @@
+FROM docker-registry.infra.01.k-ciralabs.ca/ciralabs/shg-highway:comet-0.9.7
+
+COPY . /app/highway
+ADD ./docker/Gemfile /app/highway/Gemfile
+ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
+ENV GEM_HOME="/usr/local/bundle"
+
+WORKDIR /app/highway
+
+EXPOSE 9443
+
+CMD ["bundle", "_2.0.1_", "exec", "thin", "start", "--ssl",      \
+    "--address", "0.0.0.0", "--port", "9443",                         \
+    "--ssl-cert-file", "/app/certificates/server_prime256v1.crt",\
+    "--ssl-key-file",  "/app/certificates/server_prime256v1.key" ]
+
