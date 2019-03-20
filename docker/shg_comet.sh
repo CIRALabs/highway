@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker build -t mcr314/shg_comet:v097 .
+docker build -t mcr314/shg_comet:v098 .

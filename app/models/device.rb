@@ -131,6 +131,8 @@ class Device < ActiveRecord::Base
     when $LETSENCRYPT_CA_SHG_DEVICE
       logger.info "Signing CSR with LetsEncrypt"
       sign_from_csr_letsencrypt(csr)
+    else
+      logger.info "No certificate authority enabled"
     end
   end
 

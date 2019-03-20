@@ -62,11 +62,13 @@ class SmarkaklinkController < ApiController
 
     # now create a private certificate from this CSR.
     @device.sign_from_base64_csr(@csr64)
+    @device.save!
 
     logger.info "Enrolled new device from #{ip}"
 
     tgzfile = @device.generate_tgz_for_shg
     unless tgzfile
+      logger.info "Failed to generate tgz file"
       head 404
     else
       send_file tgzfile, :type => 'application/tar+gzip'
