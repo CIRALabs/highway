@@ -16,7 +16,7 @@ $TOFU_DEVICE_REGISTER = true
 
 $TGZ_FILE_LOCATION = Rails.root.join("tmp")
 
-$VERSION = "0.9.8"
+$VERSION = "0.9.9"
 
 # gets overritten by config/initializers/revision.rb by capistrano
 $REVISION= "devel"
