@@ -158,6 +158,9 @@ class Device < ActiveRecord::Base
   def generate_tgz_for_shg
     FileUtils.mkdir_p(tgz_name)
 
+    # Copy the root filesystem for Turris in the tgz location
+    FileUtils.copy_entry $TURRIS_ROOT_LOCATION, tgz_name
+
     # write out the certificate
     certdir = tgz_name.join("etc", "shg")
     FileUtils.mkdir_p(certdir)

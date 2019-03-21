@@ -15,6 +15,7 @@ $TOFU_DEVICE_REGISTER = true
 #$LETENCRYPT_CA_SHG_DEVICE=true
 
 $TGZ_FILE_LOCATION = Rails.root.join("tmp")
+$TURRIS_ROOT_LOCATION = Rails.root.join("turris_root")
 
 $VERSION = "0.9.9"
 

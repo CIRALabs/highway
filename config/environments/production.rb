@@ -61,4 +61,5 @@ Rails.application.configure do
 end
 
 $TGZ_FILE_LOCATION = Pathname.new("/var/tmp/tgz")
+$TURRIS_ROOT_LOCATION = Rails.root.join("turris_root")
 $ACME_SERVER = "https://acme-v02.api.letsencrypt.org/directory"
