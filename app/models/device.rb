@@ -129,7 +129,7 @@ class Device < ActiveRecord::Base
       logger.info "Signing CSR with internal CA"
       sign_eui64
     when $LETSENCRYPT_CA_SHG_DEVICE
-      logger.info "Signing CSR with LetsEncrypt"
+      logger.info "Processing CSR with LetsEncrypt"
       sign_from_csr_letsencrypt(csr)
     else
       logger.info "No certificate authority enabled"
@@ -158,13 +158,18 @@ class Device < ActiveRecord::Base
   def generate_tgz_for_shg
     FileUtils.mkdir_p(tgz_name)
 
-    # Copy the root filesystem for Turris in the tgz location
-    FileUtils.copy_entry $TURRIS_ROOT_LOCATION, tgz_name
+    if $TURRIS_ROOT_LOCATION
+      # Copy the root filesystem for Turris in the tgz location
+      FileUtils.copy_entry $TURRIS_ROOT_LOCATION, tgz_name
+    end
 
     # write out the certificate
     certdir = tgz_name.join("etc", "shg")
     FileUtils.mkdir_p(certdir)
-    return nil unless certificate
+    unless certificate
+      logger.info "tgz file not created due to lack of certificate"
+      return nil
+    end
 
     File.open(certdir.join("idevid_cert.pem"), "w") { |f|
       f.write certificate.to_pem
