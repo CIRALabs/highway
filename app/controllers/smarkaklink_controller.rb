@@ -55,9 +55,7 @@ class SmarkaklinkController < ApiController
     end
 
     # found a device, collect the information about it!
-    @device.eui64 = params['wan-mac']
-    @device.second_eui64 = params['switch-mac']
-    @device.ula   = params['ula']
+    @device.update_from_smarkaklink_provision(params)
     @csr64 = params['csr']
 
     # now create a private certificate from this CSR.

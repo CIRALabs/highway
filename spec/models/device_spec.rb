@@ -127,6 +127,19 @@ RSpec.describe Device, type: :model do
 
       expect(dev.certificate).to_not be_nil
     end
+
+    it "should accept a CSR for an existing device, sign it with LetsEncrypt staging" do
+      dev = devices(:heranew)
+      expect(dev.certificate).to be_nil
+
+      # grab the CSR from the hera machine, and extract the CSR and use it.
+      provision1 = IO::read("spec/files/hera.provision.json")
+      atts = JSON::parse(provision1)
+      dev.update_from_smarkaklink_provision(atts)
+      dev.sign_from_csr_letsencrypt(atts['csr'])
+
+      expect(dev.certificate).to_not be_nil
+    end
   end
 
   describe "provisioning" do

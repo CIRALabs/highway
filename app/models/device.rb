@@ -20,6 +20,10 @@ class Device < ActiveRecord::Base
   scope :owned,   -> { where.not(owner: nil) }
   scope :unowned, -> { where(owner: nil) }
 
+  def canonicalize_eui64(str)
+    self.class.canonicalize_eui64(str)
+  end
+
   def self.canonicalize_eui64(str)
     return '' unless str
     nocolondash = str.downcase.gsub(/[\-\:]/,'')
@@ -137,9 +141,7 @@ class Device < ActiveRecord::Base
   end
 
   def sign_from_csr_letsencrypt(csr)
-    names = [shg_basename, "mud." + shg_basename]
-
-
+    self.certificate = AcmeKeys.acme.cert_for(shg_basename, shg_zone, csr, logger)
   end
 
   def sign_from_csr_internal(csr)
@@ -259,6 +261,12 @@ class Device < ActiveRecord::Base
     @shg_zone   ||= SystemVariable.string(:shg_zone)
   end
 
+  def update_from_smarkaklink_provision(params)
+    self.eui64        = canonicalize_eui64(params['wan-mac'])
+    self.second_eui64 = canonicalize_eui64(params['switch-mac'])
+    self.ula          = params['ula']
+  end
+
   # return a textual form of the ULA address
   def ula_str
     ula        # stored as string in DB for now.
@@ -333,7 +341,13 @@ class Device < ActiveRecord::Base
   end
 
   def certificate
-    @certificate ||= calc_certificate
+    @idevid ||= calc_certificate
+  end
+  def certificate=(x)
+    @idevid = x
+    if x
+      self.idevid_cert = x.to_pem
+    end
   end
 
   def pubkey
@@ -411,7 +425,7 @@ class Device < ActiveRecord::Base
     # include the official HardwareModule OID:  1.3.6.1.5.5.7.8.4
     @idevid.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
 
-    self.idevid_cert   = @idevid.to_pem
+    self.certificate     = @idevid
     self.serial_number ||= sanitized_eui64
     save!
   end
