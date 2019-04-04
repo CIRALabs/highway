@@ -48,7 +48,12 @@ RSpec.describe Device, type: :model do
       tmp_device_dir {
         almec.gen_and_store_key
         expect(almec.idevid_cert).to_not be_nil
-        expect(File.exists?(File.join(HighwayKeys.ca.devicedir, "#{almec.sanitized_eui64}/device.crt"))).to be true
+
+        file = File.join(HighwayKeys.ca.devicedir, "#{almec.sanitized_eui64}/device.crt")
+        expect(File.exists?(file)).to be true
+
+        cert = OpenSSL::X509::Certificate.new(IO::read(file))
+        expect(cert.subject.to_s).to include("/serialNumber=JADA_f2-00-01")
       }
       # expect almec public key to verify with root key
     end
