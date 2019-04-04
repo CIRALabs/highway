@@ -1,6 +1,7 @@
 # 00:D0:E5	SOLIDUM SYSTEMS CORP. (defunct)
 #
 # private key is in spec/files/product_00-D0-E5-F2-00-01
+# but the certificate is intentionally not loaded in this record to test error conditions.
 almec:
   eui64: '00-d0-e5-f2-00-01'
   notes: 'almec.sandelman.ca'
