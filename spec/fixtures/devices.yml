@@ -167,3 +167,10 @@ heranew:
   eui64: d8-58-d7-00-8d-0f
 
 
+cborhighwaytest:
+  id: 18
+  eui64: 00-d0-e5-e0-00-0f
+  model_id: 20
+  notes: CBOR device test case
+  serial_number: 00-D0-E5-E0-00-0F
+  obsolete: false

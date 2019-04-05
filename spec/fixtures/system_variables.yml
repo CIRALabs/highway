@@ -25,7 +25,7 @@ SystemVariable12:
 SystemVariable13:
   id: 13
   variable: masa_iauthority
-  value: highway-test.example.com
+  value: highway-test.example.com:9443
   number:
 
 SystemVariable14:
@@ -39,3 +39,9 @@ SystemVariable15:
   variable: shg_zone
   value: "securehomegateway.ca"
   number:
+
+SystemVariable24:
+  id: 24
+  variable: portnum
+  number: 9443
+

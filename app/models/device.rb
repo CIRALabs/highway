@@ -359,7 +359,7 @@ class Device < ActiveRecord::Base
   end
 
   def masa_url
-    SystemVariable.string(:masa_iauthority) || "highway.sandelman.ca"
+    SystemVariable.string(:masa_iauthority) || "unset-masa-iauthority"
   end
 
   def masa_extension
