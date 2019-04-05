@@ -10,26 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_12_230246) do
+ActiveRecord::Schema.define(version: 2019_04_05_212807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "admins", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
-    t.string   "reset_password_token"
+  create_table "admins", id: :serial, force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.inet     "current_sign_in_ip"
-    t.inet     "last_sign_in_ip"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.index ["email"], name: "index_admins_on_email", unique: true, using: :btree
-    t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true, using: :btree
+    t.inet "current_sign_in_ip"
+    t.inet "last_sign_in_ip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_admins_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
   create_table "devices", id: :serial, force: :cascade do |t|
@@ -50,53 +50,53 @@ ActiveRecord::Schema.define(version: 2019_03_12_230246) do
     t.text "second_eui64"
   end
 
-  create_table "owners", force: :cascade do |t|
-    t.text     "name"
-    t.text     "fqdn"
-    t.text     "dn"
-    t.text     "certificate"
-    t.text     "last_ip"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.text     "pubkey"
+  create_table "owners", id: :serial, force: :cascade do |t|
+    t.text "name"
+    t.text "fqdn"
+    t.text "dn"
+    t.text "certificate"
+    t.text "last_ip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "pubkey"
   end
 
-  create_table "system_variables", force: :cascade do |t|
-    t.string  "variable"
-    t.string  "value"
+  create_table "system_variables", id: :serial, force: :cascade do |t|
+    t.string "variable"
+    t.string "value"
     t.integer "number"
   end
 
-  create_table "voucher_requests", force: :cascade do |t|
-    t.json     "details"
-    t.integer  "owner_id"
-    t.integer  "voucher_id"
-    t.integer  "device_id"
-    t.text     "originating_ip"
-    t.text     "nonce"
-    t.text     "device_identifier"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
-    t.binary   "raw_request"
-    t.binary   "voucher_request"
-    t.binary   "pledge_request"
-    t.text     "signing_key"
-    t.text     "prior_signing_key"
-    t.text     "type"
-    t.boolean  "validated",         default: false
+  create_table "voucher_requests", id: :serial, force: :cascade do |t|
+    t.json "details"
+    t.integer "owner_id"
+    t.integer "voucher_id"
+    t.integer "device_id"
+    t.text "originating_ip"
+    t.text "nonce"
+    t.text "device_identifier"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.binary "raw_request"
+    t.binary "voucher_request"
+    t.binary "pledge_request"
+    t.text "signing_key"
+    t.text "prior_signing_key"
+    t.text "type"
+    t.boolean "validated", default: false
   end
 
-  create_table "vouchers", force: :cascade do |t|
-    t.text     "issuer"
-    t.integer  "device_id"
+  create_table "vouchers", id: :serial, force: :cascade do |t|
+    t.text "issuer"
+    t.integer "device_id"
     t.datetime "expires_on"
-    t.integer  "owner_id"
-    t.text     "requesting_ip"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.text     "nonce"
-    t.text     "as_issued"
-    t.text     "type"
+    t.integer "owner_id"
+    t.text "requesting_ip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "nonce"
+    t.text "as_issued"
+    t.text "type"
   end
 
 end
