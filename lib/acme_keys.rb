@@ -48,8 +48,10 @@ class AcmeKeys < HighwayKeys
   end
 
   def acme_client
-    @acme_client ||= Acme::Client.new(private_key: acmeprivkey,
-                                    directory: server)
+    if dns_update_options
+      @acme_client ||= Acme::Client.new(private_key: acmeprivkey,
+                                        directory: server)
+    end
   end
 
   def acme_contact
@@ -57,12 +59,16 @@ class AcmeKeys < HighwayKeys
   end
 
   def acme_account
-    @acme_account||= acme_client.new_account(contact: acme_contact,
-                                             terms_of_service_agreed: true)
+    if acme_client
+      @acme_account ||= acme_client.new_account(contact: acme_contact,
+                                                terms_of_service_agreed: true)
+    end
   end
 
   def acme_dns_updater
-    @dns ||= DnsUpdate::load dns_update_options
+    if dns_update_options
+      @dns ||= DnsUpdate::load dns_update_options
+    end
   end
 
   def acme_logger
@@ -77,6 +83,8 @@ class AcmeKeys < HighwayKeys
 
     mudqname = "mud." + baseqname
     qnames = [baseqname, mudqname]
+
+    return nil unless dns_update_options
 
     order = acme_client.new_order(identifiers: qnames)
 
