@@ -289,7 +289,7 @@ RSpec.describe Device, type: :model do
       expect(zeb.fqdn).to eq("n3CE618.router.securehomegateway.ca")
 
       # URL to this MASA
-      expect(dpphash["S"]).to eq("highway-test.example.com")
+      expect(dpphash["S"]).to eq("highway-test.example.com:9443")
       expect(dpphash["M"]).to eq("00163E8D519B")    # MAC address
       expect(dpphash["K"]).to_not be_nil
 
@@ -305,7 +305,7 @@ RSpec.describe Device, type: :model do
     it "should generate a DPP string" do
       zeb = devices(:zeb)
 
-      expect(zeb.dppstring).to eq("DPP:M:00163E8D519B;K:MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEujp6VXpEgkSkPFM+R5iETYQ4hTZiZDZPJKqJWJJmQ6nFC8tS6QjITod6LFZ22WrwJ4NK987wAeRNkh3XTtCD5w==;L:02163EFEFF8D519B;S:highway-test.example.com;E:SHG3CE618;")
+      expect(zeb.dppstring).to eq("DPP:M:00163E8D519B;K:MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEujp6VXpEgkSkPFM+R5iETYQ4hTZiZDZPJKqJWJJmQ6nFC8tS6QjITod6LFZ22WrwJ4NK987wAeRNkh3XTtCD5w==;L:02163EFEFF8D519B;S:highway-test.example.com:9443;E:SHG3CE618;")
     end
 
   end
