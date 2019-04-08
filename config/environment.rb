@@ -20,7 +20,7 @@ $TURRIS_ROOT_LOCATION = Rails.root.join("turris_root")
 $VERSION = "0.9.11"
 
 # gets overridden by config/initializers/revision.rb by capistrano
-$REVISION= "devel"
+$REVISION ||= "devel"
 
 Mime::Type.register "application/voucher-cose+cbor", :vcc
 Mime::Type.register "application/pkcs7-mime", :cms

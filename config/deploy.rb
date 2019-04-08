@@ -27,6 +27,8 @@ set :bundle_roles, [:app]
 # Default value for :pty is false
 # set :pty, true
 
+set :assets_roles, []
+
 # Default value for :linked_files is []
 append :linked_files, "config/database.yml", "config/secrets.yml", "config/environments/production.rb"
 

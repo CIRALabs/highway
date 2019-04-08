@@ -35,8 +35,8 @@ require "capistrano/rails/migrations"
 
 # load passenger, but leave the hook undefined, since not all
 # deployments use it.
-require "capistrano/passenger"
-#require "capistrano/passenger/no_hook"
+#require "capistrano/passenger"
+require "capistrano/passenger/no_hook"
 
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined

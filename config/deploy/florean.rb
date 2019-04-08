@@ -7,6 +7,7 @@ set :rvm_custom_path, '/usr/share/rvm'
 set :rvm_type, :system
 set :rvm_ruby_version, '2.6.2'
 set :deploy_to, "/home/highway"
+set :rails_env, "production"
 
 server "florean.sandelman.ca",
        user: "highway",
