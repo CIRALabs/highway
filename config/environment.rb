@@ -17,9 +17,9 @@ $TOFU_DEVICE_REGISTER = true
 $TGZ_FILE_LOCATION = Rails.root.join("tmp")
 $TURRIS_ROOT_LOCATION = Rails.root.join("turris_root")
 
-$VERSION = "0.9.10"
+$VERSION = "0.9.11"
 
-# gets overritten by config/initializers/revision.rb by capistrano
+# gets overridden by config/initializers/revision.rb by capistrano
 $REVISION= "devel"
 
 Mime::Type.register "application/voucher-cose+cbor", :vcc
