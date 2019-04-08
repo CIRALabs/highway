@@ -5,7 +5,7 @@
 
 set :rvm_custom_path, '/usr/share/rvm'
 set :rvm_type, :system
-set :rvm_ruby_version, '2.5.1'
+set :rvm_ruby_version, '2.6.2'
 set :deploy_to, "/home/highway"
 
 server "florean.sandelman.ca",
