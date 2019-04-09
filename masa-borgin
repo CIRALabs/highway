@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# THE BORGIN MASA has a seperate set of keys, and uses a different database
+# as well.   This is done by using a custom RAILS_ENV, and CERTDIR.
+# This script sets up the variables, and then starts a shell.
+
+export PS1="borgin%"
+export CERTDIR=`pwd`/spec/files/borgin
+mkdir -p $CERTDIR
+export RAILS_ENV=borgin
+
+make INPUTFILE=$CERTDIR/borgin.sql
+rake db:migrate
+exec $SHELL
