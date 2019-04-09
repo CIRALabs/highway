@@ -8,7 +8,7 @@ namespace :highway do
     value = STDIN.gets.chomp
 
     if value.blank?
-      value = previous
+      value = previous.chomp
     end
 
     value
