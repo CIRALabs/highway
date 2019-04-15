@@ -58,6 +58,8 @@ RSpec.describe 'SmarKaKlink MASA API', type: :request do
     end
 
     it "should provision via LetsEncrypt, a new device when mac address already loaded" do
+
+      pending "dns_update_options is not configured" unless AcmeKeys.acme.dns_update_options
       $INTERNAL_CA_SHG_DEVICE=false
       $LETSENCRYPT_CA_SHG_DEVICE=true
       provision1 = IO::read("spec/files/hera.provision.json")
