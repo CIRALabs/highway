@@ -4,11 +4,12 @@ namespace :highway do
 
   def prompt_variable(prompt, variable, previous)
     print prompt
+    previous = previous.to_s.chomp
     print "(default #{previous}): "
     value = STDIN.gets.chomp
 
     if value.blank?
-      value = previous.chomp
+      value = previous
     end
 
     value
