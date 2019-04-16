@@ -64,7 +64,15 @@ COPY --from=builder /bin/busybox  /bin/busybox
 
 ENV PATH="/usr/local/bundle/bin:${PATH}"
 
-COPY app bin config config.ru lib LICENSE.md public Rakefile README.md /app/highway/
+# stupid COPY always explodes directories, so can not do this in one step.
+# RUN ["busybox", "rm", "-rf", "/app/highway"]
+COPY app /app/highway/app/
+COPY bin /app/highway/bin/
+COPY config /app/highway/config/
+COPY db /app/highway/db/
+COPY lib /app/highway/lib/
+COPY public /app/highway/public/
+COPY LICENSE.md Rakefile README.md config.ru /app/highway/
 ADD ./docker/Gemfile /app/highway/Gemfile
 ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
 ENV GEM_HOME="/usr/local/bundle"
