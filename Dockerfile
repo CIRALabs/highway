@@ -64,7 +64,7 @@ COPY --from=builder /bin/busybox  /bin/busybox
 
 ENV PATH="/usr/local/bundle/bin:${PATH}"
 
-COPY . /app/highway
+COPY app bin config config.ru lib LICENSE.md public Rakefile README.md /app/highway/
 ADD ./docker/Gemfile /app/highway/Gemfile
 ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
 ENV GEM_HOME="/usr/local/bundle"
