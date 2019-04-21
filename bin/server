@@ -16,7 +16,7 @@ certdir=${dir}/db/cert
 if [ -n "${CERTDIR}" ]; then
     certdir=${CERTDIR}
     priv=${CERTDIR}/server_prime256v1.key;
-    cert=${CERTDIR}/server_prime256v1.cert;
+    cert=${CERTDIR}/server_prime256v1.crt;
 else
     case $RAILS_ENV in
         production) priv=${certdir}/server_prime256v1.key;
