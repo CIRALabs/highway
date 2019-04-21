@@ -72,9 +72,13 @@ class Voucher < ActiveRecord::Base
     owner.savefixturefw(fw)  if owner
   end
 
-  # CMS and CBOR vouchers are always stored Base64 strict-encoded.
-  def voucher_binary
-    Base64.decode64(as_issued)
+  # CMS and CBOR vouchers are always stored Base64 urlsafe encoded in the database
+  # avoiding a binary database
+  def as_issued=(x)
+    self[:as_issued]=Base64.urlsafe_encode64(x)
+  end
+  def as_issued
+    Base64.urlsafe_decode64(self[:as_issued])
   end
 
 end

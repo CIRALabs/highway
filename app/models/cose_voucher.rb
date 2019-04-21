@@ -1,12 +1,5 @@
 class CoseVoucher < Voucher
 
-  def as_issued=(x)
-    self[:as_issued]=Base64.urlsafe_encode64(x)
-  end
-  def as_issued
-    Base64.urlsafe_decode64(self[:as_issued])
-  end
-
   def voucher_type
     "cose_voucher"
   end
