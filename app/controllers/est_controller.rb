@@ -28,6 +28,13 @@ class EstController < ApiController
         binary_pkcs = Base64.decode64(request.body.read)
         begin
           @voucherreq = CmsVoucherRequest.from_pkcs7(binary_pkcs)
+        rescue VoucherRequest::MissingPublicKey
+          DeviceNotifierMailer.invalid_voucher_request(request).deliver
+          capture_bad_request
+          head 404,
+               text: "voucher request was for invalid device, or was missing public key"
+          return
+
         rescue Chariwt::Voucher::RequestFailedValidation
           DeviceNotifierMailer.invalid_voucher_request(request).deliver
           capture_bad_request

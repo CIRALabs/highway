@@ -53,10 +53,11 @@ RSpec.describe VoucherRequest, type: :model do
       expect(voucher.owner).to   eq(req13.owner)
     end
 
-    it "should process a parboiled voucher request from a file, without error, even though certificate is missing" do
+    it "should process a parboiled voucher request from a file, raising error, because certificate is missing" do
       token = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-01.pkcs"))
-      vr1 = CmsVoucherRequest.from_pkcs7(token)
-      expect(vr1.id).to_not be_nil
+      expect {
+        vr1 = CmsVoucherRequest.from_pkcs7(token)
+      }.to raise_exception(VoucherRequest::MissingPublicKey)
     end
 
     it "should validate a voucher request" do
