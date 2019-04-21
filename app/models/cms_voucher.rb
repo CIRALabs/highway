@@ -19,7 +19,8 @@ class CmsVoucher < Voucher
       cv.pinnedPublicKey  = owner.pubkey_object
     end
 
-    self.as_issued = cv.pkcs_sign(MasaKeys.masa.masaprivkey)
+    # pkcs_sign returns Base64, decode it again.
+    self.as_issued = Base64.strict_decode64(cv.pkcs_sign(MasaKeys.masa.masaprivkey))
     notify_voucher!
     save!
     self
