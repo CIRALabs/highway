@@ -20,12 +20,19 @@ class CoseVoucherRequest < VoucherRequest
     hash = vr.sanitized_hash
     voucher = create(details: hash, voucher_request: token)
     voucher.validated=false
-    voucher.raw_request = Base64.urlsafe_encode64(token)
-    #voucher.request = vr
-    voucher.extract_prior_signed_voucher_request(vr)
-    voucher.populate_explicit_fields(voucher.prior_voucher_request.attributes)
-    voucher.lookup_owner
-    voucher.validate_prior!
+    voucher.parse!(vr)
+    voucher
+  end
+
+  def parse!(vr = nil)
+    # base64 encode it for safe keeping.
+    self.raw_request = Base64.urlsafe_encode64(voucher_request)
+    if vr
+      extract_prior_signed_voucher_request(vr)
+    end
+    populate_explicit_fields(prior_voucher_request.attributes)
+    lookup_owner
+    validate_prior!
     voucher
   end
 

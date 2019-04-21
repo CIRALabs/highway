@@ -29,6 +29,7 @@ class VoucherRequest < ApplicationRecord
 
   class InvalidVoucherRequest < Exception; end
   class MissingPublicKey < Exception; end
+  class InvalidDeviceSignature < Exception; end
 
   def self.from_json(json, artifact)
     vr = create(details: json, voucher_request: artifact)
@@ -77,12 +78,15 @@ class VoucherRequest < ApplicationRecord
   end
 
   def validate_prior!
-    if device.try(:certificate) and prior_voucher_request.verify_with_key(device.certificate)
-      self.signing_key = device.pubkey
-      self.validated!
+    if device.try(:certificate)
+      if prior_voucher_request.verify_with_key(device.certificate)
+        self.signing_key = device.pubkey
+        self.validated!
+      else
+        raise VoucherRequest::InvalidDeviceSignature
+      end
     else
-      # or raise?
-      return false
+      raise VoucherRequest::MissingPublicKey
     end
   end
 
