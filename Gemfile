@@ -46,7 +46,7 @@ gem 'dns-update', :git => 'https://github.com/CIRALabs/dns-update.git', :branch 
 # used by IP address management in ANIMA ACP
 gem 'ipaddress'
 
-gem 'active_scaffold', :git => 'https://github.com/activescaffold/active_scaffold.git'
+#gem 'active_scaffold', :git => 'https://github.com/activescaffold/active_scaffold.git'
 gem 'sass'
 gem 'sass-rails'
 
