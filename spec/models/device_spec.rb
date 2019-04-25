@@ -135,10 +135,12 @@ RSpec.describe Device, type: :model do
       # grab the CSR from the hera machine, and extract the CSR and use it.
       provision1 = IO::read("spec/files/hera.provision.json")
       atts = JSON::parse(provision1)
-      dev.update_from_smarkaklink_provision(atts)
-      dev.sign_from_csr_letsencrypt(atts['csr'])
+      if ENV['ACME_TESTING']
+        dev.update_from_smarkaklink_provision(atts)
+        dev.sign_from_csr_letsencrypt(atts['csr'])
 
-      expect(dev.certificate).to_not be_nil
+        expect(dev.certificate).to_not be_nil
+      end
     end
   end
 
