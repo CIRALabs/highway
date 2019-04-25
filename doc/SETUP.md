@@ -23,3 +23,11 @@ shg_zone
 This is the zone which the shg_suffix is a part of.
 The full SHG name will be made up of shg\_suffix . shg\_zone.
 
+Configuration Variables
+=======================
+
+$INTERNAL_CA_SHG_DEVICE=             true
+$LETENCRYPT_CA_SHG_DEVICE=           false
+
+Determines if an internal CA is used for SHG-provisioning, or if an external
+DNS-01 challenge with LetsEncrypt will be done.
