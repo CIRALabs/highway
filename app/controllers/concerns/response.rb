@@ -5,5 +5,8 @@ module Response
   end
   def raw_response(object, status = :ok, content = nil)
     send_data object, :type => content
+
+    # hack to get around https://github.com/rails/rails/issues/36095
+    @_response.set_header "Content-Type", content
   end
 end
