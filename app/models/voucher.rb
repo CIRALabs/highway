@@ -31,7 +31,8 @@ class Voucher < ActiveRecord::Base
   end
 
   # sign! is implemented in subclass.
-  def self.create_voucher(owner:, device:, effective_date:, nonce: nil, expires: nil)
+  def self.create_voucher(owner:, device:, effective_date:,
+                          nonce: nil, expires: nil, domainOwnerCert: nil, domainOwnerRPK: nil)
     voucher = create(owner: owner,
                      device: device,
                      nonce: nonce)
@@ -40,6 +41,9 @@ class Voucher < ActiveRecord::Base
     device.owner = owner
     device.save!
 
+    domainOwnerCert ||= owner.certder
+    domainOwnerRPK  ||= owner.pubkey_object
+
     unless expires
       expires = effective_date + 14.days
     end
@@ -47,7 +51,7 @@ class Voucher < ActiveRecord::Base
       voucher.expires_on = expires
     end
 
-    voucher.sign!(today: effective_date)
+    voucher.sign!(today: effective_date, owner_cert: domainOwnerCert, owner_rpk: domainOwnerRPK)
     voucher
   end
 
