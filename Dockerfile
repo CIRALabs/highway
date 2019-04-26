@@ -1,6 +1,6 @@
 FROM ruby:2.6.2 as builder
 
-RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libgmp10 sash busybox dnsutils && \
+RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libgmp10 sash busybox dnsutils apt-utils zip && \
     apt-get remove -y git &&  \
     apt-get install -y git && \
     mkdir -p /app/highway && \
@@ -61,10 +61,20 @@ COPY --from=builder /gems/highway /gems/highway
 COPY --from=builder /bin/sash     /bin/sash
 COPY --from=builder /usr/bin/env  /usr/bin/env
 COPY --from=builder /bin/busybox  /bin/busybox
+COPY --from=builder /usr/bin/zip  /usr/bin/zip
+COPY --from=builder /lib/x86_64-linux-gnu/libbz2.so.1.0 /lib/x86_64-linux-gnu/
 
 ENV PATH="/usr/local/bundle/bin:${PATH}"
 
-COPY app bin config config.ru lib LICENSE.md public Rakefile README.md /app/highway/
+# stupid COPY always explodes directories, so can not do this in one step.
+RUN ["busybox", "rm", "-rf", "/app/highway"]
+COPY app /app/highway/app/
+COPY bin /app/highway/bin/
+COPY config /app/highway/config/
+COPY db /app/highway/db/
+COPY lib /app/highway/lib/
+COPY public /app/highway/public/
+COPY LICENSE.md Rakefile README.md config.ru /app/highway/
 ADD ./docker/Gemfile /app/highway/Gemfile
 ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
 ENV GEM_HOME="/usr/local/bundle"
