@@ -31,7 +31,7 @@ class Voucher < ActiveRecord::Base
   end
 
   # sign! is implemented in subclass.
-  def self.create_voucher(owner, device, effective_date, nonce = nil, expires = nil)
+  def self.create_voucher(owner:, device:, effective_date:, nonce: nil, expires: nil)
     voucher = create(owner: owner,
                      device: device,
                      nonce: nonce)
