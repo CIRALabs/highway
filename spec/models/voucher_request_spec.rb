@@ -61,6 +61,9 @@ RSpec.describe VoucherRequest, type: :model do
       expect(voucher.nonce).to   eq(vr67.nonce)
       expect(voucher.device).to  eq(vr67.device)
       expect(voucher.owner).to   eq(vr67.owner)
+
+      cv = Chariwt::Voucher.from_pkcs7(voucher.as_issued, MasaKeys.masa.masakey)
+      expect(cv.pinnedDomainCert).to eq(vr67.prior_voucher_request.proximityRegistrarCert)
     end
 
     it "should process a parboiled voucher request from a file, raising error, because certificate is missing" do
