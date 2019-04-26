@@ -53,6 +53,16 @@ RSpec.describe VoucherRequest, type: :model do
       expect(voucher.owner).to   eq(req13.owner)
     end
 
+    it "should process a repeated voucher request into a new voucher with a different certificate" do
+      vr67 = voucher_requests(:vr67)
+      voucher,reason = vr67.issue_voucher
+      expect(reason).to eq(:ok)
+      expect(voucher).to_not be_nil
+      expect(voucher.nonce).to   eq(vr67.nonce)
+      expect(voucher.device).to  eq(vr67.device)
+      expect(voucher.owner).to   eq(vr67.owner)
+    end
+
     it "should process a parboiled voucher request from a file, raising error, because certificate is missing" do
       token = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-01.pkcs"))
       expect {

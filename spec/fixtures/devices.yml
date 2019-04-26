@@ -238,3 +238,43 @@ shgmudhighway31:
     register_ip: "::3"
     tofu_register: true
   second_eui64: 6c-88-14-34-93-bc
+
+f02002d:
+  id: 45
+  eui64: 00-d0-e5-02-00-2d
+  pub_key: MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEWi/jqPpRJ0JgWghZRgeZlLKutbXVjmnHb+1AYaEF/YQjE2g5FZV8KjiR/bkEl+l8M4onIC7KHaXKKkuag9S6Tw==
+  owner_id: 2
+  model_id:
+  notes:
+  created_at: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &1 2019-04-24 02:16:58.834614000 Z
+    zone: &2 !ruby/object:ActiveSupport::TimeZone
+      name: Etc/UTC
+    time: *1
+  updated_at: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &3 2019-04-24 02:18:54.135907000 Z
+    zone: *2
+    time: *3
+  serial_number: 00-d0-e5-02-00-2d
+  obsolete: false
+  idevid_cert: |
+    -----BEGIN CERTIFICATE-----
+    MIICBDCCAYugAwIBAgIECe20qTAKBggqhkjOPQQDAjBNMRIwEAYKCZImiZPyLGQB
+    GRYCY2ExGTAXBgoJkiaJk/IsZAEZFglzYW5kZWxtYW4xHDAaBgNVBAMME1Vuc3Ry
+    dW5nIEhpZ2h3YXkgQ0EwIBcNMTkwNDI0MDIxNjU4WhgPMjk5OTEyMzEwMDAwMDBa
+    MBwxGjAYBgNVBAUMETAwLWQwLWU1LTAyLTAwLTJkMFkwEwYHKoZIzj0CAQYIKoZI
+    zj0DAQcDQgAEWi/jqPpRJ0JgWghZRgeZlLKutbXVjmnHb+1AYaEF/YQjE2g5FZV8
+    KjiR/bkEl+l8M4onIC7KHaXKKkuag9S6T6OBhzCBhDAdBgNVHQ4EFgQUj8KYdUoE
+    OvJ0kcOIbjEWwgWdDYkwCQYDVR0TBAIwADArBgNVHREEJDAioCAGCSsGAQQBgu5S
+    AaATDBEwMC1EMC1FNS0wMi0wMC0yRDArBgkrBgEEAYLuUgIEHgwcbWFzYS5ob25l
+    eWR1a2VzLnNhbmRlbG1hbi5jYTAKBggqhkjOPQQDAgNnADBkAjAmvMjmNgjypDhc
+    fynMV3kMuIpSKrYzRWr4g3PtTwXDsAe0oitTTj4QtU1bajhOfTkCMGMNbsW2Q41F
+    z9t6PDVdtOKabBbAP1RVoFTlDQuO9nmLzb5kU+cUqCtPRFZBUXP3kg==
+    -----END CERTIFICATE-----
+  fqdn:
+  essid:
+  ula:
+  extra_attrs:
+  second_eui64:
+
+
