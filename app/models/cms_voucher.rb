@@ -4,7 +4,7 @@ class CmsVoucher < Voucher
     "cms_voucher"
   end
 
-  def sign!(today: DateTime.now.utc)
+  def sign!(today: DateTime.now.utc, owner_cert: owner.certder, owner_rpk: owner.pubkey_object)
     cv = Chariwt::Voucher.new
     cv.assertion    = 'logged'
     cv.serialNumber = serial_number
@@ -13,10 +13,10 @@ class CmsVoucher < Voucher
     cv.createdOn    = today
     cv.expiresOn    = expires_on
     cv.signing_cert   = MasaKeys.masa.masakey
-    if owner.certificate
-      cv.pinnedDomainCert = owner.certder
+    if owner_cert
+      cv.pinnedDomainCert = owner_cert
     else
-      cv.pinnedPublicKey  = owner.pubkey_object
+      cv.pinnedPublicKey  = owner_rpk
     end
 
     # pkcs_sign returns Base64, decode it again.
