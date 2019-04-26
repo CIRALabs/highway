@@ -29,7 +29,7 @@ RSpec.describe VoucherRequest, type: :model do
       expect(voucher.as_issued).to_not be_nil
 
       # save it for examination elsewhere (and use by Registrar tests)
-      expect(Chariwt.cmp_pkcs_file(voucher.as_issued, "voucher_#{voucher.device_identifier}")).to be true
+      expect(Chariwt.cmp_pkcs_file(Base64.strict_encode64(voucher.as_issued), "voucher_#{voucher.device_identifier}")).to be true
     end
 
     it "should not duplicate a byte4byte identical request" do
