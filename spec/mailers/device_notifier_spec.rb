@@ -12,9 +12,8 @@ RSpec.describe DeviceNotifierMailer, type: :mailer do
     it "should send an email when a voucher is issued" do
       v1 = vouchers(:almec_v1)
       today  = '2017-01-01'.to_date
-      v1.sign!(today)
 
-      expect { v1.sign!(today) }
+      expect { v1.sign!(today: today) }
         .to change { ActionMailer::Base.deliveries.count }.by(1)
     end
 

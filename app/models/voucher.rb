@@ -47,7 +47,7 @@ class Voucher < ActiveRecord::Base
       voucher.expires_on = expires
     end
 
-    voucher.sign!(effective_date)
+    voucher.sign!(today: effective_date)
     voucher
   end
 

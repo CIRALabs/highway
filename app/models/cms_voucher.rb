@@ -4,7 +4,7 @@ class CmsVoucher < Voucher
     "cms_voucher"
   end
 
-  def sign!(today = DateTime.now.utc)
+  def sign!(today: DateTime.now.utc)
     cv = Chariwt::Voucher.new
     cv.assertion    = 'logged'
     cv.serialNumber = serial_number
