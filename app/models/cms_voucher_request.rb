@@ -13,8 +13,11 @@ class CmsVoucherRequest < VoucherRequest
     vreq = from_json(cvr.inner_attributes, token)
     vreq.extract_prior_signed_voucher_request(cvr)
     vreq.populate_explicit_fields
-    vreq.signing_key = Base64.urlsafe_encode64(cvr.signing_cert.public_key.to_der)
+
     # need to collect cvr.signing_cert into a field.
+    if cvr.signing_cert
+      vreq.signing_key = Base64.urlsafe_encode64(cvr.signing_cert.public_key.to_der)
+    end
 
     vreq.lookup_owner
     vreq.validate_prior!
