@@ -205,4 +205,36 @@ f21005:
     zone: *2
     time: *3
   serial_number: 00-D0-E5-F2-00-05
-  
+
+# this fixture is used for smarkaklink testing
+# the key pair are in fountain/spec/files/product/Smarkaklink-n3ce618
+shgmudhighway31:
+  id: 31
+  eui64: 3c-97-0e-b9-cd-98
+  pub_key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr4FGUQyOc8AAogrcaCYdJmkohj57+cvdp99aN3x58Zeqd5BDiLYxLj7mrDRbiOGqlKiCIIF96x8DmabKchfPQOCvx/fcGaYoWbrTuFqiS5h1NzbW0pPneOiD5GmaNRppOv/ka6oKFDQkXzmp40rgj3aY1xW9z0si6E4hY+3NyR6Qd9t/5ZUpfURaYSSwiqxsoujBD4eHfZUPfUgb6/l/Gq9KsxUy1s6kSWQA0ZLDeTcQ+KBmsORP/uF0d8S+tU2MxzIG5Ddr/0jKoPLe7CvRxbBXCHewSipZEB5gcZn68DTnqwiOZcLvyUwApaXdlNgApIfdtm/jGDOoABOXEm9JlwIDAQAB
+  serial_number: 3c-97-0e-b9-cd-98
+  obsolete: true
+  idevid_cert: |
+    -----BEGIN CERTIFICATE-----
+    MIIC2zCCAmKgAwIBAgIEOFhj2zAKBggqhkjOPQQDAjBdMQ8wDQYDVQQGEwZDYW5h
+    ZGExEDAOBgNVBAgMB09udGFyaW8xEjAQBgNVBAsMCVNhbmRlbG1hbjEkMCIGA1UE
+    AwwbaGlnaHdheS10ZXN0LmV4YW1wbGUuY29tIENBMCAXDTE5MDUwMzE5NTIxMloY
+    DzI5OTkxMjMxMDAwMDAwWjAcMRowGAYDVQQFDBEzYy05Ny0wZS1iOS1jZC05ODCC
+    ASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAK+BRlEMjnPAAKIK3GgmHSZp
+    KIY+e/nL3affWjd8efGXqneQQ4i2MS4+5qw0W4jhqpSogiCBfesfA5mmynIXz0Dg
+    r8f33BmmKFm607haokuYdTc21tKT53jog+RpmjUaaTr/5GuqChQ0JF85qeNK4I92
+    mNcVvc9LIuhOIWPtzckekHfbf+WVKX1EWmEksIqsbKLowQ+Hh32VD31IG+v5fxqv
+    SrMVMtbOpElkANGSw3k3EPigZrDkT/7hdHfEvrVNjMcyBuQ3a/9IyqDy3uwr0cWw
+    Vwh3sEoqWRAeYHGZ+vA056sIjmXC78lMAKWl3ZTYAKSH3bZv4xgzqAATlxJvSZcC
+    AwEAAaOBgzCBgDAdBgNVHQ4EFgQUNsyZHn8V1rY7JdSWY7kUA1+QC6QwCQYDVR0T
+    BAIwADArBgNVHREEJDAioCAGCSsGAQQBgu5SAaATDBEzQy05Ny0wRS1COS1DRC05
+    ODAnBgkrBgEEAYLuUgIEGgwYaGlnaHdheS10ZXN0LmV4YW1wbGUuY29tMAoGCCqG
+    SM49BAMCA2cAMGQCMGDSQ/8qSBk+N0CHYsuArhZ05EPczMnsAGnGUPI9f4yPHfca
+    RQW+CnmYgZbiJRbS6wIwCni08l7vLu2w4gSjSeWZ4k79mQwbnQZKo43Pd7mQMdUO
+    1faDyAi9tkWdMv7oyNfc
+    -----END CERTIFICATE-----
+  ula: 'fd3c:e618:51e2::'
+  extra_attrs:
+    register_ip: "::3"
+    tofu_register: true
+  second_eui64: 6c-88-14-34-93-bc
