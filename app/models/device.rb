@@ -265,8 +265,8 @@ class Device < ActiveRecord::Base
   end
 
   def update_from_smarkaklink_provision(params)
-    self.eui64        = canonicalize_eui64(params['wan-mac'])
-    self.second_eui64 = canonicalize_eui64(params['switch-mac'])
+    self.eui64        = canonicalize_eui64(params['switch-mac'])
+    self.second_eui64 = canonicalize_eui64(params['wan-mac'])
     self.ula          = params['ula']
   end
 

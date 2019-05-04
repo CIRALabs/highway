@@ -31,10 +31,10 @@ class SmarkaklinkController < ApiController
 
   def provision
     ip = request.env["REMOTE_ADDR"]
-    if devnum=params['wan-mac']
+    if devnum=params['switch-mac']
       @device = Device.find_by_number(devnum) || Device.find_by_second_eui64(devnum)
     end
-    if !@device and devnum=params['switch-mac']
+    if !@device and devnum=params['wan-mac']
       devnum  = Device.canonicalize_eui64(devnum)
       @device = Device.find_by_number(devnum) || Device.find_by_second_eui64(devnum)
     end
@@ -44,9 +44,9 @@ class SmarkaklinkController < ApiController
         attrs = Hash.new
         attrs['register_ip'] = ip
         attrs['tofu_register'] = true
-        @device = Device.create(eui64: Device.canonicalize_eui64(params['wan-mac']),
-                      second_eui64: Device.canonicalize_eui64(params['switch-mac']),
-                      obsolete: true,        # mark it has not valid.
+        @device = Device.create(eui64: Device.canonicalize_eui64(params['switch-mac']),
+                      second_eui64: Device.canonicalize_eui64(params['wan-mac']),
+                      obsolete: true,        # mark it has not valid until an admin makes it valid
                       extra_attrs: attrs)
         num = @device.id
       end
