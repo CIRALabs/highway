@@ -134,7 +134,7 @@ class Device < ActiveRecord::Base
     case
     when $INTERNAL_CA_SHG_DEVICE
       logger.info "Signing CSR with internal CA"
-      sign_eui64
+      sign_from_csr_internal(csr)
     when $LETSENCRYPT_CA_SHG_DEVICE
       logger.info "Processing CSR with LetsEncrypt"
       sign_from_csr_letsencrypt(csr)
@@ -147,8 +147,32 @@ class Device < ActiveRecord::Base
     self.certificate = AcmeKeys.acme.cert_for(shg_basename, shg_zone, csr, logger)
   end
 
+  # this routine is used to sign SHG device CSR for bootstrap use.
+  # The MASA URL is still included, but the sanitized_eui64 is not included,
+  # and the DN includes the requested CN value as well as the serial number.
   def sign_from_csr_internal(csr)
-    sign_eui64
+    sign_setup_certificate
+
+    # make sure that fqdn has been setup.
+    # the CSR value is actually pretty much ignored... how can we trust any of it?
+    # 12 - is the code for UTF8 string, I think.
+    extrapolate_from_ula
+    subject_list = [["CN", fqdn, 12],
+                    ["serialNumber", serial_number,12],
+                    ["CN", "mud." + fqdn, 12]]
+
+    @idevid.subject = OpenSSL::X509::Name.new(subject_list)
+
+    # the OID: 1.3.6.1.4.1.46930.2 is a Private Enterprise Number OID:
+    #    iso.org.dod.internet.private.enterprise . SANDELMAN=46930 . 2
+    # this is used for the BRSKI MASAURLExtnModule-2016 until allocated
+    # depends upon a patch to ruby-openssl, at:
+    #  https://github.com/mcr/openssl/commit/a59c5e049b8b4b7313c6532692fa67ba84d1707c
+    @idevid.add_extension(masa_extension)
+    @idevid.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
+
+    self.certificate     = @idevid
+    save!
   end
 
   def tgz_name
@@ -390,20 +414,29 @@ class Device < ActiveRecord::Base
     @ef ||= OpenSSL::X509::ExtensionFactory.new
   end
 
-  def sign_eui64
+  def sign_setup_certificate
     @idevid  = OpenSSL::X509::Certificate.new
     @idevid.version = 2
     @idevid.serial = SystemVariable.randomseq(:serialnumber)
     @idevid.issuer = HighwayKeys.ca.rootkey.issuer
     @idevid.public_key = self.public_key
-    @idevid.subject = OpenSSL::X509::Name.new([["serialNumber", serial_number,12]])
     @idevid.not_before = Time.now
     @idevid.not_after  = Time.gm(2999,12,31)
 
+    self.serial_number ||= sanitized_eui64
+  end
+
+  def end_certificate_extensions
     extension_factory.subject_certificate = @idevid
     extension_factory.issuer_certificate  = HighwayKeys.ca.rootkey
     @idevid.add_extension(extension_factory.create_extension("subjectKeyIdentifier","hash",false))
     @idevid.add_extension(extension_factory.create_extension("basicConstraints","CA:FALSE",false))
+  end
+
+  def sign_eui64
+    sign_setup_certificate
+    end_certificate_extensions
+    @idevid.subject = OpenSSL::X509::Name.new([["serialNumber", serial_number,12]])
 
     # keyUsage and extendedKeyUsage (EKU) were tried, but shoud be avoided according to brski-20
     # @idevid.add_extension(extension_factory.create_extension("keyUsage","digitalSignature",false))
@@ -429,7 +462,6 @@ class Device < ActiveRecord::Base
     @idevid.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
 
     self.certificate     = @idevid
-    self.serial_number ||= sanitized_eui64
     save!
   end
 
