@@ -77,6 +77,10 @@ class VoucherRequest < ApplicationRecord
     self.validated = true
   end
 
+  def details
+    self[:details] ||= Hash.new
+  end
+
   def validate_prior!
     if device.try(:certificate)
       if prior_voucher_request.verify_with_key(device.certificate)
