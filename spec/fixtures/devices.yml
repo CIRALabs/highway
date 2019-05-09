@@ -165,7 +165,7 @@ zeb:
 heranew:
   id: 17
   eui64: d8-58-d7-00-8d-0f
-
+  ula: "fd3c:def0:f00d::"
 
 cborhighwaytest:
   id: 18
