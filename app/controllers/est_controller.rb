@@ -14,9 +14,7 @@ class EstController < ApiController
     media_types = HTTP::Accept::MediaTypes.parse(request.env['CONTENT_TYPE'])
 
     if media_types == nil or media_types.length < 1
-      capture_bad_request
-      head 406,
-           text: "unknown voucher-request content-type: #{request.content_type}"
+      capture_bad_request(msg: "unknown voucher-request content-type: #{request.content_type}")
       return
     end
     media_type = media_types.first
@@ -30,16 +28,14 @@ class EstController < ApiController
           @voucherreq = CmsVoucherRequest.from_pkcs7(binary_pkcs)
         rescue VoucherRequest::MissingPublicKey
           DeviceNotifierMailer.invalid_voucher_request(request).deliver
-          capture_bad_request
-          head 404,
-               text: "voucher request was for invalid device, or was missing public key"
+          capture_bad_request(code: 404,
+                              msg: "voucher request was for invalid device, or was missing public key")
           return
 
         rescue Chariwt::Voucher::RequestFailedValidation
           DeviceNotifierMailer.invalid_voucher_request(request).deliver
-          capture_bad_request
-          head 406,
-               text: "voucher request corrupt or failed to validate"
+          capture_bad_request(code: 406,
+                              msg: "voucher request corrupt or failed to validate")
           return
         end
 
@@ -48,22 +44,19 @@ class EstController < ApiController
           @voucherreq = CoseVoucherRequest.from_cbor_cose_io(request.body, @clientcert)
         rescue VoucherRequest::InvalidVoucherRequest
           DeviceNotifierMailer.invalid_voucher_request(request).deliver
-          capture_bad_request
-          head 406,
-               text: "voucher request was not signed with known public key"
+          capture_bad_request(code: 406,
+                              msg: "voucher request was not signed with known public key")
           return
         end
       else
-        capture_bad_request
-        head 406,
-             text: "unknown voucher-request content-type: #{request.content_type}"
+        capture_bad_request(code: 406,
+                            msg: "unknown voucher-request content-type: #{request.content_type}")
         return
       end
     end
 
     unless @voucherreq
-      capture_bad_request
-      head 404, text: 'missing voucher request'
+      capture_bad_request(code: 404, msg: 'missing voucher request')
       return
     end
 
@@ -109,14 +102,13 @@ class EstController < ApiController
       }
 
       unless @answered
-        capture_bad_request
-        head 406, text: "no acceptable HTTP_ACCEPT type found"
+        logger.error "No acceptable HTTP_ACCEPT type found #{accept_types}"
+        capture_bad_request(code: 406, msg: "no acceptable HTTP_ACCEPT type found")
       end
 
     else
-      capture_bad_request
       logger.error "no voucher issued for #{request.ip}, reason: #{@reason.to_s}"
-      head 404, text: @reason.to_s
+      capture_bad_request(code: 404, msg: @reason.to_s)
     end
   end
 
@@ -148,15 +140,16 @@ class EstController < ApiController
     clientcert_pem
   end
 
-  def capture_bad_request
+  def capture_bad_request(msg:, code: 406)
     token = request.body.read
     @voucherreq ||= VoucherRequest.create(:voucher_request => token,
                                           :originating_ip => request.env["REMOTE_ADDR"])
 
     capture_client_certificate
+    @voucherreq.details["returned_message"] = msg
     @voucherreq.save!
-    logger.info "Voucher request was not parsed, details in #{@voucherreq.id}, #{$!}"
-    head 406
+    logger.info "Voucher request failed, details in #{@voucherreq.id}, #{$!}"
+    head code, text: msg
   end
 
 end
