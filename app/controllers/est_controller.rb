@@ -82,7 +82,8 @@ class EstController < ApiController
               (type.mime_type == 'application/pkcs7-mime' and
                type.parameters == { } )                         or
               (type.mime_type == 'application/voucher-cms+json'))
-          raw_response(@voucher.as_issued, :ok, @replytype)
+
+          raw_response(@voucher.as_issued, :ok, "application/voucher-cms+json")
           @answered = true
 
         when (type.mime_type == 'application/voucher-cose+cbor')
