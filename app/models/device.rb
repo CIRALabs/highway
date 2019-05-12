@@ -199,6 +199,8 @@ class Device < ActiveRecord::Base
       logger.info "tgz file not created due to lack of certificate"
       return nil
     end
+    # put the key that will be validating the vouchers in
+    FileUtils.copy_entry MasaKeys.masa.masa_pubkey, certdir.join("masa.crt")
 
     File.open(certdir.join("idevid_cert.pem"), "w") { |f|
       f.write certificate.to_pem
