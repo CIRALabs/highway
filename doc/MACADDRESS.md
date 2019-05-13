@@ -11,6 +11,7 @@ The following sub-allocations have been done.
 00-D0-E5-01-xx-yy - masa.wheezes.sandelman.ca
 00-D0-E5-02-xx-yy - masa.honeydukes.sandelman.ca
 00-D0-E5-03-xx-yy - florean.sandelman.ca
+00-D0-E5-04-xx-yy - eeylops.sandelman.ca
 
 00-D0-E5-Fx-xx-yy - test cases
 
