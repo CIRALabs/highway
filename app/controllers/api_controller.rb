@@ -10,5 +10,11 @@ class ApiController < ActionController::Metal
   def logger
     ActionController::Base.logger
   end
+
+  def log_client_certificate(cert)
+    clientname = sprintf("DN: %s", cert.subject.to_s)
+    logger.info "Connection from #{clientname}"
+  end
+
 end
 

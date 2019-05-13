@@ -9,7 +9,12 @@ class EstController < ApiController
 
     clientcert = nil
     @replytype  = request.content_type
-    @clientcert = capture_client_certificate
+
+    begin
+      @clientcert = OpenSSL::X509::Certificate.new(capture_client_certificate)
+      log_client_certificate(@clientcert)
+    rescue OpenSSL::X509
+    end
 
     media_types = HTTP::Accept::MediaTypes.parse(request.env['CONTENT_TYPE'])
 

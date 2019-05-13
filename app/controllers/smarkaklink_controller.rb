@@ -8,13 +8,19 @@ class SmarkaklinkController < ApiController
   def enroll
     clientcert  = nil
     @replytype  = request.content_type
-    @clientcert = capture_client_certificate
+
+    begin
+      @clientcert = OpenSSL::X509::Certificate.new(capture_client_certificate)
+      log_client_certificate(@clientcert)
+    rescue OpenSSL::X509
+    end
 
     # params in application/json will get parsed automatically, no need
     # to do anything.
     # the posted certificate will in most cases be identical
     # to the TLS Client Certificate.
     # note: the lookup is by *PUBLIC KEY*, not certificate.
+
 
     if params[:cert]
       @owner = Owner.find_or_create_by_base64_certificate(params[:cert])
@@ -83,9 +89,9 @@ class SmarkaklinkController < ApiController
   private
 
   def capture_client_certificate
-    clientcert_pem = request.env["SSL_CLIENT_CERT"]
-    clientcert_pem ||= request.env["rack.peer_cert"]
-    clientcert_pem
+    @clientcert_pem = request.env["SSL_CLIENT_CERT"]
+    @clientcert_pem ||= request.env["rack.peer_cert"]
+    @clientcert_pem
   end
 
   # not sure how/where to capture bad requests
