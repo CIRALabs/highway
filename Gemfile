@@ -11,6 +11,8 @@ gem 'pg', '~> 0.15'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
+gem 'log4r'
+
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 
