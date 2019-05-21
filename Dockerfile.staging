@@ -1,4 +1,5 @@
-FROM docker-registry.infra.01.k-ciralabs.ca/ciralabs/shg-highway:comet-0.9.7
+#FROM docker-registry.infra.01.k-ciralabs.ca/ciralabs/shg-highway:comet-0.9.7
+FROM mcr314/shg_comet:v099
 
 # stupid COPY always explodes directories
 # something is missing, resulting in /usr/local/bundle/bin/thin being unable to run
