@@ -50,8 +50,16 @@ class AcmeKeys < HighwayKeys
   def acme_client
     if dns_update_options
       @acme_client ||= Acme::Client.new(private_key: acmeprivkey,
-                                        directory: server)
+                                        directory: server,
+                                        connection_options: {
+                                          :ssl => {
+                                            :ca_file => '/usr/lib/ssl/certs/ca-certificates.crt',
+                                            :ca_path => "/usr/lib/ssl/certs"
+                                          }
+                                        })
+
     end
+    @acme_client
   end
 
   def acme_contact
@@ -62,7 +70,9 @@ class AcmeKeys < HighwayKeys
     if acme_client
       @acme_account ||= acme_client.new_account(contact: acme_contact,
                                                 terms_of_service_agreed: true)
+      #puts "New account setup: #{@acme_account}"
     end
+    @acme_account
   end
 
   def acme_dns_updater
@@ -84,7 +94,16 @@ class AcmeKeys < HighwayKeys
     mudqname = "mud." + baseqname
     qnames = [baseqname, mudqname]
 
+    cert_for_names(qnames: qnames, zone: zone, csr: csr, logger: logger, sleeptime: sleeptime)
+  end
+
+  def cert_for_names(qnames:, zone:, csr:, logger: nil, sleeptime: 30, extrazone: '')
+    logger ||= acme_logger
+
     return nil unless dns_update_options
+
+    # make sure acme_account has been setup.
+    return nil unless acme_account
 
     order = acme_client.new_order(identifiers: qnames)
 
@@ -92,7 +111,7 @@ class AcmeKeys < HighwayKeys
       qname = authorization.domain
 
       challenge     = authorization.dns
-      dns_target = challenge.record_name + "." + qname
+      dns_target = challenge.record_name + "." + qname + extrazone
       logger.info "Removing  old challenge from #{dns_target}"
       acme_dns_updater.remove { |m|
         m.type = :txt

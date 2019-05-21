@@ -71,4 +71,66 @@ namespace :highway do
     SystemVariable.dump_vars
   end
 
+  def rfc822NameChoice
+    1
+  end
+  def rfc822NameAttr(rfc822name)
+    v = OpenSSL::ASN1::UTF8String.new(rfc822name, rfc822NameChoice, :EXPLICIT, :CONTEXT_SPECIFIC)
+    OpenSSL::X509::Attribute.new("subjectAltName",
+                                 OpenSSL::ASN1::Set.new([OpenSSL::ASN1::Sequence.new([v])]))
+  end
+
+  # while this asks LetsEncrypt for a host like "foobar.example.com", it assumes that there is
+  # a CNAME at _acme-challenge.foobar.example.com, pointing to _acme-challenge.example.com.example.net,
+  # where example.net is the zone that has DNS updates enabled.
+  desc "Ask LetsEncrypt for server certificate"
+  task :h4_masa_letsencrypt => :environment do
+
+    hostname = SystemVariable.hostname
+
+    curve   = HighwayKeys.ca.client_curve
+    certdir = HighwayKeys.ca.certdir
+    serverprivkeyfile = certdir.join("server_#{curve}.key")
+    outfile=certdir.join("server_#{curve}.crt")
+    dn = sprintf("CN=%s", hostname)
+    dnobj = OpenSSL::X509::Name.parse dn
+
+    if !File.exist?(outfile) or ENV['RESIGN']
+      FileUtils.mkpath(HighwayKeys.ca.certdir)
+
+      AcmeKeys.acme.acme_maybe_make_keys
+
+      privkey = HighwayKeys.ca.generate_privkey_if_needed(serverprivkeyfile, curve, "SERVER")
+
+      csr = OpenSSL::X509::Request.new
+      csr.version = 0
+      csr.subject = dnobj
+      csr.public_key = privkey   # EC::Point can function as public key appropriately.
+      csr.add_attribute rfc822NameAttr(hostname)
+      csr.sign privkey, OpenSSL::Digest::SHA256.new
+
+      mylog = Log4r::Logger.new 'mylog'
+      mylog.outputters = Log4r::Outputter.stdout
+
+      server_cert = AcmeKeys.acme.cert_for_names(qnames: [hostname],
+                                                 zone: SystemVariable.string(:shg_zone),
+                                                 logger: mylog,
+                                                 csr: csr,
+                                                 extrazone: "." + SystemVariable.string(:shg_zone))
+
+      if server_cert
+        puts "MASA SERVER certificate writtten to: #{outfile}"
+        File.open(outfile, "w") { |f|
+          f.write server_cert
+        }
+      else
+        puts "certificate failed"
+      end
+    end
+
+
+
+  end
+
+
 end
