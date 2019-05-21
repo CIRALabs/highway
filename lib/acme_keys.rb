@@ -182,7 +182,7 @@ class AcmeKeys < HighwayKeys
 
   protected
   def load_acme_priv_key
-
+    acme_maybe_make_keys
     File.open(acme_privkey_file) do |f|
       OpenSSL::PKey.read(f)
     end
