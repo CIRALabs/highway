@@ -31,7 +31,7 @@ SystemVariable13:
 SystemVariable14:
   id: 14
   variable: shg_suffix
-  value: "router"
+  value: "r"
   number:
 
 SystemVariable15:

@@ -304,7 +304,7 @@ RSpec.describe Device, type: :model do
 
       zeb.reload
       expect(zeb.essid).to eq("SHG3CE618")
-      expect(zeb.fqdn).to  eq("n3CE618.router.securehomegateway.ca")
+      expect(zeb.fqdn).to  eq("n3CE618.r.securehomegateway.ca")
     end
 
     it "should generate a tagged set of values" do
@@ -312,7 +312,7 @@ RSpec.describe Device, type: :model do
 
       dpphash = zeb.dpphash
 
-      expect(zeb.fqdn).to eq("n3CE618.router.securehomegateway.ca")
+      expect(zeb.fqdn).to eq("n3CE618.r.securehomegateway.ca")
 
       # URL to this MASA
       expect(dpphash["S"]).to eq("highway-test.example.com:9443")
@@ -337,6 +337,11 @@ RSpec.describe Device, type: :model do
     it "should create a new host" do
       zeb = devices(:zeb)
       expect(zeb.ulanet.host_address(1).to_s).to eq("fd3c:e618:51e2::1")
+    end
+
+    it "should update a ULA ::" do
+      zeb = devices(:zeb)
+      zeb.insert_ula_quad_ah
     end
 
   end
