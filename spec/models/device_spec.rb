@@ -334,6 +334,11 @@ RSpec.describe Device, type: :model do
       expect(zeb.dppstring).to eq("DPP:M:00163E8D519B;K:MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEujp6VXpEgkSkPFM+R5iETYQ4hTZiZDZPJKqJWJJmQ6nFC8tS6QjITod6LFZ22WrwJ4NK987wAeRNkh3XTtCD5w==;L:02163EFFFE8D519B;S:highway-test.example.com:9443;E:SHG3CE618;")
     end
 
+    it "should create a new host" do
+      zeb = devices(:zeb)
+      expect(zeb.ulanet.host_address(1).to_s).to eq("fd3c:e618:51e2::1")
+    end
+
   end
 
 end

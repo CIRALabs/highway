@@ -121,6 +121,12 @@ class ACPAddress < IPAddress::IPv6
     a
   end
 
+  def host_address(x)
+    a = self.class.parse_u128((to_u128 & (0xffffffffffffffff << (64))) | x)
+    a.prefix = 128
+    a
+  end
+
   private
   def asa_address_u128
     u128 = node_address.network.to_u128
