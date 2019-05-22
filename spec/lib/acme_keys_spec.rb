@@ -15,7 +15,14 @@ RSpec.describe AcmeKeys do
         # OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
         AcmeKeys.acme.acme_maybe_make_keys
         client = Acme::Client.new(private_key: AcmeKeys.acme.acmeprivkey,
-                                  directory: AcmeKeys.acme.server)
+                                  directory: AcmeKeys.acme.server,
+                                  connection_options: {
+                                    :ssl => {
+                                      :ca_file => '/usr/lib/ssl/certs/ca-certificates.crt',
+                                      :ca_path => "/usr/lib/ssl/certs"
+                                    }
+                                  })
+
         expect(client).to_not be_nil
         account = client.new_account(contact: 'mailto:minerva@sandelman.ca',
                                      terms_of_service_agreed: true)
