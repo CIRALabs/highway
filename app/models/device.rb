@@ -138,6 +138,7 @@ class Device < ActiveRecord::Base
     when $LETSENCRYPT_CA_SHG_DEVICE
       logger.info "Processing CSR with LetsEncrypt"
       sign_from_csr_letsencrypt(csr)
+      insert_ula_quad_ah
     else
       logger.info "No certificate authority enabled"
     end
@@ -157,6 +158,15 @@ class Device < ActiveRecord::Base
     cert_bag = AcmeKeys.acme.cert_for(shg_basename, shg_zone, csr, logger)
     certs = split_up_bag_of_certificates(cert_bag)
     self.certificate = certs[0]
+  end
+
+  def insert_ula_quad_ah
+    AcmeKeys.acme.acme_dns_updater.update { |m|
+      m.type = :aaaa
+      m.zone = shg_zone
+      m.hostname = shg_basename
+      m.data     = ulanet.host_address(1).to_s
+    }
   end
 
   # this routine is used to sign SHG device CSR for bootstrap use.
