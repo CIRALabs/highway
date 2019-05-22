@@ -48,6 +48,10 @@ class SmarkaklinkController < ApiController
                       second_eui64: Device.canonicalize_eui64(params['wan-mac']),
                       obsolete: true)        # mark it has not valid until an admin makes it valid
         num = @device.id
+        if @device.extra_attrs
+          @device.extra_attrs.merge!(attrs)
+        end
+        @device.save!
       end
       head 404, text: "device not known here #{num}"
       return
@@ -57,7 +61,6 @@ class SmarkaklinkController < ApiController
       if @device.extra_attrs
         @device.extra_attrs.merge!(attrs)
       end
-      @device.save!
     end
 
     # found a device, collect the information about it!

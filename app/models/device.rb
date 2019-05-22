@@ -116,6 +116,11 @@ class Device < ActiveRecord::Base
     find_by_pub_key(b64)
   end
 
+  # make sure extra_attrs is initialized as a hash.
+  def extra_attrs
+    self[:extra_attrs] ||= Hash.new
+  end
+
   def sign_from_base64_csr(csr64)
     # chop off any base64 literal prefix.
     if csr64[0..6]=='base64:'
