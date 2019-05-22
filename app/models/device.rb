@@ -165,9 +165,17 @@ class Device < ActiveRecord::Base
     AcmeKeys.acme.acme_dns_updater.update { |m|
       m.type = :aaaa
       m.zone = shg_zone
-      m.hostname = shg_basename
-      m.address  = addr = ulanet.host_address(1).to_s
-      logger.info "ULA updating to #{shg_basename} to #{addr}"
+      hostname   = m.hostname = shg_basename
+      addr       = m.address  = ulanet.host_address(1).to_s
+      logger.info "device #{id} ULA updating to #{hostname} to #{addr}"
+    }
+
+    AcmeKeys.acme.acme_dns_updater.update { |m|
+      m.type = :aaaa
+      m.zone = shg_zone
+      hostname   = m.hostname = "mud." + shg_basename
+      addr       = m.address  = ulanet.host_address(2).to_s
+      logger.info "device #{id} ULA updating to #{hostname} to #{addr}"
     }
   end
 
