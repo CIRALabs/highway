@@ -105,6 +105,7 @@ class AcmeKeys < HighwayKeys
     # make sure acme_account has been setup.
     return nil unless acme_account
 
+    logger.info "Updating #{qnames.join(' ')}"
     order = acme_client.new_order(identifiers: qnames)
 
     order.authorizations.each { |authorization|

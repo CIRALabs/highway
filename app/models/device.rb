@@ -144,7 +144,9 @@ class Device < ActiveRecord::Base
   end
 
   def sign_from_csr_letsencrypt(csr)
-    self.certificate = AcmeKeys.acme.cert_for(shg_basename, shg_zone, csr, logger)
+    # a pem format certificate is returned
+    @idevid = nil
+    self.idevid_cert = AcmeKeys.acme.cert_for(shg_basename, shg_zone, csr, logger)
   end
 
   # this routine is used to sign SHG device CSR for bootstrap use.
