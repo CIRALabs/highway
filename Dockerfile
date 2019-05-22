@@ -10,7 +10,7 @@ RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libg
     git clone --single-branch --branch binary_http_multipart https://github.com/AnimaGUS-minerva/multipart_body.git && \
     git clone --single-branch --branch ecdsa_interface_openssl https://github.com/AnimaGUS-minerva/ruby_ecdsa.git && \
     git clone --single-branch --branch v0.6.0 https://github.com/mcr/ChariWTs.git && \
-    git clone --single-branch --branch txt_rr https://github.com/CIRALabs/dns-update.git
+    git clone --single-branch --branch aaaa_rr https://github.com/CIRALabs/dns-update.git
 
 # build custom openssl with ruby-openssl patches
 
