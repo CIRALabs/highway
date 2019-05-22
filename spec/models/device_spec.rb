@@ -339,9 +339,12 @@ RSpec.describe Device, type: :model do
       expect(zeb.ulanet.host_address(1).to_s).to eq("fd3c:e618:51e2::1")
     end
 
-    it "should update a ULA ::" do
+    # this will only work if AcmeKeys is setup.
+    it "should update a ULA ::1" do
+      pending "needs AcmeKeys setup" unless ENV['ACME_TESTING']
+      SystemVariable.setvalue(:shg_zone, "dasblinkenled.org")
       zeb = devices(:zeb)
-      zeb.insert_ula_quad_ah
+      expect(zeb.insert_ula_quad_ah).to_not be_nil
     end
 
   end

@@ -166,7 +166,8 @@ class Device < ActiveRecord::Base
       m.type = :aaaa
       m.zone = shg_zone
       m.hostname = shg_basename
-      m.data     = ulanet.host_address(1).to_s
+      m.address  = addr = ulanet.host_address(1).to_s
+      logger.info "ULA updating to #{shg_basename} to #{addr}"
     }
   end
 
