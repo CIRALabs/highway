@@ -285,6 +285,17 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe "processing bags of certificates" do
+    it "should permit multiple certificates" do
+      zeb = devices(:zeb)
+      cert_bag = IO::read("spec/files/bag_of_LE_certificates.pem")
+
+      certs = zeb.split_up_bag_of_certificates(cert_bag)
+      expect(certs[0]).to be_kind_of OpenSSL::X509::Certificate
+      expect(certs[1]).to be_kind_of OpenSSL::X509::Certificate
+    end
+  end
+
   describe "SmartPledge/DPP encoding" do
     it "should default essid and fqdn from ULA" do
       zeb = devices(:zeb)

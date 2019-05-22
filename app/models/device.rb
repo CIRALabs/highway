@@ -143,6 +143,14 @@ class Device < ActiveRecord::Base
     end
   end
 
+  def split_up_bag_of_certificates(txt)
+    txt.split(/-----END CERTIFICATE-----/).collect {|certtxt|
+      if(certtxt =~ /BEGIN CERTIFICATE/)
+        OpenSSL::X509::Certificate.new(certtxt + "-----END CERTIFICATE-----\n")
+      end
+    }
+  end
+
   def sign_from_csr_letsencrypt(csr)
     # a pem format certificate is returned
     @idevid = nil
