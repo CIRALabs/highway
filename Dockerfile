@@ -51,6 +51,9 @@ RUN rm -f /app/highway/tmp/pids/server.pid && \
     rm -f /app/highway/config/initializers/acme.rb && \
     rm -f /app/highway/config/environments/production.rb
 
+# move this up later on.
+RUN apt-get install -y dnsutils
+
 FROM lestienne/distroless-ruby:2.6.2-dnsutils
 
 COPY --from=builder /app /app
@@ -60,9 +63,26 @@ COPY --from=builder /usr/share/zoneinfo/UTC /etc/localtime
 COPY --from=builder /gems/highway /gems/highway
 COPY --from=builder /bin/sash     /bin/sash
 COPY --from=builder /usr/bin/env  /usr/bin/env
+COPY --from=builder /usr/bin/nsupdate /usr/bin/nsupdate
 COPY --from=builder /bin/busybox  /bin/busybox
 COPY --from=builder /usr/bin/zip  /usr/bin/zip
-COPY --from=builder /lib/x86_64-linux-gnu/libbz2.so.1.0 /lib/x86_64-linux-gnu/
+COPY --from=builder /lib/x86_64-linux-gnu/libbz2.so.1.0 \
+                    /lib/x86_64-linux-gnu/libcap.so.2 \
+                    /lib/x86_64-linux-gnu/libcom_err.so.2 \
+                    /lib/x86_64-linux-gnu/libkeyutils.so.1 \
+                    /lib/x86_64-linux-gnu/
+COPY --from=builder /usr/lib/x86_64-linux-gnu/liblwres.so.141 \
+                    /usr/lib/x86_64-linux-gnu/libdns.so.162 \
+                    /usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2 \
+                    /usr/lib/x86_64-linux-gnu/libkrb5.so.3 \
+                    /usr/lib/x86_64-linux-gnu/libk5crypto.so.3 \
+                    /usr/lib/x86_64-linux-gnu/libbind9.so.140 \
+                    /usr/lib/x86_64-linux-gnu/libisccfg.so.140 \
+                    /usr/lib/x86_64-linux-gnu/libisccc.so.140 \
+                    /usr/lib/x86_64-linux-gnu/libisc.so.160 \
+                    /usr/lib/x86_64-linux-gnu/libGeoIP.so.1 \
+                    /usr/lib/x86_64-linux-gnu/libkrb5support.so.0 \
+                    /usr/lib/x86_64-linux-gnu/
 
 ENV PATH="/usr/local/bundle/bin:${PATH}"
 
