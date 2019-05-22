@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: https://github.com/CIRALabs/dns-update.git
-  revision: 7a94d1260e799677f77f57eecd7e21da9d0f87f3
+  revision: 2b5666f52700795843db06f18736ef02e368759c
   branch: txt_rr
   specs:
     dns-update (0.0.7)

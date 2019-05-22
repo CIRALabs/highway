@@ -43,6 +43,7 @@ gem 'rake', '~> 12.3.2'
 
 # for LetsEncrypt
 gem 'acme-client'
+#gem 'dns-update', :path => '../minerva/dns-update'
 gem 'dns-update', :git => 'https://github.com/CIRALabs/dns-update.git', :branch => 'txt_rr'
 
 # used by IP address management in ANIMA ACP
