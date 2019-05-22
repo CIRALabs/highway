@@ -82,6 +82,7 @@ COPY --from=builder /usr/lib/x86_64-linux-gnu/liblwres.so.141 \
                     /usr/lib/x86_64-linux-gnu/libisc.so.160 \
                     /usr/lib/x86_64-linux-gnu/libGeoIP.so.1 \
                     /usr/lib/x86_64-linux-gnu/libkrb5support.so.0 \
+                    /usr/lib/x86_64-linux-gnu/libicui18n.so.57 \
                     /usr/lib/x86_64-linux-gnu/
 
 ENV PATH="/usr/local/bundle/bin:${PATH}"
