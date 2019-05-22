@@ -99,7 +99,7 @@ RSpec.describe 'SmarKaKlink MASA API', type: :request do
       expect(response).to have_http_status(404)
       device = assigns(:device)
       expect(device).to_not be_nil
-      expect(device.eui64).to eq('11-22-ba-dd-ba-dd')
+      expect(device.second_eui64).to eq('11-22-ba-dd-ba-dd')
     end
   end
 
