@@ -161,6 +161,7 @@ class Device < ActiveRecord::Base
   end
 
   def insert_ula_quad_ah
+    return nil unless AcmeKeys.acme.acme_dns_updater
     AcmeKeys.acme.acme_dns_updater.update { |m|
       m.type = :aaaa
       m.zone = shg_zone

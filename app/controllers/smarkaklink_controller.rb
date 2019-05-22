@@ -49,10 +49,15 @@ class SmarkaklinkController < ApiController
                       obsolete: true)        # mark it has not valid until an admin makes it valid
         num = @device.id
       end
-      @device.extra_attrs.merge!(attrs)
-      @device.save!
       head 404, text: "device not known here #{num}"
       return
+    end
+
+    if @device
+      if @device.extra_attrs
+        @device.extra_attrs.merge!(attrs)
+      end
+      @device.save!
     end
 
     # found a device, collect the information about it!
