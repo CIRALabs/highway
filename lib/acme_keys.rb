@@ -105,6 +105,7 @@ class AcmeKeys < HighwayKeys
     # make sure acme_account has been setup.
     return nil unless acme_account
 
+    logger.info "Getting certificates from ACME server #{server}"
     logger.info "Updating #{qnames.join(' ')}"
     order = acme_client.new_order(identifiers: qnames)
 
@@ -132,10 +133,10 @@ class AcmeKeys < HighwayKeys
     # appropriate publically facing DNS servers to verify that the
     # update is now in place.
     sleep(sleeptime)
-    if false
+    if SystemVariable.boolvalue?(:dns_update_debug)
       qnames.each { |name|
-        system("dig +short @nic.sandelman.ca #{name}")
-        system("dig +short @sns.cooperix.net #{name}")
+        system("dig +short @nic.sandelman.ca _acme-challenge.#{name}")
+        system("dig +short @sns.cooperix.net _acme-challenge.#{name}")
       }
     end
 
