@@ -46,10 +46,11 @@ class SmarkaklinkController < ApiController
         attrs['tofu_register'] = true
         @device = Device.create(eui64: Device.canonicalize_eui64(params['switch-mac']),
                       second_eui64: Device.canonicalize_eui64(params['wan-mac']),
-                      obsolete: true,        # mark it has not valid until an admin makes it valid
-                      extra_attrs: attrs)
+                      obsolete: true)        # mark it has not valid until an admin makes it valid
         num = @device.id
       end
+      @device.extra_attrs.merge!(attrs)
+      @device.save!
       head 404, text: "device not known here #{num}"
       return
     end
