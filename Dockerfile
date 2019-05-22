@@ -1,6 +1,6 @@
 FROM ruby:2.6.2 as builder
 
-RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libgmp10 sash busybox dnsutils apt-utils zip && \
+RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libgmp10 sash busybox dnsutils apt-utils zip dnsutils && \
     apt-get remove -y git &&  \
     apt-get install -y git && \
     mkdir -p /app/highway && \
@@ -50,9 +50,6 @@ RUN rm -f /app/highway/tmp/pids/server.pid && \
     rm -f /app/highway/config/{config,database,secret}.yml && \
     rm -f /app/highway/config/initializers/acme.rb && \
     rm -f /app/highway/config/environments/production.rb
-
-# move this up later on.
-RUN apt-get install -y dnsutils
 
 FROM lestienne/distroless-ruby:2.6.2-dnsutils
 
