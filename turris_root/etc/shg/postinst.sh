@@ -17,5 +17,7 @@ INTERMEDIATE="/etc/shg/intermediate_certs.pem"
 OUTPUT="/etc/shg/lighttpd.pem"
 
 cat ${KEY} ${CERTIF} ${INTERMEDIATE} > ${OUTPUT}
+cp ${KEY}    /srv/lxc/mud-supervisor/rootfs/app/certificates/jrc_prime256v1.key
+cp ${OUTPUT} /srv/lxc/mud-supervisor/rootfs/app/certificates/jrc_prime256v1.crt
 check_error "Failed to create certificate for lighttpd"
 chmod 600 ${OUTPUT}
