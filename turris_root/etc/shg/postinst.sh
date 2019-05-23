@@ -13,8 +13,9 @@ check_error() {
 
 KEY="/etc/shg/shg.key"
 CERTIF="/etc/shg/idevid_cert.pem"
+INTERMEDIATE="/etc/shg/intermediate_certs.pem"
 OUTPUT="/etc/shg/lighttpd.pem"
 
-cat ${KEY} ${CERTIF} > ${OUTPUT}
+cat ${KEY} ${CERTIF} ${INTERMEDIATE} > ${OUTPUT}
 check_error "Failed to create certificate for lighttpd"
 chmod 600 ${OUTPUT}

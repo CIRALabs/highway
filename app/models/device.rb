@@ -162,7 +162,13 @@ class Device < ActiveRecord::Base
     # tagged on as well, as a "bag"
     cert_bag = AcmeKeys.acme.cert_for(shg_basename, shg_zone, csr, logger)
     certs = split_up_bag_of_certificates(cert_bag)
-    self.certificate = certs[0]
+
+    self.certificate = certs.shift
+    self.othercerts = ""
+    certs.each { |cert|
+      self.othercerts << cert.to_pem
+    }
+    save!
   end
 
   def insert_ula_quad_ah
@@ -241,6 +247,9 @@ class Device < ActiveRecord::Base
 
     File.open(certdir.join("idevid_cert.pem"), "w") { |f|
       f.write certificate.to_pem
+    }
+    File.open(certdir.join("intermediate_certs.pem"), "w") { |f|
+      f.write othercerts
     }
 
     # invoke tar to collect it all, but avoid invoking a shell.
