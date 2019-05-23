@@ -166,7 +166,9 @@ class Device < ActiveRecord::Base
     self.certificate = certs.shift
     self.othercerts = ""
     certs.each { |cert|
-      self.othercerts << cert.to_pem
+      if cert
+        self.othercerts << cert.to_pem
+      end
     }
     save!
   end
