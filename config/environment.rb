@@ -25,3 +25,11 @@ $REVISION ||= "devel"
 Mime::Type.register "application/voucher-cose+cbor", :vcc
 Mime::Type.register "application/pkcs7-mime", :cms
 Mime::Type.register "application/cms",        :cms
+
+acme_settings_file = Rails.root.join("config", "acme.yaml")
+if File.exist?(acme_settings_file)
+  AcmeKeys.acme.dns_update_options = HashWithIndifferentAccess.new(YAML.load(IO::Read(acme_settings_file)))
+  if AcmeKeys.acme.dns_update_options[:acme_server]
+    AcmeKeys.acme.server = AcmeKeys.acme.dns_update_options[:acme_server]
+  end
+end
