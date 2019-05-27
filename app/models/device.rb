@@ -11,6 +11,7 @@ class Device < ActiveRecord::Base
 
   class CSRNotverified < Exception; end
   class CSRSerialNumberDuplicated < Exception; end
+  class CSRFailed < Exception; end
 
   before_save :fill_in_pub_key
   before_save :serial_number_from_eui64
@@ -162,6 +163,9 @@ class Device < ActiveRecord::Base
     # a pem format certificate is returned, possibly with extra certificates
     # tagged on as well, as a "bag"
     cert_bag = AcmeKeys.acme.cert_for(shg_basename, shg_zone, csr, logger)
+
+    raise CSRFailed unless cert_bag
+
     certs = split_up_bag_of_certificates(cert_bag)
 
     self.certificate = certs.shift

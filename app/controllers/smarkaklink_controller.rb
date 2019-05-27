@@ -59,10 +59,16 @@ class SmarkaklinkController < ApiController
     @device.update_from_smarkaklink_provision(params)
     @csr64 = params['csr']
 
-    # now create a private certificate from this CSR.
-    @device.sign_from_base64_csr(@csr64)
-    @device.save!
+  # now create a private certificate from this CSR.
+    begin
+      @device.sign_from_base64_csr(@csr64)
+    rescue Device::CSRFailed
+      capture_bad_request "CSR failed to be signed by CA in id\##{@device.id}"
+      @device.save!
+      return
+    end
 
+    @device.save!
     logger.info "Enrolled new device from #{ip}"
 
     tgzfile = @device.generate_tgz_for_shg
