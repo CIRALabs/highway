@@ -5,7 +5,7 @@ RSpec.describe Device, type: :model do
 
   before(:each) do
     HighwayKeys.ca.certdir = Rails.root.join('spec','files','cert')
-    MasaKeys.ca.certdir = Rails.root.join('spec','files','cert')
+    MasaKeys.masa.certdir  = Rails.root.join('spec','files','cert')
   end
 
   describe "canonical eui" do
