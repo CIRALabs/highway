@@ -53,7 +53,3 @@ Rails.application.configure do
 
 end
 
-# always use staging server for tests, ideally mock them as well.
-AcmeKeys.acme.server="https://acme-staging-v02.api.letsencrypt.org/directory"
-$INTERNAL_CA_SHG_DEVICE=true
-$LETENCRYPT_CA_SHG_DEVICE=false

@@ -49,8 +49,9 @@ class AcmeKeys < HighwayKeys
 
   def acme_client
     if dns_update_options
+      directory = server || dns_update_options[:acme_server]
       @acme_client ||= Acme::Client.new(private_key: acmeprivkey,
-                                        directory: server,
+                                        directory: directory,
                                         connection_options: {
                                           :ssl => {
                                             :ca_file => '/usr/lib/ssl/certs/ca-certificates.crt',
