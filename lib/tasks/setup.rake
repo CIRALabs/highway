@@ -100,6 +100,11 @@ namespace :highway do
 
       AcmeKeys.acme.acme_maybe_make_keys
 
+      if SystemVariable.string(:shg_zone).blank?
+        puts "Can not use LetsEncrypt unless :shg_zone SystemVariable is set"
+        return
+      end
+
       privkey = HighwayKeys.ca.generate_privkey_if_needed(serverprivkeyfile, curve, "SERVER")
 
       csr = OpenSSL::X509::Request.new
