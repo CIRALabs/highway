@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_05_212809) do
+ActiveRecord::Schema.define(version: 2019_05_23_115100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(version: 2019_04_05_212809) do
     t.text "ula"
     t.json "extra_attrs"
     t.text "second_eui64"
+    t.text "othercerts"
   end
 
   create_table "owners", id: :serial, force: :cascade do |t|
