@@ -150,6 +150,7 @@ class Device < ActiveRecord::Base
   end
 
   def split_up_bag_of_certificates(txt)
+    return [] if txt.blank?
     txt.split(/-----END CERTIFICATE-----/).collect {|certtxt|
       if(certtxt =~ /BEGIN CERTIFICATE/)
         OpenSSL::X509::Certificate.new(certtxt + "-----END CERTIFICATE-----\n")

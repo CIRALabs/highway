@@ -180,6 +180,11 @@ class AcmeKeys < HighwayKeys
         logger.fatal "ACME error on #{baseqname}: #{order.error}"
         return nil
       end
+
+    rescue Acme::Client::Error::Malformed
+      logger.fatal "CSR problems: #{$!.message}"
+      return nil
+
     rescue Acme::Client::Error::Unauthorized
       logger.fatal "CSR problems: #{$!.message}"
       return nil
