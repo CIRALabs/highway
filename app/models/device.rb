@@ -180,31 +180,34 @@ class Device < ActiveRecord::Base
 
   def insert_ula_quad_ah
     return nil unless AcmeKeys.acme.acme_dns_updater
-    AcmeKeys.acme.acme_dns_updater.update { |m|
+    worked = AcmeKeys.acme.acme_dns_updater.update { |m|
       m.type = :aaaa
       m.zone = shg_zone
       hostname   = m.hostname = shg_basename
       addr       = m.address  = ulanet.host_address(1).to_s
       logger.info "device #{id} ULA updating to #{hostname} to #{addr}"
     }
+    return false unless worked
 
-    AcmeKeys.acme.acme_dns_updater.update { |m|
+    worked = AcmeKeys.acme.acme_dns_updater.update { |m|
       m.type = :aaaa
       m.zone = shg_zone
       hostname   = m.hostname = "mud." + shg_basename
       addr       = m.address  = ulanet.host_address(2).to_s
       logger.info "device #{id} ULA updating to #{hostname} to #{addr}"
     }
+    return false unless worked
 
     # also add the ULA + ::2c66:d8ff:fe00:9329 which is the SLAAC address for now.
     slaac = ACPAddress.new("::2c66:d8ff:fe00:9329")
-    AcmeKeys.acme.acme_dns_updater.update { |m|
+    worked = AcmeKeys.acme.acme_dns_updater.update { |m|
       m.type = :aaaa
       m.zone = shg_zone
       hostname   = m.hostname = "mud." + shg_basename
       addr       = m.address  = ulanet.host_address(slaac.to_u128).to_s
       logger.info "device #{id} ULA adding #{hostname} to #{addr}"
     }
+    return worked
   end
 
   # this routine is used to sign SHG device CSR for bootstrap use.

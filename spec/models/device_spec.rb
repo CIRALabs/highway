@@ -117,27 +117,33 @@ RSpec.describe Device, type: :model do
     end
 
     it "should accept CSR for an existing device" do
+      $INTERNAL_CA_SHG_DEVICE=true
+      $LETSENCRYPT_CA_SHG_DEVICE=false
       dev = devices(:heranew)
       expect(dev.certificate).to be_nil
 
       # grab the CSR from the hera machine, and extract the CSR and use it.
       provision1 = IO::read("spec/files/hera.provision.json")
       atts = JSON::parse(provision1)
-      dev.sign_from_base64_csr(atts['csr'])
 
+      dev.sign_from_base64_csr(atts['csr'])
       expect(dev.certificate).to_not be_nil
     end
 
     it "should accept a CSR for an existing device, sign it with LetsEncrypt staging" do
+      SystemVariable.setbool!(:dns_update_debug, true)
+      SystemVariable.setvalue(:shg_zone, "dasblinkenled.org")
       dev = devices(:heranew)
       expect(dev.certificate).to be_nil
 
-      # grab the CSR from the hera machine, and extract the CSR and use it.
+      # grab the CSR from the hera machine, but extract the CSR, use it.
       provision1 = IO::read("spec/files/hera.provision.json")
       atts = JSON::parse(provision1)
-      if ENV['ACME_TESTING']
+      if ENV['ACME_TESTING'] and AcmeKeys.acme.server
+        $INTERNAL_CA_SHG_DEVICE=false
+        $LETSENCRYPT_CA_SHG_DEVICE=true
         dev.update_from_smarkaklink_provision(atts)
-        dev.sign_from_csr_letsencrypt(atts['csr'])
+        dev.sign_from_base64_csr(atts['csr'])
 
         expect(dev.certificate).to_not be_nil
       end

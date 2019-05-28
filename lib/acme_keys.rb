@@ -182,7 +182,7 @@ class AcmeKeys < HighwayKeys
       end
 
     rescue Acme::Client::Error::Malformed
-      logger.fatal "CSR problems: #{$!.message}"
+      logger.fatal "CSR problems: #{$!.message}, #{order.status}"
       return nil
 
     rescue Acme::Client::Error::Unauthorized
