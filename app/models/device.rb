@@ -178,36 +178,47 @@ class Device < ActiveRecord::Base
     save!
   end
 
-  def insert_ula_quad_ah
-    return nil unless AcmeKeys.acme.acme_dns_updater
-    worked = AcmeKeys.acme.acme_dns_updater.update { |m|
-      m.type = :aaaa
-      m.zone = shg_zone
-      hostname   = m.hostname = shg_basename
-      addr       = m.address  = ulanet.host_address(1).to_s
-      logger.info "device #{id} ULA updating to #{hostname} to #{addr}"
-    }
-    return false unless worked
+  def insert_quad_ah(hostname, addr, remove = true)
 
+    if remove
+      AcmeKeys.acme.acme_dns_updater.remove { |m|
+        m.type = :aaaa
+        m.zone = shg_zone
+        m.hostname = hostname
+      }
+    end
     worked = AcmeKeys.acme.acme_dns_updater.update { |m|
       m.type = :aaaa
       m.zone = shg_zone
-      hostname   = m.hostname = "mud." + shg_basename
-      addr       = m.address  = ulanet.host_address(2).to_s
+      m.hostname = hostname
+      m.address  = addr
       logger.info "device #{id} ULA updating to #{hostname} to #{addr}"
     }
-    return false unless worked
+    unless worked
+      logger.error "Failed to DNS update #{hostname} -> #{addr}"
+      return false
+    end
+    return true
+  end
+
+  def insert_ula_quad_ah
+    hostname = nil
+    addr     = nil
+    return nil unless AcmeKeys.acme.acme_dns_updater
+
+    hostname   = shg_basename
+    addr       = ulanet.host_address(1).to_s
+    return false unless insert_quad_ah(hostname, addr)
+
+    hostname = "mud." + shg_basename
+    addr     = ulanet.host_address(2).to_s
+    return false unless insert_quad_ah(hostname, addr)
 
     # also add the ULA + ::2c66:d8ff:fe00:9329 which is the SLAAC address for now.
     slaac = ACPAddress.new("::2c66:d8ff:fe00:9329")
-    worked = AcmeKeys.acme.acme_dns_updater.update { |m|
-      m.type = :aaaa
-      m.zone = shg_zone
-      hostname   = m.hostname = "mud." + shg_basename
-      addr       = m.address  = ulanet.host_address(slaac.to_u128).to_s
-      logger.info "device #{id} ULA adding #{hostname} to #{addr}"
-    }
-    return worked
+    addr  = ulanet.host_address(slaac.to_u128).to_s
+    return false unless insert_quad_ah(hostname, addr, false)
+    return true
   end
 
   # this routine is used to sign SHG device CSR for bootstrap use.
