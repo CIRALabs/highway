@@ -2,15 +2,7 @@ FROM ruby:2.6.2 as builder
 
 RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libgmp10 sash busybox dnsutils apt-utils zip dnsutils && \
     apt-get remove -y git &&  \
-    apt-get install -y git && \
-    mkdir -p /app/highway && \
-    mkdir -p /gems/highway && cd /gems/highway && \
-    git config --global http.sslVerify "false" && \
-    git clone --single-branch --branch cms-added https://github.com/CIRALabs/ruby-openssl.git && \
-    git clone --single-branch --branch binary_http_multipart https://github.com/AnimaGUS-minerva/multipart_body.git && \
-    git clone --single-branch --branch ecdsa_interface_openssl https://github.com/AnimaGUS-minerva/ruby_ecdsa.git && \
-    git clone --single-branch --branch v0.6.0 https://github.com/mcr/ChariWTs.git && \
-    git clone --single-branch --branch aaaa_rr https://github.com/CIRALabs/dns-update.git
+    apt-get install -y git
 
 # build custom openssl with ruby-openssl patches
 
@@ -30,7 +22,8 @@ RUN rm -rf /usr/include/x86_64-linux-gnu/openssl && \
 WORKDIR /app/highway
 RUN gem install bundler --source=http://rubygems.org
 
-# install gems with extensions explicitely so that layers are cached.
+# install gems with extensions explicitely so that layers are cached, many involve
+# long compilation efforts. Versions are matched against what bundle locks in.
 RUN gem install -v1.10.1 nokogiri --source=http://rubygems.org && \
     gem install -v1.2.7 eventmachine --source=http://rubygems.org && \
     gem install -v2.3.1 nio4r --source=http://rubygems.org && \
@@ -40,6 +33,19 @@ RUN gem install -v1.10.1 nokogiri --source=http://rubygems.org && \
     gem install -v1.7.2 thin --source=http://rubygems.org && \
     gem install -v0.1.3  websocket-extensions --source=http://rubygems.org && \
     gem install -v0.5.9.3 cbor --source=http://rubygems.org
+
+# this layer seperately, because docker can not tell when branches change
+# would be way better to have Gemfile lock these, but persistent problems with
+# git clone inside of bundle seems to mess this up.
+RUN mkdir -p /app/highway && \
+    mkdir -p /gems/highway && cd /gems/highway && \
+    git config --global http.sslVerify "false" && \
+    git clone --single-branch --branch cms-added https://github.com/CIRALabs/ruby-openssl.git && \
+    git clone --single-branch --branch binary_http_multipart https://github.com/AnimaGUS-minerva/multipart_body.git && \
+    git clone --single-branch --branch ecdsa_interface_openssl https://github.com/AnimaGUS-minerva/ruby_ecdsa.git && \
+    git clone --single-branch --branch v0.7.0  https://github.com/mcr/ChariWTs.git && \
+    git clone --single-branch --branch aaaa_rr https://github.com/CIRALabs/dns-update.git
+
 ADD ./docker/Gemfile /app/highway/Gemfile
 ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
 ADD ./docker/Rakefile /app/highway/Rakefile
