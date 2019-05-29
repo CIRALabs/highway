@@ -15,8 +15,12 @@ RUN rm -rf /usr/include/x86_64-linux-gnu/openssl && \
     cd /src/highway/openssl && \
     ./Configure --prefix=/usr --openssldir=/usr/lib/ssl --libdir=lib/linux-x86_64 no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test linux-x86_64 && \
     id && make && \
-    cd /src/highway/openssl && make install_sw && \
+    cd /src/highway/openssl && make install_sw
+
+RUN mkdir -p /gems/highway && \
     gem install rake-compiler --source=http://rubygems.org && \
+    cd /gems/highway && \
+    git clone --single-branch --branch cms-added https://github.com/CIRALabs/ruby-openssl.git && \
     cd /gems/highway/ruby-openssl && rake compile
 
 WORKDIR /app/highway
@@ -40,11 +44,12 @@ RUN gem install -v1.10.1 nokogiri --source=http://rubygems.org && \
 RUN mkdir -p /app/highway && \
     mkdir -p /gems/highway && cd /gems/highway && \
     git config --global http.sslVerify "false" && \
-    git clone --single-branch --branch cms-added https://github.com/CIRALabs/ruby-openssl.git && \
     git clone --single-branch --branch binary_http_multipart https://github.com/AnimaGUS-minerva/multipart_body.git && \
     git clone --single-branch --branch ecdsa_interface_openssl https://github.com/AnimaGUS-minerva/ruby_ecdsa.git && \
     git clone --single-branch --branch v0.7.0  https://github.com/mcr/ChariWTs.git && \
     git clone --single-branch --branch aaaa_rr https://github.com/CIRALabs/dns-update.git
+
+RUN sha256sum /gems/highway/dns-update/lib/dns-update/validate.rb
 
 ADD ./docker/Gemfile /app/highway/Gemfile
 ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
