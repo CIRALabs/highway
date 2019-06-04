@@ -114,6 +114,7 @@ class Device < ActiveRecord::Base
     # will allocate an EUI-64 for it along the way.
     # The caller can set the model if desired.
     dev.sign_eui64
+    dev.save!
 
     dev
   end
