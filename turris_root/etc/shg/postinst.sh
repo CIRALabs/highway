@@ -18,6 +18,6 @@ OUTPUT="/etc/shg/lighttpd.pem"
 
 cat ${KEY} ${CERTIF} > ${OUTPUT}
 cp ${KEY}    /srv/lxc/mud-supervisor/rootfs/app/certificates/jrc_prime256v1.key
-cat ${OUTPUT} ${INTERMEDIATE} >/srv/lxc/mud-supervisor/rootfs/app/certificates/jrc_prime256v1.crt
+cat ${CERTIF} ${INTERMEDIATE} >/srv/lxc/mud-supervisor/rootfs/app/certificates/jrc_prime256v1.crt
 check_error "Failed to create certificate for lighttpd"
 chmod 600 ${OUTPUT}
