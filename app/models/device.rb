@@ -49,8 +49,14 @@ class Device < ActiveRecord::Base
   def self.find_by_second_eui64(number)
     where(second_eui64: number).take
   end
+  def self.find_obsolete_by_eui64(number)
+    where(serial_number: number).take ||
+      where(eui64: canonicalize_eui64(number)).take ||
+      where(second_eui64: canonicalize_eui64(number)).take
+  end
+
   def self.find_obsolete_or_create_by_eui64(number)
-    where(eui64: number).take || where(second_eui64: number).take || create(eui64: canonicalize_eui64(number))
+    find_obsolete_by_eui64(number) || create(eui64: canonicalize_eui64(number))
   end
 
   def self.create_from_csr_io(csrio)
