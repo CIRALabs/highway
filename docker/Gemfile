@@ -34,7 +34,8 @@ gem 'http-accept'
 
 # for LetsEncrypt
 gem 'acme-client'
-gem 'dns-update', :path => '/gems/highway/dns-update'
+#gem 'dns-update', :path => '/gems/highway/dns-update'
+gem 'dns-update', :git => 'https://github.com/CIRALabs/dns-update.git', :branch => 'aaaa_rr'
 
 # used to generate multipart bodies
 gem 'multipart_body', :path => '/gems/highway/multipart_body'

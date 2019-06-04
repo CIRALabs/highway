@@ -162,7 +162,11 @@ class Device < ActiveRecord::Base
   def sign_from_csr_letsencrypt(csr)
     # a pem format certificate is returned, possibly with extra certificates
     # tagged on as well, as a "bag"
-    cert_bag = AcmeKeys.acme.cert_for(shg_basename, shg_zone, csr, logger)
+    begin
+      cert_bag = AcmeKeys.acme.cert_for(shg_basename, shg_zone, csr, logger)
+    rescue Faraday::ConnectionFailed => e
+      return CSRFailed.new("LetsEncrypt/ACME failed to connect #{e.message}")
+    end
 
     raise CSRFailed unless cert_bag
 
@@ -195,7 +199,7 @@ class Device < ActiveRecord::Base
       logger.info "device #{id} ULA updating to #{hostname} to #{addr}"
     }
     unless worked
-      logger.error "Failed to DNS update #{hostname} -> #{addr}"
+      logger.error "Failed to do DNS update #{hostname} -> #{addr}"
       return false
     end
     return true
