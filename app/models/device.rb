@@ -311,7 +311,7 @@ class Device < ActiveRecord::Base
   end
 
   def public_key
-    @public_key ||= OpenSSL::PKey.read(Base64::decode64(pub_key))
+    @public_key ||= (OpenSSL::PKey.read(Base64::decode64(pub_key)) unless pub_key.blank?)
   end
 
   def activated!
