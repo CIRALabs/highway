@@ -34,8 +34,11 @@ gem 'devise', '~> 4.6.0'
 
 # need CMS code, but not DTLS code, so do not complicate life with
 # need for openssl 1.1.1 w/patches.
-gem 'openssl', :git => 'https://github.com/CIRALabs/ruby-openssl.git', :branch => 'cms-added'
-#gem 'openssl', :path => '../minerva/ruby-openssl'
+#gem 'openssl', :git => 'https://github.com/CIRALabs/ruby-openssl.git', :branch => 'cms-added'
+gem 'openssl', :path => '../minerva/ruby-openssl'
+
+# for static files
+gem 'rails-static-router'
 
 # for github warning
 gem "loofah", ">= 2.2.3"
