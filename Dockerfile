@@ -11,16 +11,18 @@ RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libg
 RUN rm -rf /usr/include/x86_64-linux-gnu/openssl && \
     mkdir -p /src/highway && \
     cd /src/highway && \
-    git clone -b dtls-listen-refactor-1.1.1b git://github.com/mcr/openssl.git && \
+    git clone -b dtls-listen-refactor-1.1.1c git://github.com/mcr/openssl.git && \
     cd /src/highway/openssl && \
-    ./Configure --prefix=/usr --openssldir=/usr/lib/ssl --libdir=lib/linux-x86_64 no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test linux-x86_64 && \
+    ./Configure --prefix=/usr --openssldir=/usr/lib/ssl --libdir=lib/x86_64-linux-gnu no-idea no-mdc2 no-rc5 no-zlib no-ssl3                  linux-x86_64 && \
     id && make && \
-    cd /src/highway/openssl && make install_sw
+    cd /src/highway/openssl && make install_sw && \
+    gem install rake-compiler --source=http://rubygems.org && \
+    cd /gems/highway/ruby-openssl && rake compile
 
 RUN mkdir -p /gems/highway && \
     gem install rake-compiler --source=http://rubygems.org && \
     cd /gems/highway && \
-    git clone --single-branch --branch cms-added https://github.com/CIRALabs/ruby-openssl.git && \
+    git clone --single-branch --branch ies-cms-dtls https://github.com/CIRALabs/ruby-openssl.git && \
     cd /gems/highway/ruby-openssl && rake compile
 
 WORKDIR /app/highway
