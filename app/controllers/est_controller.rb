@@ -142,6 +142,7 @@ class EstController < ApiController
   end
 
   def capture_bad_request(msg:, code: 406)
+    request.body.rewind
     token = request.body.read
     @voucherreq ||= VoucherRequest.create(:voucher_request => token,
                                           :originating_ip => request.env["REMOTE_ADDR"])
