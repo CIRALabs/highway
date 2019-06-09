@@ -5,7 +5,7 @@ set :application, "highway"
 #set :repo_url, "git+ssh://code.credil.org/git/pandora/highway"
 set :repo_url, "git@github.com:AnimaGUS-minerva/highway.git"
 
-# Default branch is :master
+# ask for the branch to deploy, default to current.
 ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
@@ -30,7 +30,7 @@ set :bundle_roles, [:app]
 set :assets_roles, []
 
 # Default value for :linked_files is []
-append :linked_files, "config/database.yml", "config/secrets.yml", "config/environments/production.rb"
+append :linked_files, "config/database.yml", "config/secrets.yml", "config/environments/production.rb", "config/acme.yml"
 
 # Default value for linked_dirs is []
 append :linked_dirs, "db/cert", "db/devices", "db/inventory", "log", "tmp"
