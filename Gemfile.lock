@@ -187,6 +187,7 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
+    rails-static-router (1.0.0)
     railties (5.2.3)
       actionpack (= 5.2.3)
       activesupport (= 5.2.3)
@@ -296,6 +297,7 @@ DEPENDENCIES
   pg (~> 0.15)
   rails (~> 5.2.0)
   rails-controller-testing
+  rails-static-router
   rake (~> 12.3.2)
   rb-readline
   rspec-rails

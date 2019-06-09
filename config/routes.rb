@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  root to: static("index.html")
+
   if $ADMININTERFACE or Rails.env == 'test'
   devise_for :admins
   resources :voucher_requests
