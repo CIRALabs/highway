@@ -1,0 +1,64 @@
+FROM ruby:2.6.2 as builder
+
+RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libgmp10 sash busybox dnsutils apt-utils zip dnsutils && \
+    apt-get remove -y git &&  \
+    apt-get install -y git
+
+# build custom openssl with ruby-openssl patches
+
+# remove directory with broken opensslconf.h,
+# build in /src, as we do not need openssl once installed
+RUN rm -rf /usr/include/x86_64-linux-gnu/openssl && \
+    mkdir -p /src/highway && \
+    cd /src/highway && \
+    git clone -b dtls-listen-refactor-1.1.1c git://github.com/mcr/openssl.git && \
+    cd /src/highway/openssl && \
+    ./Configure --prefix=/usr --openssldir=/usr/lib/ssl --libdir=lib/x86_64-linux-gnu no-idea no-mdc2 no-rc5 no-zlib no-ssl3                  linux-x86_64 && \
+    id && make && \
+    cd /src/highway/openssl && make install_sw
+
+RUN mkdir -p /gems/highway && \
+    gem install rake-compiler --source=http://rubygems.org && \
+    cd /gems/highway && \
+    git clone --single-branch --branch ies-cms-dtls https://github.com/CIRALabs/ruby-openssl.git && \
+    cd /gems/highway/ruby-openssl && rake compile
+
+WORKDIR /app/highway
+RUN gem install bundler --source=http://rubygems.org
+
+# install gems with extensions explicitely so that layers are cached, many involve
+# long compilation efforts. Versions are matched against what bundle locks in.
+RUN gem install -v1.10.1 nokogiri --source=http://rubygems.org && \
+    gem install -v1.2.7 eventmachine --source=http://rubygems.org && \
+    gem install -v2.3.1 nio4r --source=http://rubygems.org && \
+    gem install -v3.1.12 bcrypt --source=http://rubygems.org && \
+    gem install -v1.10.0 ffi --source=http://rubygems.org && \
+    gem install -v0.21.0 pg --source=http://rubygems.org && \
+    gem install -v1.7.2 thin --source=http://rubygems.org && \
+    gem install -v0.1.3  websocket-extensions --source=http://rubygems.org && \
+    gem install -v0.5.9.3 cbor --source=http://rubygems.org
+
+# this layer seperately, because docker can not tell when branches change
+# would be way better to have Gemfile lock these, but persistent problems with
+# git clone inside of bundle seems to mess this up.
+RUN mkdir -p /app/highway && \
+    mkdir -p /gems/highway && cd /gems/highway && \
+    git config --global http.sslVerify "false" && \
+    git clone --single-branch --branch binary_http_multipart https://github.com/AnimaGUS-minerva/multipart_body.git && \
+    git clone --single-branch --branch ecdsa_interface_openssl https://github.com/AnimaGUS-minerva/ruby_ecdsa.git && \
+    git clone --single-branch --branch v0.7.0  https://github.com/mcr/ChariWTs.git && \
+    git clone --single-branch --branch aaaa_rr https://github.com/CIRALabs/dns-update.git
+
+RUN sha256sum /gems/highway/dns-update/lib/dns-update/validate.rb
+
+ADD ./docker/Gemfile /app/highway/Gemfile
+ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
+ADD ./docker/Rakefile /app/highway/Rakefile
+RUN bundle _2.0.1_ install --system --no-deployment --gemfile=/app/highway/Gemfile && \
+    bundle _2.0.1_ check
+
+RUN rm -f /app/highway/tmp/pids/server.pid && \
+    rm -f /app/highway/config/{config,database,secret}.yml && \
+    rm -f /app/highway/config/initializers/acme.rb && \
+    rm -f /app/highway/config/environments/production.rb
+
