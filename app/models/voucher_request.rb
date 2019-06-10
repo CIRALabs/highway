@@ -69,6 +69,7 @@ class VoucherRequest < ApplicationRecord
     self.device_identifier = hash["serial-number"]
     if self.device_identifier
       self.device            = Device.find_by_number(device_identifier)
+      logger.info "Mapped voucher request to device number: #{self.device.id}"
     end
     self.nonce             = hash["nonce"]
   end
