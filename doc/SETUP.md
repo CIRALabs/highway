@@ -32,6 +32,16 @@ $LETENCRYPT_CA_SHG_DEVICE=           false
 Determines if an internal CA is used for SHG-provisioning, or if an external
 DNS-01 challenge with LetsEncrypt will be done.
 
+The ACME server to use and the DNS update parameters should be placed in a
+file config/acme.yaml like:
+
+dns_update_options:
+  acme_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
+  master: 'ip.of.primary.dnsserver',
+  key_name: 'hmac-sha256:keyname'
+  secret:  'thesecretkey'
+  print_only: false
+
 To set the ACME server, set the variable AcmeKeys.acme.server:
 
 For staging:
@@ -43,15 +53,9 @@ For production:
     AcmeKeys.acme.server="https://acme-v02.api.letsencrypt.org/directory"
 
 This uses the dns-01 challenge method, so it needs to be able to do
-DNS-Update to a zone under your control.  This the zone setup as shg\_zone above, plus
-shg\_suffix.
+DNS-Update to a zone under your control.
 
-    AcmeKeys.acme.dns_update_options = {
-      :master     => 'ip.of.primary.dnsserver',
-      :key_name   => 'hmac-sha256:nameofkey',
-      :secret     => 'therandomkeyyougenerated',
-      :print_only => false
-    }
+This the zone setup as shg\_zone above, plus shg\_suffix.
 
 The MASA will need a TLS server certificate which can be validated via the
 WebPKI.  The one produced by rake highway:h4\_masa\_server\_cert is anchored
