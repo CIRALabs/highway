@@ -33,7 +33,7 @@ set :assets_roles, []
 append :linked_files, "config/database.yml", "config/secrets.yml", "config/environments/production.rb", "config/acme.yml"
 
 # Default value for linked_dirs is []
-append :linked_dirs, "db/cert", "db/devices", "db/inventory", "log", "tmp"
+append :linked_dirs, "db/cert", "db/devices", "db/inventory", "log", "tmp", "turris_root"
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
