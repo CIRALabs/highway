@@ -265,11 +265,13 @@ class Device < ActiveRecord::Base
   # this creates a tgz file for installation in a SecureHomeGateway.ca
   # the file name is returned.
   def generate_tgz_for_shg
-    FileUtils.mkdir_p(tgz_name)
+    unless File.exist?(tgz_name)
+      FileUtils.mkdir_p(tgz_name)
+    end
 
     if $TURRIS_ROOT_LOCATION
       # Copy the root filesystem for Turris in the tgz location
-      FileUtils.copy_entry $TURRIS_ROOT_LOCATION, tgz_name
+      FileUtils.copy_entry($TURRIS_ROOT_LOCATION, tgz_name, true, true, true)
     end
 
     # write out the certificate
@@ -292,7 +294,8 @@ class Device < ActiveRecord::Base
     # invoke tar to collect it all, but avoid invoking a shell.
     #puts ["tar", "-C", tgz_name.to_s, "-c", "-z", "-f", tgz_filename, "."].join(' ')
     system("tar", "-C", tgz_name.to_s, "-c", "-z", "-f", tgz_filename, ".")
-    FileUtils.remove_entry_secure(tgz_name)
+    FileUtils.remove_entry_secure(tgz_name, true)
+    FileUtils.rmdir(tgz_name) if File.exist?(tgz_name)
     tgz_filename
   end
 
