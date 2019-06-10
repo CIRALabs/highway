@@ -26,7 +26,10 @@ Mime::Type.register "application/voucher-cose+cbor", :vcc
 Mime::Type.register "application/pkcs7-mime", :cms
 Mime::Type.register "application/cms",        :cms
 
-acme_settings_file = Rails.root.join("config", "acme.yaml")
+acme_settings_file = Rails.root.join("config", "acme.yml")
+unless File.exist?(acme_settings_file)
+  acme_settings_file = Rails.root.join("config", "acme.yaml")
+end
 if File.exist?(acme_settings_file)
   options = HashWithIndifferentAccess.new(YAML.load(IO::read(acme_settings_file)))
   AcmeKeys.acme.dns_update_options = options["dns_update_options"]
