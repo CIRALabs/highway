@@ -239,6 +239,21 @@ shgmudhighway31:
     tofu_register: true
   second_eui64: 6c-88-14-34-93-bc
 
+# this fixture is used for smarkaklink testing, and represents an owned key pair
+# items are in fountain/spec/files/product/Smarkaklink-n3ce6b3
+shgmudhighway31:
+  id: 31
+  eui64: 3c-97-0e-9b-dc-98
+  pub_key: Need to generate
+  serial_number: 3c-97-0e-9b-dc-98
+  obsolete: false
+  idevid_cert: need to generate
+  ula: 'fd3c:e6b3:51e2::'
+  extra_attrs:
+    register_ip: "::3"
+    tofu_register: true
+  second_eui64: 6c-88-14-34-39-cb
+
 f02002d:
   id: 45
   eui64: 00-d0-e5-02-00-2d
