@@ -41,7 +41,7 @@ class Device < ActiveRecord::Base
   end
 
   def self.find_by_number(number)
-    active.where(fqdn: number).take || active.where(serial_number: number).take || active.where(eui64: canonicalize_eui64(number)).take
+    active.where(fqdn: number.downcase).take || active.where(serial_number: number).take || active.where(eui64: canonicalize_eui64(number)).take
   end
   def self.create_by_number(number)
     find_by_number(number) || create(eui64: canonicalize_eui64(number))
@@ -395,7 +395,7 @@ class Device < ActiveRecord::Base
   end
 
   def fqdn
-    self[:fqdn] ||= shg_basename
+    self[:fqdn] ||= shg_basename.downcase
   end
 
   def essid
@@ -403,7 +403,7 @@ class Device < ActiveRecord::Base
   end
 
   def extrapolate_from_ula
-    self.fqdn  ||= fqdn
+    self.fqdn  ||= fqdn.downcase
     self.essid ||= essid
     save!
   end
