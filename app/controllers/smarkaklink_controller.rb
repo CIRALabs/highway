@@ -8,12 +8,7 @@ class SmarkaklinkController < ApiController
   def enroll
     clientcert  = nil
     @replytype  = request.content_type
-
-    begin
-      @clientcert = OpenSSL::X509::Certificate.new(capture_client_certificate)
-      log_client_certificate(@clientcert)
-    rescue OpenSSL::X509
-    end
+    @clientcert = capture_client_certificate
 
     # params in application/json will get parsed automatically, no need
     # to do anything.
@@ -29,8 +24,7 @@ class SmarkaklinkController < ApiController
       send_data @cert.to_der, :type => 'application/pkcs7'
 
     else
-      capture_bad_request
-      logger.error "enrollment failed for #{request.ip}, no certificate provided"
+      capture_bad_request(msg: "enrollment failed for #{request.ip}, no certificate provided")
       head 406, text: "missing certificate"
     end
   end
@@ -65,11 +59,13 @@ class SmarkaklinkController < ApiController
     @device.update_from_smarkaklink_provision(params)
     @csr64 = params['csr']
 
-  # now create a private certificate from this CSR.
+    # now create a private certificate from this CSR.
     begin
       @device.sign_from_base64_csr(@csr64)
     rescue Device::CSRFailed
-      capture_bad_request "CSR failed to be signed by CA in id\##{@device.id}"
+      capture_bad_request(msg: "CSR failed to be signed by CA in id\##{@device.id}",
+                          params: params)
+
       @device.save!
       return
     end
@@ -89,15 +85,14 @@ class SmarkaklinkController < ApiController
   private
 
   def capture_client_certificate
-    @clientcert_pem = request.env["SSL_CLIENT_CERT"]
-    @clientcert_pem ||= request.env["rack.peer_cert"]
-    @clientcert_pem
+    clientcert_pem = request.env["SSL_CLIENT_CERT"]
+    clientcert_pem ||= request.env["rack.peer_cert"]
+    clientcert_pem
   end
 
   # not sure how/where to capture bad requests
-  def capture_bad_request
-    junk = Base64.decode64(request.body.read)
-    logger.info "Bad owner enrollment: #{junk}"
+  def capture_bad_request(msg: "", params: params)
+    logger.info "Bad owner enrollment #{msg}: #{params}"
     head 406
   end
 

@@ -130,10 +130,6 @@ class Device < ActiveRecord::Base
   end
 
   def sign_from_base64_csr(csr64)
-    # chop off any base64 literal prefix.
-    if csr64[0..6]=='base64:'
-      csr64 = csr64[7..-1]
-    end
     csrio = Base64.decode64(csr64)
     csr = OpenSSL::X509::Request.new(csrio)
     sign_from_csr(csr)
