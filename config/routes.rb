@@ -2,6 +2,8 @@ Rails.application.routes.draw do
 
   root to: static("index.html")
   get '/favicon.ico', to: static("favicon.ico")
+  get '/robots.txt',  to: static("robots.txt")
+  get '/.well-known/security.txt',  to: static("security.txt")
 
   if $ADMININTERFACE or Rails.env == 'test'
   devise_for :admins
