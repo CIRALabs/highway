@@ -102,7 +102,7 @@ class VoucherRequest < ApplicationRecord
       return nil,:notmydevice
     end
 
-    # must have an owner!
+    # must have an known owner!
     return nil,:ownerunknown unless owner
 
     # validate that the signature on the prior-signed-voucher-request
