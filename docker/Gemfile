@@ -37,6 +37,9 @@ gem 'acme-client'
 #gem 'dns-update', :path => '/gems/highway/dns-update'
 gem 'dns-update', :git => 'https://github.com/CIRALabs/dns-update.git', :branch => 'aaaa_rr'
 
+# for static files
+gem 'rails-static-router'
+
 # used to generate multipart bodies
 gem 'multipart_body', :path => '/gems/highway/multipart_body'
 gem 'ecdsa',   :path => '/gems/highway/ruby_ecdsa'

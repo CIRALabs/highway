@@ -80,6 +80,8 @@ COPY --from=builder /lib/x86_64-linux-gnu/libbz2.so.1.0 \
                     /lib/x86_64-linux-gnu/libkeyutils.so.1 \
                     /lib/x86_64-linux-gnu/
 COPY --from=builder /usr/lib/x86_64-linux-gnu/liblwres.so.141 \
+                    /usr/lib/x86_64-linux-gnu/libssl.so.1.1 \
+                    /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1 \
                     /usr/lib/x86_64-linux-gnu/libdns.so.162 \
                     /usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2 \
                     /usr/lib/x86_64-linux-gnu/libkrb5.so.3 \
