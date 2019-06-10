@@ -73,9 +73,11 @@ gem 'jwt'
 
 gem 'thin'
 
+# just in case we need it.
+# Call 'byebug' anywhere in the code to stop execution and get a debugger console
+gem 'byebug'
+
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'
   gem "rspec-rails"
   gem "shoulda"
   gem 'shoulda-matchers'
