@@ -17,7 +17,7 @@ $TOFU_DEVICE_REGISTER = true
 $TGZ_FILE_LOCATION = Rails.root.join("tmp")
 $TURRIS_ROOT_LOCATION = Rails.root.join("turris_root")
 
-$VERSION = "0.9.13"
+$VERSION = "0.9.14"
 
 # gets overridden by config/initializers/revision.rb by capistrano
 $REVISION ||= "devel"
