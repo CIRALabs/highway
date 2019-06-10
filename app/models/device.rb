@@ -41,7 +41,7 @@ class Device < ActiveRecord::Base
   end
 
   def self.find_by_number(number)
-    active.where(serial_number: number).take || active.where(eui64: canonicalize_eui64(number)).take
+    active.where(fqdn: number).take || active.where(serial_number: number).take || active.where(eui64: canonicalize_eui64(number)).take
   end
   def self.create_by_number(number)
     find_by_number(number) || create(eui64: canonicalize_eui64(number))
@@ -241,7 +241,6 @@ class Device < ActiveRecord::Base
     # make sure that fqdn has been setup.
     # the CSR value is actually pretty much ignored... how can we trust any of it?
     # 12 - is the code for UTF8 string, I think.
-    extrapolate_from_ula
     subject_list = [["CN", fqdn, 12],
                     ["serialNumber", serial_number,12],
                     ["CN", "mud." + fqdn, 12]]
@@ -382,6 +381,7 @@ class Device < ActiveRecord::Base
     self.eui64        = canonicalize_eui64(params['switch-mac'])
     self.second_eui64 = canonicalize_eui64(params['wan-mac'])
     self.ula          = params['ula']
+    extrapolate_from_ula
   end
 
   # return a textual form of the ULA address
@@ -403,8 +403,8 @@ class Device < ActiveRecord::Base
   end
 
   def extrapolate_from_ula
-    self.fqdn = fqdn
-    self.essid= essid
+    self.fqdn  ||= fqdn
+    self.essid ||= essid
     save!
   end
 
