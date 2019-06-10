@@ -15,9 +15,7 @@ RUN rm -rf /usr/include/x86_64-linux-gnu/openssl && \
     cd /src/highway/openssl && \
     ./Configure --prefix=/usr --openssldir=/usr/lib/ssl --libdir=lib/x86_64-linux-gnu no-idea no-mdc2 no-rc5 no-zlib no-ssl3                  linux-x86_64 && \
     id && make && \
-    cd /src/highway/openssl && make install_sw && \
-    gem install rake-compiler --source=http://rubygems.org && \
-    cd /gems/highway/ruby-openssl && rake compile
+    cd /src/highway/openssl && make install_sw
 
 RUN mkdir -p /gems/highway && \
     gem install rake-compiler --source=http://rubygems.org && \
