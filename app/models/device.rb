@@ -283,7 +283,10 @@ class Device < ActiveRecord::Base
     end
     # put the key that will be validating the vouchers in
     FileUtils.copy_entry MasaKeys.masa.masa_pubkey, certdir.join("masa.crt")
-    FileUtils.copy_entry MasaKeys.masa.masa_pubkey, tgz_name.join("srv", "lxc", "mud-supervisor", "rootfs", "app", "certificates", "masa.crt")
+
+    masa_certdir=tgz_name.join("srv", "lxc", "mud-supervisor", "rootfs", "app", "certificates")
+    FileUtils.mkdir_p(masa_certdir)
+    FileUtils.copy_entry MasaKeys.masa.masa_pubkey, masa_certdir.join("masa.crt")
 
     File.open(certdir.join("idevid_cert.pem"), "w") { |f|
       f.write certificate.to_pem
