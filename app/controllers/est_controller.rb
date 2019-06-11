@@ -11,9 +11,16 @@ class EstController < ApiController
     @replytype  = request.content_type
 
     begin
-      @clientcert = OpenSSL::X509::Certificate.new(capture_client_certificate)
-      log_client_certificate(@clientcert)
+      cert_pem = capture_client_certificate
+      if cert_pem
+        @clientcert = OpenSSL::X509::Certificate.new(cert_pem)
+        log_client_certificate(@clientcert)
+      end
+
+    # catch case where certificate is crap.
     rescue OpenSSL::X509
+      capture_bad_request(code: 406,
+                          msg: "client certificate was not well formatted")
     end
 
     media_types = HTTP::Accept::MediaTypes.parse(request.env['CONTENT_TYPE'])
