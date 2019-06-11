@@ -310,7 +310,7 @@ RSpec.describe Device, type: :model do
 
       zeb.reload
       expect(zeb.essid).to eq("SHG3CE618")
-      expect(zeb.fqdn).to  eq("n3CE618.r.securehomegateway.ca")
+      expect(zeb.fqdn).to  eq("n3ce618.r.securehomegateway.ca")
     end
 
     it "should generate a tagged set of values" do
@@ -318,7 +318,7 @@ RSpec.describe Device, type: :model do
 
       dpphash = zeb.dpphash
 
-      expect(zeb.fqdn).to eq("n3CE618.r.securehomegateway.ca")
+      expect(zeb.fqdn).to eq("n3ce618.r.securehomegateway.ca")
 
       # URL to this MASA
       expect(dpphash["S"]).to eq("highway-test.example.com:9443")
