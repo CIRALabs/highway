@@ -109,16 +109,18 @@ RSpec.describe 'SmarKaKlink MASA API', type: :request do
       token = { "version" => 1,
                 "status"  => true,
                 "reason"  => "ok",
-                "voucher" => Base64.strict_encode64(vouchers(:voucher43).as_issued)
+                "voucher" => Base64.urlsafe_encode64(vouchers(:voucher43).as_issued)
               }
 
-      post "/.well-known/est/enrollstatus", params: token, headers: {
+      post "/.well-known/est/enrollstatus", params: token.to_json, headers: {
              'CONTENT_TYPE' => 'application/json',
            }
       expect(response).to have_http_status(200)
       device = assigns(:device)
       expect(device).to_not be_nil
-      expect(device.second_eui64).to eq('3c-97-0e-b9-cd-98')
+      expect(device.eui64).to eq('00-d0-e5-f2-00-02')
+      expect(device.extra_attrs['last_status']).to eq(true)
+      expect(device.extra_attrs['last_reason']).to eq("ok")
     end
   end
 

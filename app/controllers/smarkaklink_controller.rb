@@ -82,6 +82,30 @@ class SmarkaklinkController < ApiController
     end
   end
 
+  def enrollstatus
+    unless params['voucher']
+      logger.info "Invalid enrollment status"
+      head 406
+      return
+    end
+
+    binary_pkcs = Base64.urlsafe_decode64(params['voucher'])
+
+    @voucher = Voucher.find_by_issued_voucher(binary_pkcs)
+
+    unless @voucher
+      head 404, text: "unknown transaction ignored"
+      return
+    end
+
+    @device = @voucher.device
+    @device.extra_attrs['last_status'] = params['status']
+    @device.extra_attrs['last_reason'] = params['reason']
+    @device.save!
+    head 200
+  end
+
+
   private
 
   def capture_client_certificate

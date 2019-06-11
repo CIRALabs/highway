@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   post '/.well-known/est/smarkaklink',  to: 'smarkaklink#enroll'
   post '/smarkaklink/enroll',           to: 'smarkaklink#enroll'
   post '/shg-provision',                to: 'smarkaklink#provision'
+  post '/.well-known/est/enrollstatus', to: 'smarkaklink#enrollstatus'
 
   resources :status,  :only => [:index ]
   resources :version, :only => [:index ]
