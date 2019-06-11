@@ -76,6 +76,12 @@ class Voucher < ActiveRecord::Base
     owner.savefixturefw(fw)  if owner
   end
 
+  # recode it in correct base64, and look up a voucher entry with that.
+  def self.find_by_issued_voucher(binary_voucher)
+    urlsafe64 = Base64.urlsafe_encode64(binary_voucher)
+    Voucher.where(as_issued: urlsafe64).take
+  end
+
   # CMS and CBOR vouchers are always stored Base64 urlsafe encoded in the database
   # avoiding a binary database
   def as_issued=(x)

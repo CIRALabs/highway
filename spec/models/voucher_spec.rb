@@ -34,6 +34,12 @@ RSpec.describe Voucher, type: :model do
     end
   end
 
+  describe "lookup of voucher by binary" do
+    it "should find a voucher by base64" do
+      expect(Voucher.find_by_issued_voucher(vouchers(:voucher43).as_issued)).to eq(vouchers(:voucher43))
+    end
+  end
+
   describe "json creation" do
     it "should create signed json representation" do
       v1 = vouchers(:almec_v1)
