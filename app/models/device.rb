@@ -384,6 +384,9 @@ class Device < ActiveRecord::Base
     self.eui64        = canonicalize_eui64(params['switch-mac'])
     self.second_eui64 = canonicalize_eui64(params['wan-mac'])
     self.ula          = params['ula']
+
+    # set to null, and reset.
+    self.essid = self.fqdn = nil
     extrapolate_from_ula
   end
 
