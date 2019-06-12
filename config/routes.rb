@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   root to: static("index.html")
   get '/favicon.ico', to: static("favicon.ico")
   get '/robots.txt',  to: static("robots.txt")
+  get '/sitemap.xml',  to: static("empty.xml")
   get '/.well-known/security.txt',  to: static("security.txt")
 
   if $ADMININTERFACE or Rails.env == 'test'
