@@ -9,7 +9,7 @@ RSpec.describe AcmeKeys do
   end
 
   it "should reuse an ACME key already generated" do
-    unless ENV["ACME_TESTING"]
+    if ENV["ACME_TESTING"]
       tmp_device_dir(true) {
         # something wrong with authenticating the SSL key for staging server.
         # OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
@@ -32,7 +32,7 @@ RSpec.describe AcmeKeys do
   end
 
   it "should enroll a SHG from a CSR provided" do
-    unless ENV["ACME_TESTING"]
+    if ENV["ACME_TESTING"]
       # something wrong with authenticating the SSL key for staging server.
       #OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
