@@ -6,7 +6,7 @@ namespace :shg do
   task :dpp_pledge => :environment do
     productid = ENV['PRODUCTID']
 
-    device = Device.find_by_number(productid)
+    device = Device.find_by_number(productid.downcase)
     if device
       STDERR.puts "Found product #{device.id}"
       puts device.dppstring

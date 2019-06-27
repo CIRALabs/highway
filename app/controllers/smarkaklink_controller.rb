@@ -84,7 +84,7 @@ class SmarkaklinkController < ApiController
 
   def enrollstatus
     unless params['voucher']
-      logger.info "Invalid enrollment status"
+      logger.info "A voucher is required to match device"
       head 406
       return
     end
