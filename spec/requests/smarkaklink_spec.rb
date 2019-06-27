@@ -122,6 +122,15 @@ RSpec.describe 'SmarKaKlink MASA API', type: :request do
       expect(device.extra_attrs['last_status']).to eq(true)
       expect(device.extra_attrs['last_reason']).to eq("ok")
     end
+
+    it "should reject enrollment status if no voucher included" do
+      token = {"version"=>1, "status"=>true, "reason"=>"ok"}
+
+      post "/.well-known/est/enrollstatus", params: token.to_json, headers: {
+             'CONTENT_TYPE' => 'application/json',
+           }
+      expect(response).to have_http_status(406)
+    end
   end
 
 end
