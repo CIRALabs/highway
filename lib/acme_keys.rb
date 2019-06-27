@@ -109,12 +109,16 @@ class AcmeKeys < HighwayKeys
     logger.info "Getting certificates from ACME server #{server}"
     logger.info "Updating #{qnames.join(' ')}"
 
-    begin
-      order = acme_client.new_order(identifiers: qnames)
-    rescue Acme::Client::Error::BadNonce
-      logger.info "Failed communicate with ACME server, please try again"
-      return nil
-    end
+    order = nil
+
+    (1..5).each { |num|
+      begin
+        order = acme_client.new_order(identifiers: qnames)
+        break
+      rescue Acme::Client::Error::BadNonce
+        logger.info "Failed to communicate with ACME server, trying #{num}"
+      end
+    }
 
     order.authorizations.each { |authorization|
       qname = authorization.domain
