@@ -353,6 +353,12 @@ RSpec.describe Device, type: :model do
       expect(zeb.insert_ula_quad_ah).to_not be_nil
     end
 
+    it "should enroll a device from a base64 CSR" do
+      SystemVariable.setvalue(:shg_zone, "dasblinkenled.org")
+      b64="MIICLzCCAdYCAQAwJjEkMCIGA1UEAwwbbjQ5NDMzOS5yLmRhc2JsaW5rZW5sZWQub3JnMIIBSzCCAQMGByqGSM49AgEwgfcCAQEwLAYHKoZIzj0BAQIhAP////8AAAABAAAAAAAAAAAAAAAA////////////////MFsEIP////8AAAABAAAAAAAAAAAAAAAA///////////////8BCBaxjXYqjqT57PrvVV2mIa8ZR0GsMxTsPY7zjw+J9JgSwMVAMSdNgiG5wSTamZ44ROdJreBn36QBEEEaxfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpZP40Li/hp/m47n60p8D54WK84zV2sxXs7LtkBoN79R9QIhAP////8AAAAA//////////+85vqtpxeehPO5ysL8YyVRAgEBA0IABJSG0GnnubH/K65/07zNDCmau+ijV44TMktmJRPRzTTJUC7b6Jl/lVhzpnk/yG70Sqm9q2bT+TMAxzz/nQdkCRugWjBYBgkqhkiG9w0BCQ4xSzBJMEcGA1UdEQRAMD6CG240OTQzMzkuci5kYXNibGlua2VubGVkLm9yZ4IfbXVkLm40OTQzMzkuci5kYXNibGlua2VubGVkLm9yZzAKBggqhkjOPQQDAgNHADBEAiA8RNx349S003zUYo0IgfWLr0ZioTD8Z46X3VMepf6TDgIgXEOSyNHcNcGtMmCZz6N0rGKk70e6j2NarQ7TgvrwHzU="
+      zeb=devices(:zeb)
+      zeb.sign_from_base64_csr(b64)
+    end
   end
 
 end
