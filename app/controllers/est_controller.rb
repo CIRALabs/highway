@@ -7,7 +7,7 @@ class EstController < ApiController
 
   def requestvoucher
 
-    clientcert = nil
+    @clientcert = nil
     @replytype  = request.content_type
 
     begin
@@ -57,7 +57,12 @@ class EstController < ApiController
         rescue VoucherRequest::InvalidVoucherRequest
           DeviceNotifierMailer.invalid_voucher_request(request).deliver
           capture_bad_request(code: 406,
-                              msg: "voucher request was not signed with known public key")
+                              msg: "voucher request was not signed with a known public key")
+          return
+        rescue VoucherRequest::MissingPublicKey
+          DeviceNotifierMailer.invalid_voucher_request(request).deliver
+          capture_bad_request(code: 406,
+                              msg: "voucher request prior-signed-voucher-request was not signed with a known public key")
           return
         end
       else
