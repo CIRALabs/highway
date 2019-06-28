@@ -208,17 +208,27 @@ class Device < ActiveRecord::Base
     return true
   end
 
+  def router_name_ip
+    hostname   = shg_basename
+    addr       = ulanet.host_address(1).to_s
+    return hostname, addr
+  end
+
+  def mud_router_name_ip
+    hostname = "mud." + shg_basename
+    addr     = ulanet.host_address(2).to_s
+    return hostname, addr
+  end
+
   def insert_ula_quad_ah
     hostname = nil
     addr     = nil
     return nil unless AcmeKeys.acme.acme_dns_updater
 
-    hostname   = shg_basename
-    addr       = ulanet.host_address(1).to_s
+    (hostname,addr) = router_name_ip
     return false unless insert_quad_ah(hostname, addr)
 
-    hostname = "mud." + shg_basename
-    addr     = ulanet.host_address(2).to_s
+    (hostname,addr) = mud_router_name_ip
     return false unless insert_quad_ah(hostname, addr)
 
     # also add the ULA + ::2c66:d8ff:fe00:9329 which is the SLAAC address for now.
