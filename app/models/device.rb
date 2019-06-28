@@ -305,6 +305,18 @@ class Device < ActiveRecord::Base
       f.write othercerts
     }
 
+    # extend /etc/hosts with addresses so that dnsmasq will answer them if no Internet.
+    etcdir = tgz_name.join("etc", "shg", "extra", "etc")
+    FileUtils.mkdir_p(etcdir)
+    etchosts=etcdir.join("hosts")
+    File.open(etchosts, "w") { |f|
+      (host, addr) = router_name_ip
+      f.puts sprintf("%s %s", host, addr)
+
+      (host, addr) = mud_router_name_ip
+      f.puts sprintf("%s %s", host, addr)
+    }
+
     # invoke tar to collect it all, but avoid invoking a shell.
     #puts ["tar", "-C", tgz_name.to_s, "-c", "-z", "-f", tgz_filename, "."].join(' ')
     system("tar", "-C", tgz_name.to_s, "-c", "-z", "-f", tgz_filename, ".")
