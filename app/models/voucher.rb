@@ -19,7 +19,11 @@ class Voucher < ActiveRecord::Base
   end
 
   def notify_voucher!
-    DeviceNotifierMailer.voucher_issued_email(self).deliver
+    begin
+      DeviceNotifierMailer.voucher_issued_email(self).deliver
+    rescue Exception => e
+      DeviceNotifierMailer.failed_to_notify-email(e).deliver
+    end
   end
 
   def signing_cert
