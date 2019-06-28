@@ -30,14 +30,16 @@ class CoseVoucherRequest < VoucherRequest
     if vr
       extract_prior_signed_voucher_request(vr)
     end
-    populate_explicit_fields(prior_voucher_request.attributes)
+    if prior_voucher_request
+      populate_explicit_fields(prior_voucher_request.attributes)
+    end
     lookup_owner
     validate_prior!
     voucher
   end
 
   def pledge_cbor
-    @pledge_cbor ||= prior_voucher_request.attributes
+    @pledge_cbor ||= prior_voucher_request.try(:attributes) || Hash.new
   end
 
   def lookup_owner
