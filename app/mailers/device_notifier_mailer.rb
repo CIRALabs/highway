@@ -22,4 +22,14 @@ class DeviceNotifierMailer < ApplicationMailer
     mail(to: ENV['USER'], subject: "Invalid voucher request")
   end
 
+  def failed_to_notify_email(trace)
+    if Rails.env.test?
+      STDERR.puts "Failed to send notify"
+      STDERR.puts trace.try(:to_s)
+    else
+      @trace = trace.try(:to_s)
+      mail(to: 'webmaster', subject: "Failed to send notify email")
+    end
+  end
+
 end
