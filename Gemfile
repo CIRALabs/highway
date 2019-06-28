@@ -68,7 +68,7 @@ gem 'ecdsa',   :git => 'https://github.com/AnimaGUS-minerva/ruby_ecdsa.git', :br
 #gem 'ecdsa',   :path => '../minerva/ruby_ecdsa'
 
 #gem 'chariwt', :path => '../chariwt'
-gem 'chariwt', :git => 'https://github.com/mcr/ChariWTs.git', :branch => 'v0.7.0'
+gem 'chariwt', :git => 'https://github.com/mcr/ChariWTs.git', :branch => 'v0.8.0'
 gem 'jwt'
 
 gem 'thin'
