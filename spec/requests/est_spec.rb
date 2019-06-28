@@ -1,5 +1,6 @@
 # spec/requests/todos_spec.rb
 require 'rails_helper'
+require 'support/pem_data'
 
 RSpec.describe 'BRSKI-MASA EST API', type: :request do
 
@@ -83,14 +84,29 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
     it "POST a constrained voucher request, without a client certificate" do
       token = IO::read("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
 
+      env = Hash.new
+      env["ACCEPT"]          = "application/voucher-cose+cbor"
+      env["CONTENT_TYPE"]    = "application/voucher-cose+cbor"
+
+      expect {
+        post "/.well-known/est/requestvoucher", params: token, headers: env
+      }.to change { ActionMailer::Base.deliveries.count }.by(1)
+
+      expect(response).to have_http_status(200)
+    end
+
+    it "POST a constrained voucher request for device F2-00-02" do
+      token = IO::read("spec/files/parboiled_vr_00-D0-E5-F2-00-02.vrq")
+
       expect {
         post "/.well-known/est/requestvoucher", params: token, headers: {
                'CONTENT_TYPE' => 'application/voucher-cose+cbor',
-               'ACCEPT'       => 'application/voucher-cose+cbor'
+               'ACCEPT'       => 'application/voucher-cose+cbor',
+               "SSL_CLIENT_CERT" => fountaintest_servercert
              }
       }.to change { ActionMailer::Base.deliveries.count }.by(1)
 
-      expect(response).to have_http_status(406)
+      expect(response).to have_http_status(200)
     end
 
     it "POST a constrained voucher request and get a constrained voucher" do
@@ -104,7 +120,7 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
                'ACCEPT'       => 'application/voucher-cose+cbor',
                'SSL_CLIENT_CERT'=> pubkey_pem
              }
-        expect(assigns(:reason)).to be :ok
+        expect(assigns(:reason)).to eq(:ok)
         expect(response).to have_http_status(200)
       }.to change { ActionMailer::Base.deliveries.count }.by(1)
 
@@ -123,7 +139,7 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
                'ACCEPT'       => 'application/voucher-cose+cbor',
                'SSL_CLIENT_CERT'=> pubkey_pem
              }
-        expect(assigns(:reason)).to be :ok
+        expect(assigns(:reason)).to eq(:ok)
         expect(response).to have_http_status(200)
       }.to change { ActionMailer::Base.deliveries.count }.by(1)
 
@@ -142,7 +158,7 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
                'ACCEPT'       => 'multipart/mixed',
                'SSL_CLIENT_CERT'=> pubkey_pem
              }
-        expect(assigns(:reason)).to be :ok
+        expect(assigns(:reason)).to eq(:ok)
         expect(response).to have_http_status(200)
         expect(response.headers['Content-Type']).to include("boundary")
       }.to change { ActionMailer::Base.deliveries.count }.by(1)
