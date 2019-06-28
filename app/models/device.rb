@@ -311,10 +311,10 @@ class Device < ActiveRecord::Base
     etchosts=etcdir.join("hosts")
     File.open(etchosts, "w") { |f|
       (host, addr) = router_name_ip
-      f.puts sprintf("%s %s", host, addr)
+      f.puts sprintf("%s %s router", addr, host)
 
       (host, addr) = mud_router_name_ip
-      f.puts sprintf("%s %s", host, addr)
+      f.puts sprintf("%s %s mud", addr, host)
     }
 
     # invoke tar to collect it all, but avoid invoking a shell.
