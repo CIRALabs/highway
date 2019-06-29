@@ -220,6 +220,16 @@ class Device < ActiveRecord::Base
     return hostname, addr
   end
 
+  def mudmac_router_name_ip
+    hostname = "mud." + shg_basename
+
+    # also add the ULA + ::2c66:d8ff:fe00:9329 which is the SLAAC address for now.
+    # because the ::2 address is not reliably added.
+    slaac = ACPAddress.new("::2c66:d8ff:fe00:9329")
+    addr  = ulanet.host_address(slaac.to_u128).to_s
+    return hostname, addr
+  end
+
   def insert_ula_quad_ah
     hostname = nil
     addr     = nil
@@ -231,9 +241,7 @@ class Device < ActiveRecord::Base
     (hostname,addr) = mud_router_name_ip
     return false unless insert_quad_ah(hostname, addr)
 
-    # also add the ULA + ::2c66:d8ff:fe00:9329 which is the SLAAC address for now.
-    slaac = ACPAddress.new("::2c66:d8ff:fe00:9329")
-    addr  = ulanet.host_address(slaac.to_u128).to_s
+    (hostname,addr) = mudmac_router_name_ip
     return false unless insert_quad_ah(hostname, addr, false)
     return true
   end
@@ -314,6 +322,9 @@ class Device < ActiveRecord::Base
       f.puts sprintf("%s %s router", addr, host)
 
       (host, addr) = mud_router_name_ip
+      f.puts sprintf("%s %s mud", addr, host)
+
+      (host, addr) = mudmac_router_name_ip
       f.puts sprintf("%s %s mud", addr, host)
     }
 
