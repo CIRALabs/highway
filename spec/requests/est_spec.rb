@@ -92,7 +92,7 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
         post "/.well-known/est/requestvoucher", params: token, headers: env
       }.to change { ActionMailer::Base.deliveries.count }.by(1)
 
-      expect(response).to have_http_status(200)
+      expect(response).to have_http_status(406)
     end
 
     it "POST a constrained voucher request for device F2-00-02" do
@@ -109,8 +109,8 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
       expect(response).to have_http_status(200)
     end
 
-    it "POST a constrained voucher request and get a constrained voucher" do
-      token = IO::read("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
+    it "POST a constrained voucher request signed by the wrong key, and get a 406" do
+      token = IO::read("spec/files/parboiled_vr_00-D0-E5-F2-00-03.vrq")
       regfile= File.join("spec","files","jrc_prime256v1.crt")
       pubkey_pem = IO::read(regfile)
 
@@ -120,31 +120,8 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
                'ACCEPT'       => 'application/voucher-cose+cbor',
                'SSL_CLIENT_CERT'=> pubkey_pem
              }
-        expect(assigns(:reason)).to eq(:ok)
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(406)
       }.to change { ActionMailer::Base.deliveries.count }.by(1)
-
-      outfilename = File.join("tmp", "voucher_00-D0-E5-F2-10-03.vch")
-      File.open(outfilename, "wb") do |f| f.write response.body end
-    end
-
-    it "POST a constrained voucher request and get a constrained voucher" do
-      token = IO::read("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
-      regfile= File.join("spec","files","jrc_prime256v1.crt")
-      pubkey_pem = IO::read(regfile)
-
-      expect {
-        post "/.well-known/est/requestvoucher", params: token, headers: {
-               'CONTENT_TYPE' => 'application/voucher-cose+cbor',
-               'ACCEPT'       => 'application/voucher-cose+cbor',
-               'SSL_CLIENT_CERT'=> pubkey_pem
-             }
-        expect(assigns(:reason)).to eq(:ok)
-        expect(response).to have_http_status(200)
-      }.to change { ActionMailer::Base.deliveries.count }.by(1)
-
-      outfilename = File.join("tmp", "voucher_00-D0-E5-F2-10-03.vch")
-      File.open(outfilename, "wb") do |f| f.write response.body end
     end
 
     it "POST another constrained voucher request and get a multipart constrained voucher" do
