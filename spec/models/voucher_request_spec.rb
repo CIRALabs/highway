@@ -106,8 +106,8 @@ RSpec.describe VoucherRequest, type: :model do
     end
 
     it "should load a constrained voucher request into database" do
-      token  = open("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
-      regfile= File.join("spec","files","cert", "jrcA_prime256v1.crt")
+      token  = open("spec/files/parboiled_vr_00-D0-E5-F2-00-02.vrq")
+      regfile= File.join("spec","files", "jrc_prime256v1.crt")
       pubkey = OpenSSL::X509::Certificate.new(IO::read(regfile))
 
       vch = CoseVoucherRequest.from_cbor_cose_io(token, pubkey)
