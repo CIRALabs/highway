@@ -26,7 +26,7 @@ class EstController < ApiController
     media_types = HTTP::Accept::MediaTypes.parse(request.env['CONTENT_TYPE'])
 
     if media_types == nil or media_types.length < 1
-      capture_bad_request(msg: "unknown voucher-request content-type: #{request.content_type}")
+      capture_bad_request(msg: "unknown voucher-request content-type: #{request.env['CONTENT_TYPE']}")
       return
     end
     media_type = media_types.first
