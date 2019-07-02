@@ -8,7 +8,7 @@ class EstController < ApiController
   def requestvoucher
 
     @clientcert = nil
-    @replytype  = request.content_type
+    @replytype  = request.content_type || "application/voucher-cms+json"
 
     begin
       cert_pem = capture_client_certificate
@@ -23,10 +23,11 @@ class EstController < ApiController
                           msg: "client certificate was not well formatted")
     end
 
-    media_types = HTTP::Accept::MediaTypes.parse(request.env['CONTENT_TYPE'])
+    logger.info "Processing Voucher-Request of type: '#{@replytype}'"
+    media_types = HTTP::Accept::MediaTypes.parse(@replytype)
 
     if media_types == nil or media_types.length < 1
-      capture_bad_request(msg: "unknown voucher-request content-type: #{request.env['CONTENT_TYPE']}")
+      capture_bad_request(msg: "unknown voucher-request content-type: #{@replytype}")
       return
     end
     media_type = media_types.first
