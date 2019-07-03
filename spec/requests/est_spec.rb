@@ -67,7 +67,7 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
     end
 
     it "POST a voucher request, with an invalid content_type" do
-      token = IO::read("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
+      token = IO::read("spec/files/parboiled_vr_00-D0-E5-F2-00-03.vrq")
 
       expect {
         post "/.well-known/est/requestvoucher", params: token, headers: {
@@ -82,7 +82,7 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
 
   describe "CBOR voucher request" do
     it "POST a constrained voucher request, without a client certificate" do
-      token = IO::read("spec/files/parboiled_vr_00-D0-E5-F2-10-03.vch")
+      token = IO::read("spec/files/parboiled_vr_00-D0-E5-F2-00-03.vrq")
 
       env = Hash.new
       env["ACCEPT"]          = "application/voucher-cose+cbor"

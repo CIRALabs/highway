@@ -269,8 +269,7 @@ RSpec.describe Device, type: :model do
 
   describe "signed voucher requests" do
     it "should load a constrained prior-signed (pledge) voucher request, and validate it" do
-      # this file created with reach.
-      token  = open("spec/files/vr_00-D0-E5-F2-10-03.vch")
+      token  = open("spec/files/vr_00-D0-E5-F2-00-02.vrq")
 
       pvch = Chariwt::VoucherRequest.from_cose_withoutkey_io(token)
 
