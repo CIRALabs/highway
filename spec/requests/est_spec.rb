@@ -37,7 +37,7 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
     it "POST /.well-known/est/requestvoucher" do
       # make an HTTPS request for a new voucher
       # this is section 3.3 of RFCXXXX/draft-ietf-anima-dtbootstrap-anima-keyinfra
-      token = File.read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
+      token = Base64.decode64(File.read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.b64"))
       post "/.well-known/est/requestvoucher", params: token, headers: {
              'CONTENT_TYPE' => 'application/voucher-cms+json',
              'ACCEPT'       => 'application/voucher-cms+json'
@@ -52,7 +52,7 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
       # make an HTTPS request for a new device which does not belong
       # to the MASA ---> it will produce an email about that.
       pubkey_pem = IO::read(File.join("spec","files","jrc_prime256v1.crt"))
-      token = IO::read("spec/files/parboiled_vr-00-D0-E5-02-00-20.pkcs")
+      token = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-02-00-20.b64"))
 
       expect {
         post "/.well-known/est/requestvoucher", params: token, headers: {
@@ -153,7 +153,7 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
   describe "failing requests" do
     it "with broken crypto should be stored to voucher request table" do
 
-      token = IO::read("spec/files/parboiled_vr_broken-00-D0-E5-F2-00-02.pkcs")
+      token = Base64.decode64(IO::read("spec/files/parboiled_vr_broken-00-D0-E5-F2-00-02.b64"))
       regfile= File.join("spec","files","jrc_prime256v1.crt")
       pubkey_pem = IO::read(regfile)
 
@@ -173,7 +173,7 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
     it "expect f20002 to be empty" do
       # make an HTTPS request for a history of owners for a device.
       # this is section 5.7 of RFCXXXX/draft-ietf-anima-dtbootstrap-anima-keyinfra
-      token = IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
+      token = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.b64"))
       post "/.well-known/est/requestauditlog", params: token, headers: {
              'CONTENT_TYPE' => 'application/voucher-cms+json',
              'ACCEPT'       => 'application/voucher-cms+json'
@@ -184,7 +184,7 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
 
     it "expect f20003 to have one owner which is not this one" do
       pending "needs an another parboiled voucher request"
-      token = IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
+      token = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.b64"))
       post "/.well-known/est/requestauditlog", params: token, headers: {
              'CONTENT_TYPE' => 'application/voucher-cms+json',
              'ACCEPT'       => 'application/voucher-cms+json'
@@ -200,7 +200,7 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
     it "expect f20002 to have one owner" do
       # make an HTTPS request for a history of owners for a device.
       # this is section 5.7 of RFCXXXX/draft-ietf-anima-dtbootstrap-anima-keyinfra
-      token = IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs")
+      token = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.b64"))
       post "/.well-known/est/requestvoucher", params: token, headers: {
              'CONTENT_TYPE' => 'application/voucher-cms+json',
              'ACCEPT'       => 'application/voucher-cms+json'

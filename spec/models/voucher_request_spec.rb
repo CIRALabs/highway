@@ -16,7 +16,7 @@ RSpec.describe VoucherRequest, type: :model do
 
   describe "voucher input request" do
     it "should read a voucher request from disk" do
-      token = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs"))
+      token = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.b64"))
       vr2 = CmsVoucherRequest.from_pkcs7(token)
       expect(vr2.device_identifier).to eq("00-D0-E5-F2-00-02")
       expect(vr2.nonce).to eq("Dss99sBr3pNMOACe-LYY7w")
@@ -29,15 +29,15 @@ RSpec.describe VoucherRequest, type: :model do
       expect(voucher.as_issued).to_not be_nil
 
       # save it for examination elsewhere (and use by Registrar tests)
-      expect(Chariwt.cmp_pkcs_file(Base64.strict_encode64(voucher.as_issued), "voucher_#{voucher.device_identifier}")).to be true
+      expect(Chariwt.cmp_pkcs_file(voucher.as_issued, "voucher_#{voucher.device_identifier}")).to be true
     end
 
     it "should not duplicate a byte4byte identical request" do
-      token = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs"))
+      token = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.b64"))
       vr2 = CmsVoucherRequest.from_pkcs7(token)
       expect(vr2.id).to_not be_nil
 
-      tok2 = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.pkcs"))
+      tok2 = Base64.decode64(IO::read("spec/files/parboiled_vr-00-D0-E5-F2-00-02.b64"))
       vr3 = CmsVoucherRequest.from_pkcs7(token)
       expect(vr3.id).to eq(vr2.id)
       expect(vr3.device).to eq(devices(:vizsla))

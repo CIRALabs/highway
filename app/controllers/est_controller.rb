@@ -39,7 +39,7 @@ class EstController < ApiController
       case
       when (media_type.mime_type == 'application/voucher-cms+json')
 
-        binary_pkcs = Base64.decode64(request.body.read)
+        binary_pkcs = request.body.read
         begin
           @voucherreq = CmsVoucherRequest.from_pkcs7(binary_pkcs)
         rescue VoucherRequest::MissingPublicKey
@@ -135,7 +135,7 @@ class EstController < ApiController
   end
 
   def requestauditlog
-    binary_pkcs = Base64.decode64(request.body.read)
+    binary_pkcs = request.body.read
     @voucherreq = CmsVoucherRequest.from_pkcs7(binary_pkcs)
     @device = @voucherreq.device
     @owner  = @voucherreq.owner
