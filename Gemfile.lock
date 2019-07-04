@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:AnimaGUS-minerva/ChariWTs.git
-  revision: c3958ec431e57239d8b5a18b0f57e96c0e898208
+  revision: 3933bdd59a14d3fe7821c345968edefaf54de5fb
   branch: v0.8.0
   specs:
     chariwt (0.8.4)
