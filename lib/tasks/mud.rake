@@ -2,14 +2,14 @@
 
 namespace :highway do
 
-  desc "Sign a MUD json file"
+  desc "Sign a MUD json FILE=in.json [OUTFILE=out.json SIGFILE=out.sig]"
   task :mud_json_sign => :environment do
     file    = ENV['FILE']
-    sigfilename = File.join(file, ".sig")
+    sigfilename = File.join(File.dirname(file), File.basename(file, ".*") + ".sig")
     if ENV['SIGFILE']
       sigfilename = ENV['SIGFILE']
     end
-    outfilename = File.join(file, ".json")
+    outfilename = File.join(File.dirname(file), File.basename(file, ".*") + ".ojson")
     if ENV['OUTFILE']
       outfilename = ENV['OUTFILE']
     end
