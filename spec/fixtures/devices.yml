@@ -291,3 +291,43 @@ f02002d:
   ula:
   extra_attrs:
   second_eui64:
+
+device_F3:
+  id: 3
+  eui64: 00-d0-e5-03-00-03
+  pub_key: MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEVtaJ6tuzYNZZq3yZn5gyvXN9rmrTF5QbAm2/ibsZUfG2B0wo+0cxOSgHz0BPXlUa3zqEMtJ5L1DTaDKVlgTfwQ==
+  owner_id: 1
+  model_id:
+  notes:
+  created_at: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &1 2018-11-03 10:13:33.474094000 Z
+    zone: &2 !ruby/object:ActiveSupport::TimeZone
+      name: Etc/UTC
+    time: *1
+  updated_at: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &3 2019-07-02 14:06:10.360592000 Z
+    zone: *2
+    time: *3
+  serial_number: 00-D0-E5-03-00-03
+  obsolete: false
+  idevid_cert: |
+    -----BEGIN CERTIFICATE-----
+    MIICAzCCAYmgAwIBAgIEE+z+QzAKBggqhkjOPQQDAjBOMRIwEAYKCZImiZPyLGQB
+    GRYCY2ExGTAXBgoJkiaJk/IsZAEZFglzYW5kZWxtYW4xHTAbBgNVBAMMFGZsb3Jl
+    YW4uc2FuZGVsbWFuLmNhMCAXDTE5MDYwNjE4MzMyOVoYDzI5OTkxMjMxMDAwMDAw
+    WjAcMRowGAYDVQQFDBEwMC1EMC1FNS0wMy0wMC0wMzBZMBMGByqGSM49AgEGCCqG
+    SM49AwEHA0IABFbWierbs2DWWat8mZ+YMr1zfa5q0xeUGwJtv4m7GVHxtgdMKPtH
+    MTkoB89AT15VGt86hDLSeS9Q02gylZYE38GjgYQwgYEwHQYDVR0OBBYEFJ7WOuri
+    yitfbt12s0afKrSb3qb2MAkGA1UdEwQCMAAwKwYDVR0RBCQwIqAgBgkrBgEEAYLu
+    UgGgEwwRMDAtRDAtRTUtMDMtMDAtMDMwKAYJKwYBBAGC7lICBBsMGWZsb3JlYW4u
+    c2FuZGVsbWFuLmNhOjk0NDMwCgYIKoZIzj0EAwIDaAAwZQIxAP4+4KPD66SLKrFg
+    DcC87OWY5YR8BqE9ZAWy0GKF5AjcmZP8pF1BPhRofi6q0qAgwgIwPd4gDMyAze03
+    JC6OocD6OfiPMx3lkUJ84HFe4B/nDrnLR8AASRUUGlo33sFhXWVS
+    -----END CERTIFICATE-----
+  fqdn:
+  essid:
+  ula:
+  extra_attrs:
+  second_eui64:
+  othercerts:
+    

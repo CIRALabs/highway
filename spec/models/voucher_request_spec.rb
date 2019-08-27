@@ -124,6 +124,14 @@ RSpec.describe VoucherRequest, type: :model do
       expect(reason).to be :ok
       expect(voucher).to_not be_nil
     end
+
+    it "should read a voucher request captured from Siemens JRC" do
+      # will need to populate with Device from Florean
+      token = IO::read("spec/files/product/00-D0-E5-03-00-03/vr92-from-siemens-jrc.pkcs")
+      vr92 = CmsVoucherRequest.from_pkcs7(token)
+      expect(vr92).to_not be_nil
+    end
+
   end
 
 end
