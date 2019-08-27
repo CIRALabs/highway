@@ -43,6 +43,7 @@ gem 'rails-static-router'
 # for github warning
 gem "loofah", ">= 2.2.3"
 gem 'rake', '~> 12.3.2'
+gem "nokogiri", ">= 1.10.4"
 
 # for LetsEncrypt
 gem 'acme-client'

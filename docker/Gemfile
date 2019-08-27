@@ -26,8 +26,12 @@ gem "sentry-raven"
 gem 'openssl', :path => '/gems/highway/ruby-openssl'
 gem 'sass'
 gem 'sass-rails'
+
+# for github warnings
 gem 'warden', '~> 1.2.3'
 gem 'devise', '~> 4.6.0'
+gem "nokogiri", ">= 1.10.4"
+
 # use this to get full decoding of HTTP Accept: headers, to be able to
 # split off smime-type=voucher in pkcs7-mime, and other parameters
 gem 'http-accept'

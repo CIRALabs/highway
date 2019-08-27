@@ -209,6 +209,7 @@ DEPENDENCIES
   jquery-rails
   jwt
   multipart_body!
+  nokogiri (>= 1.10.4)
   openssl!
   pg (~> 0.15)
   rails (~> 5.2.0)
