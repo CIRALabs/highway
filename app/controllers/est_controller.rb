@@ -8,7 +8,10 @@ class EstController < ApiController
   def requestvoucher
 
     @clientcert = nil
-    @replytype  = request.content_type || "application/voucher-cms+json"
+    @replytype  = request.content_type 
+    if @replytype.blank?
+	   @replytype = "application/voucher-cms+json"
+    end
 
     begin
       cert_pem = capture_client_certificate
