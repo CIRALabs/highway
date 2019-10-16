@@ -29,8 +29,9 @@ gem 'sass-rails'
 
 # for github warnings
 gem 'warden', '~> 1.2.3'
-gem 'devise', '~> 4.6.0'
+gem "devise", ">= 4.7.1"
 gem "nokogiri", ">= 1.10.4"
+gem "netaddr", ">= 2.0.4"
 
 # use this to get full decoding of HTTP Accept: headers, to be able to
 # split off smime-type=voucher in pkcs7-mime, and other parameters
