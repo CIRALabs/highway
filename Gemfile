@@ -30,7 +30,7 @@ gem "sentry-raven"
 #gem 'therubyracer'
 
 gem 'warden', '~> 1.2.3'
-gem 'devise', '~> 4.6.0'
+gem "devise", ">= 4.7.1"
 
 # need CMS code, but not DTLS code, so do not complicate life with
 # need for openssl 1.1.1 w/patches.
