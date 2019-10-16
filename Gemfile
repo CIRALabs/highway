@@ -44,6 +44,7 @@ gem 'rails-static-router'
 gem "loofah", ">= 2.2.3"
 gem 'rake', '~> 12.3.2'
 gem "nokogiri", ">= 1.10.4"
+gem "netaddr", ">= 2.0.4"
 
 # for LetsEncrypt
 gem 'acme-client'

@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:AnimaGUS-minerva/ChariWTs.git
+  remote: https://github.com/AnimaGUS-minerva/ChariWTs.git
   revision: 3933bdd59a14d3fe7821c345968edefaf54de5fb
   branch: v0.8.0
   specs:
@@ -156,7 +156,7 @@ GEM
     net-scp (2.0.0)
       net-ssh (>= 2.6.5, < 6.0.0)
     net-ssh (5.2.0)
-    netaddr (2.0.3)
+    netaddr (2.0.4)
     nio4r (2.3.1)
     nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
@@ -292,6 +292,7 @@ DEPENDENCIES
   log4r
   loofah (>= 2.2.3)
   multipart_body!
+  netaddr (>= 2.0.4)
   nokogiri (>= 1.10.4)
   openssl!
   pg (~> 0.15)
@@ -314,4 +315,4 @@ DEPENDENCIES
   warden (~> 1.2.3)
 
 BUNDLED WITH
-   2.0.1
+   2.0.2
