@@ -23,6 +23,13 @@ shg_zone
 This is the zone which the shg_suffix is a part of.
 The full SHG name will be made up of shg\_suffix . shg\_zone.
 
+eui64embed
+----------
+If this boolean is set, then IDevID which are created will have
+private subjectAltName extension added which contains the EUI64 allocation
+for this device.  This allows the certificate, which must be "burnt in"
+to replace the need for an ethernet PROM.
+
 Configuration Variables
 =======================
 

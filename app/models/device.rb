@@ -261,10 +261,7 @@ class Device < ActiveRecord::Base
 
     @idevid.subject = OpenSSL::X509::Name.new(subject_list)
 
-    # the OID: 1.3.6.1.4.1.46930.2 is a Private Enterprise Number OID:
-    #    iso.org.dod.internet.private.enterprise . SANDELMAN=46930 . 2
-    # this is used for the BRSKI MASAURLExtnModule-2016 until allocated
-    # depends upon a patch to ruby-openssl, at:
+    # this depends upon a patch to ruby-openssl, at:
     #  https://github.com/mcr/openssl/commit/a59c5e049b8b4b7313c6532692fa67ba84d1707c
     @idevid.add_extension(masa_extension)
     @idevid.sign(HighwayKeys.ca.rootprivkey, OpenSSL::Digest::SHA256.new)
@@ -571,18 +568,17 @@ class Device < ActiveRecord::Base
     # @idevid.add_extension(extension_factory.create_extension("keyUsage","digitalSignature",false))
     # @idevid.add_extension(extension_factory.create_extension("extendedKeyUsage","clientAuth",false))
 
-    # the OID: 1.3.6.1.4.1.46930.1 is a Private Enterprise Number OID:
-    #    iso.org.dod.internet.private.enterprise . SANDELMAN=46930 . 1
-    # subjectAltName=otherName:1.2.3.4;UTF8:some other identifier
-    @idevid.add_extension(extension_factory.create_extension(
-                           "subjectAltName",
-                           sprintf("otherName:1.3.6.1.4.1.46930.1;UTF8:%s",
-                                   self.sanitized_eui64),
-                           false))
+    if SystemVariable.boolvalue?(:eui64embed)
+      # the OID: 1.3.6.1.4.1.46930.1 is a Private Enterprise Number OID:
+      #    iso.org.dod.internet.private.enterprise . SANDELMAN=46930 . 1
+      # subjectAltName=otherName:1.2.3.4;UTF8:some other identifier
+      @idevid.add_extension(extension_factory.create_extension(
+                              "subjectAltName",
+                              sprintf("otherName:1.3.6.1.4.1.46930.1;UTF8:%s",
+                                      self.sanitized_eui64),
+                              false))
+    end
 
-    # the OID: 1.3.6.1.4.1.46930.2 is a Private Enterprise Number OID:
-    #    iso.org.dod.internet.private.enterprise . SANDELMAN=46930 . 2
-    # this is used for the BRSKI MASAURLExtnModule-2016 until allocated
     # depends upon a patch to ruby-openssl, at:
     #  https://github.com/mcr/openssl/commit/a59c5e049b8b4b7313c6532692fa67ba84d1707c
     @idevid.add_extension(masa_extension)
