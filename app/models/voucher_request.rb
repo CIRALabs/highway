@@ -121,4 +121,11 @@ class VoucherRequest < ApplicationRecord
     return voucher,:ok
   end
 
+  # write the parboiled voucher to disk for later inspection
+  def save_parboiled
+    File.open("tmp/parboiled_vr-#{device_identifier}.vrq", "wb") { |f|
+      f.write voucher_request
+    }
+  end
+
 end
