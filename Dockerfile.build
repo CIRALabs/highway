@@ -1,4 +1,4 @@
-FROM ruby:2.6.2 as builder
+FROM ruby:2.6.6 as builder
 
 RUN apt-get update -qq && apt-get install -y postgresql-client libgmp10-dev libgmp10 sash busybox dnsutils apt-utils zip dnsutils && \
     apt-get remove -y git &&  \
@@ -54,8 +54,9 @@ RUN sha256sum /gems/highway/dns-update/lib/dns-update/validate.rb
 ADD ./docker/Gemfile /app/highway/Gemfile
 ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
 ADD ./docker/Rakefile /app/highway/Rakefile
-RUN bundle _2.0.1_ install --system --no-deployment --gemfile=/app/highway/Gemfile && \
-    bundle _2.0.1_ check
+RUN bundle --version
+RUN bundle install --system --no-deployment --gemfile=/app/highway/Gemfile && \
+    bundle check
 
 RUN rm -f /app/highway/tmp/pids/server.pid && \
     rm -f /app/highway/config/{config,database,secret}.yml && \

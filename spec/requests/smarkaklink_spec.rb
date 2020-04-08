@@ -1,5 +1,6 @@
 # spec/requests/todos_spec.rb
 require 'rails_helper'
+require 'support/pem_data.rb'
 
 RSpec.describe 'SmarKaKlink MASA API', type: :request do
   fixtures :all
@@ -27,6 +28,22 @@ RSpec.describe 'SmarKaKlink MASA API', type: :request do
       cert = OpenSSL::X509::Certificate.new(response.body)
       expect(cert.issuer.to_s).to eq("/DC=ca/DC=sandelman/CN=highway-test.example.com IDevID CA")
       expect(cert.subject.to_s).to include(owner.simplename)
+    end
+
+    it "GET the details on a device, by public key of provisioned device" do
+      n3c = devices(:shgmudhighway31)
+
+      get "/devices", params: { :pub_key => n3c.pub_key }, headers: {
+             'ACCEPT'          => 'application/json',
+             'SSL_CLIENT_CERT' => smarkaklink_client_1502
+           }
+
+      expect(response).to have_http_status(200)
+      device=assigns(:device)
+      expect(device).to_not be_nil
+
+      result = JSON::Parse(response.body)
+      expect(result["hostname"]).to_not be_nil
     end
 
     it "POST a smarkaklink voucher request, with an invalid content_type" do

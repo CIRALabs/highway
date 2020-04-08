@@ -29,9 +29,10 @@ def highwaytest_clientcert_f20001
 end
 
 def smarkaklink_client_1502
-  @smarkaklink_client_01 ||= IO.binread("spec/files/product/Smarkaklink-1502449999/ldevice.crt")
+  @smarkaklink_client_1502 ||= IO.binread("spec/files/product/Smarkaklink-1502449999/ldevice.crt")
 end
 
 def fountaintest_servercert
   @fountaintest_servercert ||= IO.binread("spec/files/fountaintest.pem")
 end
+

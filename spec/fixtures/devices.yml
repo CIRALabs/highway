@@ -241,8 +241,8 @@ shgmudhighway31:
 
 # this fixture is used for smarkaklink testing, and represents an owned key pair
 # items are in fountain/spec/files/product/Smarkaklink-n3ce6b3
-shgmudhighway31:
-  id: 31
+shgmudhighway32:
+  id: 32
   eui64: 3c-97-0e-9b-dc-98
   pub_key: Need to generate
   serial_number: 3c-97-0e-9b-dc-98
