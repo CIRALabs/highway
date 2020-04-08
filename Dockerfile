@@ -62,7 +62,7 @@ RUN rm -f /app/highway/tmp/pids/server.pid && \
     rm -f /app/highway/config/initializers/acme.rb && \
     rm -f /app/highway/config/environments/production.rb
 
-FROM lestienne/distroless-ruby:2.6.2-dnsutils
+FROM mcr314/distroless-ruby:2.6.6-dnsutils
 
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle /usr/local/bundle
@@ -78,21 +78,23 @@ COPY --from=builder /lib/x86_64-linux-gnu/libbz2.so.1.0 \
                     /lib/x86_64-linux-gnu/libcap.so.2 \
                     /lib/x86_64-linux-gnu/libcom_err.so.2 \
                     /lib/x86_64-linux-gnu/libkeyutils.so.1 \
+                    /lib/x86_64-linux-gnu/libc\* \
                     /lib/x86_64-linux-gnu/
-COPY --from=builder /usr/lib/x86_64-linux-gnu/liblwres.so.141 \
-                    /usr/lib/x86_64-linux-gnu/libssl.so.1.1 \
-                    /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1 \
-                    /usr/lib/x86_64-linux-gnu/libdns.so.162 \
-                    /usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2 \
-                    /usr/lib/x86_64-linux-gnu/libkrb5.so.3 \
-                    /usr/lib/x86_64-linux-gnu/libk5crypto.so.3 \
-                    /usr/lib/x86_64-linux-gnu/libbind9.so.140 \
-                    /usr/lib/x86_64-linux-gnu/libisccfg.so.140 \
-                    /usr/lib/x86_64-linux-gnu/libisccc.so.140 \
-                    /usr/lib/x86_64-linux-gnu/libisc.so.160 \
-                    /usr/lib/x86_64-linux-gnu/libGeoIP.so.1 \
-                    /usr/lib/x86_64-linux-gnu/libkrb5support.so.0 \
-                    /usr/lib/x86_64-linux-gnu/libicui18n.so.57 \
+
+COPY --from=builder /usr/lib/x86_64-linux-gnu/liblwres.so* \
+                    /usr/lib/x86_64-linux-gnu/libssl.so* \
+                    /usr/lib/x86_64-linux-gnu/libcrypto.so* \
+                    /usr/lib/x86_64-linux-gnu/libdns.so* \
+                    /usr/lib/x86_64-linux-gnu/libgssapi_krb5.so* \
+                    /usr/lib/x86_64-linux-gnu/libkrb5.so* \
+                    /usr/lib/x86_64-linux-gnu/libk5crypto.so* \
+                    /usr/lib/x86_64-linux-gnu/libbind9.so* \
+                    /usr/lib/x86_64-linux-gnu/libisccfg.so* \
+                    /usr/lib/x86_64-linux-gnu/libisccc.so* \
+                    /usr/lib/x86_64-linux-gnu/libisc.so* \
+                    /usr/lib/x86_64-linux-gnu/libGeoIP.so* \
+                    /usr/lib/x86_64-linux-gnu/libkrb5support.so* \
+                    /usr/lib/x86_64-linux-gnu/libicui18n.so* \
                     /usr/lib/x86_64-linux-gnu/
 
 ENV PATH="/usr/local/bundle/bin:${PATH}"
@@ -114,7 +116,7 @@ WORKDIR /app/highway
 
 EXPOSE 9443
 
-CMD ["bundle", "_2.0.1_", "exec", "thin", "start", "--ssl",      \
+CMD ["bundle", "exec", "thin", "start", "--ssl",      \
     "--address", "0.0.0.0", "--port", "9443",                         \
     "--ssl-cert-file", "/app/certificates/server_prime256v1.crt",\
     "--ssl-key-file",  "/app/certificates/server_prime256v1.key" ]
