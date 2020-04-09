@@ -238,11 +238,12 @@ class Device < ActiveRecord::Base
     (hostname,addr) = router_name_ip
     return false unless insert_quad_ah(hostname, addr)
 
-    (hostname,addr) = mud_router_name_ip
+    (hostname,addr) = mudmac_router_name_ip
     return false unless insert_quad_ah(hostname, addr)
 
-    (hostname,addr) = mudmac_router_name_ip
-    return false unless insert_quad_ah(hostname, addr, false)
+    # do not put AAAA in for MUD IP
+    #(hostname,addr) = mud_router_name_ip
+    #return false unless insert_quad_ah(hostname, addr, false)
     return true
   end
 
@@ -318,8 +319,9 @@ class Device < ActiveRecord::Base
       (host, addr) = router_name_ip
       f.puts sprintf("%s %s router", addr, host)
 
-      (host, addr) = mud_router_name_ip
-      f.puts sprintf("%s %s mud", addr, host)
+      # no way to force the ::2 to work, so avoid for now.
+      #(host, addr) = mud_router_name_ip
+      #f.puts sprintf("%s %s mud", addr, host)
 
       (host, addr) = mudmac_router_name_ip
       f.puts sprintf("%s %s mud", addr, host)
