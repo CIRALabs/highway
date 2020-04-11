@@ -12,7 +12,7 @@ ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 #set :deploy_to, "/data/highway/highway"
 
 set :rvm_type, :system
-set :rvm_ruby_version, '2.6.1'
+set :rvm_ruby_version, '2.6.6'
 set :rvm_roles,    [:app]
 set :bundle_roles, [:app]
 
