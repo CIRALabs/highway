@@ -34,7 +34,7 @@ if File.exist?(acme_settings_file)
   options = HashWithIndifferentAccess.new(YAML.load(IO::read(acme_settings_file)))
   if options
     AcmeKeys.acme.dns_update_options = options["dns_update_options"]
-    if AcmeKeys.acme.dns_update_options[:acme_server]
+    if AcmeKeys.acme.dns_update_options and AcmeKeys.acme.dns_update_options[:acme_server]
       AcmeKeys.acme.server = AcmeKeys.acme.dns_update_options[:acme_server]
       $INTERNAL_CA_SHG_DEVICE = false
       $LETSENCRYPT_CA_SHG_DEVICE=true
