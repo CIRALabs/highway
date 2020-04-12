@@ -18,6 +18,7 @@ after :'deploy:log_revision', :'passenger:restart'
        deploy_to: '/honeydukes/app/highway',
        git_wrapper_path: '/honeydukes/app/tmp'
 
+set :stage, :production
 
 # Custom SSH Options
 # ==================
