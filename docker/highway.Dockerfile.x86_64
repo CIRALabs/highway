@@ -1,0 +1,66 @@
+FROM mcr314/minerva_builder:v202004 as builder
+
+RUN mkdir -p /app/highway
+ADD ./docker/Gemfile      /app/highway/Gemfile
+ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
+
+RUN sha256sum /gems/highway/dns-update/lib/dns-update/validate.rb
+
+WORKDIR /app/highway
+RUN bundle config setup system true
+RUN bundle install --no-deployment --gemfile=/app/highway/Gemfile && \
+    bundle check
+
+# install items for use in debugging
+RUN apt-get install -y strace
+
+RUN rm -f /app/highway/tmp/pids/server.pid && \
+    rm -f /app/highway/config/{config,database,secret}.yml && \
+    rm -f /app/highway/config/initializers/acme.rb && \
+    rm -f /app/highway/config/environments/production.rb
+
+# debugging
+RUN apt-get install strace
+
+FROM mcr314/distroless-ruby:2.6.6-dnsutils
+
+COPY --from=builder /app /app
+COPY --from=builder /usr/local/bundle /usr/local/bundle
+COPY --from=builder /usr/local/lib/ruby /usr/local/lib/ruby
+COPY --from=builder /usr/share/zoneinfo/UTC /etc/localtime
+COPY --from=builder /gems/highway /gems/highway
+COPY --from=builder /usr/bin/nsupdate /usr/bin/nsupdate
+COPY --from=builder /usr/bin/zip  /usr/bin/zip
+COPY --from=builder /bin/sash     /bin/sash
+COPY --from=builder /usr/bin/env  /usr/bin/env
+COPY --from=builder /bin/busybox  /bin/busybox
+COPY --from=builder /usr/bin/strace  /usr/bin/strace
+COPY --from=builder /usr/lib/x86_64-linux-gnu/libssl.so* \
+                    /usr/lib/x86_64-linux-gnu/libcrypto.so* \
+                    /usr/lib/x86_64-linux-gnu/libsqlite3.so* /usr/lib/x86_64-linux-gnu/
+
+ENV PATH="/usr/local/bundle/bin:${PATH}"
+
+# stupid COPY always explodes directories, so can not do this in one step.
+RUN ["busybox", "rm", "-rf", "/app/highway"]
+COPY app /app/highway/app/
+COPY bin /app/highway/bin/
+COPY config /app/highway/config/
+COPY db /app/highway/db/
+COPY lib /app/highway/lib/
+COPY public /app/highway/public/
+COPY LICENSE.md Rakefile README.md config.ru /app/highway/
+ADD ./docker/Gemfile /app/highway/Gemfile
+ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
+ENV GEM_HOME="/usr/local/bundle"
+
+WORKDIR /app/highway
+
+EXPOSE 9443
+
+CMD ["bundle", "exec", "thin", "start", "--ssl",      \
+    "--address", "0.0.0.0", "--port", "9443",                         \
+    "--ssl-cert-file", "/app/certificates/server_prime256v1.crt",\
+    "--ssl-key-file",  "/app/certificates/server_prime256v1.key" ]
+
+
