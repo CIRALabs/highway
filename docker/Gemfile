@@ -23,7 +23,7 @@ gem 'jbuilder', '~> 2.0'
 # raven for sentry.io
 gem "sentry-raven"
 
-gem 'openssl', :path => '/gems/highway/ruby-openssl'
+gem 'openssl', :path => '/app/minerva/ruby-openssl'
 gem 'sass'
 gem 'sass-rails'
 
@@ -41,16 +41,15 @@ gem 'http-accept'
 
 # for LetsEncrypt
 gem 'acme-client'
-#gem 'dns-update', :path => '/gems/highway/dns-update'
-gem 'dns-update', :git => 'https://github.com/CIRALabs/dns-update.git', :branch => 'aaaa_rr'
+gem 'dns-update', :path => '/app/minerva/dns-update'
 
 # for static files
 gem 'rails-static-router'
 
 # used to generate multipart bodies
-gem 'multipart_body', :path => '/gems/highway/multipart_body'
-gem 'ecdsa',   :path => '/gems/highway/ruby_ecdsa'
-gem 'chariwt', :path => '/gems/highway/ChariWTs'
+gem 'multipart_body', :path => '/app/minerva/multipart_body'
+gem 'ecdsa',   :path => '/app/minerva/ruby_ecdsa'
+gem 'chariwt', :path => '/app/minerva/chariwt'
 gem 'jwt'
 
 gem 'thin'

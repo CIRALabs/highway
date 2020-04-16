@@ -4,7 +4,7 @@ RUN mkdir -p /app/highway
 ADD ./docker/Gemfile      /app/highway/Gemfile
 ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
 
-RUN sha256sum /gems/highway/dns-update/lib/dns-update/validate.rb
+RUN sha256sum /app/minerva/dns-update/lib/dns-update/validate.rb
 
 WORKDIR /app/highway
 RUN bundle config setup system true
@@ -28,7 +28,6 @@ COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle /usr/local/bundle
 COPY --from=builder /usr/local/lib/ruby /usr/local/lib/ruby
 COPY --from=builder /usr/share/zoneinfo/UTC /etc/localtime
-COPY --from=builder /gems/highway /gems/highway
 COPY --from=builder /usr/bin/nsupdate /usr/bin/nsupdate
 COPY --from=builder /usr/bin/zip  /usr/bin/zip
 COPY --from=builder /bin/sash     /bin/sash

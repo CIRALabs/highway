@@ -1,42 +1,33 @@
-GIT
-  remote: https://github.com/AnimaGUS-minerva/ChariWTs.git
-  revision: 3933bdd59a14d3fe7821c345968edefaf54de5fb
-  branch: v0.8.0
+PATH
+  remote: /app/minerva/chariwts.git
   specs:
     chariwt (0.8.4)
       cbor (~> 0.5.0)
       ecdsa (~> 1.3.0)
 
-GIT
-  remote: https://github.com/AnimaGUS-minerva/multipart_body.git
-  revision: 84d15429301e614793a9fb51eb8b400326fe7b6d
-  branch: binary_http_multipart
+PATH
+  remote: /app/minerva/multipart_body.git
   specs:
     multipart_body (0.2.0)
 
-GIT
-  remote: https://github.com/AnimaGUS-minerva/ruby_ecdsa.git
-  revision: 64eb588befbf65fe58209d20d5a12da646077c5b
-  branch: ecdsa_interface_openssl
+PATH
+  remote: /app/minerva/ruby_ecdsa.git
   specs:
     ecdsa (1.3.0)
 
-GIT
-  remote: https://github.com/CIRALabs/dns-update.git
-  revision: ba0e4122c92e2c7a269ab34efc913ade5f03d95d
-  branch: aaaa_rr
+PATH
+  remote: /app/minerva/dns-update
   specs:
     dns-update (0.0.7)
       netaddr
 
-GIT
-  remote: https://github.com/mcr/cow_proxy.git
-  revision: 7c7d68393a3d9e3a47daea12c466cf49d8e63016
+PATH
+  remote: /app/minerva/cow_proxy
   specs:
     cow_proxy (0.2.1)
 
 PATH
-  remote: ../minerva/ruby-openssl
+  remote: /app/minerva/ruby-openssl
   specs:
     openssl (2.2.0.pre.mcr1)
       ipaddr
