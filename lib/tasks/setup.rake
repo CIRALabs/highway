@@ -47,6 +47,13 @@ namespace :highway do
     puts "MASA URL is #{SystemVariable.string(:masa_iauthority)}"
   end
 
+  desc "Do initial setup of shg_zone and prefix: SHG_ZONE=example.org SHG_PREFIX=r"
+  task :h0_shg_zone => :environment do
+    SystemVariable.setvalue(:shg_zone,   ENV['SHG_ZONE'])
+    SystemVariable.setvalue(:shg_prefix, ENV['SHG_PREFIX'])
+    puts "SHG dynamic update zone is #{SystemVariable.string(:shg_prefix)}.#{SystemVariable.string(:shg_zone)}"
+  end
+
   desc "Do initial setup of sytem variables"
   task :h0_setup_masa => :environment do
 
