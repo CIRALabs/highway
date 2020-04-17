@@ -314,6 +314,8 @@ If you want to use LetsEncrypt as your CA, then select true, and make sure
 that acme.yml is setup.  If an internal CA suits you (more control over the
 IDevID), then select that.
 
+One can use [LetsEncrypt](doc/ACME-HACKS.md) to setup the
+
 The Revision variable can be set to any useful value, if not set there is a
 value in the environment which is incremented on each release.
 
@@ -333,13 +335,13 @@ try again, if a long time has passed since it tried the first time.
 If this is not set, then unknown devices get a 404 and no information is
 collected, which makes it hard to enable them.
 
-To enable the device, use the "staging.sh" script, and run:
+To enable the device, use the "eeylops.sh" (or your equivalent) script, and run:
 
-    ./staging.sh bundle exec rake shg:valid PRODUCTID=aa:bb:cc:dd:ee:ff
+    ./eeylops.sh bundle exec rake shg:valid PRODUCTID=aa:bb:cc:dd:ee:ff
 
 To get a list of devices, do:
 
-./staging.sh bundle exec rake highway:list_dev
+    ./eeylops.sh bundle exec rake highway:list_dev
 
 ### public/index.html
 
