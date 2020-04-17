@@ -1,5 +1,8 @@
 # -*- ruby -*-
 
+require 'log4r'
+include Log4r
+
 namespace :highway do
 
   def prompt_variable(prompt, variable, previous)
