@@ -55,4 +55,3 @@ gem 'chariwt', :path => '/app/minerva/chariwt'
 gem 'jwt'
 
 gem 'thin'
-gem 'rake', '~> 12.3.2'

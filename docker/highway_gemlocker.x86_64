@@ -1,0 +1,15 @@
+#!/bin/sh
+
+cd $(dirname $0)/..
+
+ver=mcr314/minera_highway_gemlock
+# this is done when one wants to update the Gemfile
+docker build -t ${ver} -f docker/highway_gemlocker.Dockerfile.x86_64 .
+
+cid=$(docker create ${ver})
+docker cp $cid:/app/highway/Gemfile.lock docker/Gemfile.lock.new
+docker rm $cid
+
+
+
+

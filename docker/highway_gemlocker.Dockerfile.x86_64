@@ -1,0 +1,13 @@
+FROM mcr314/minerva_builder:v202004 as builder
+
+RUN mkdir -p /app/highway
+ADD ./docker/Gemfile      /app/highway/Gemfile
+ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
+
+RUN sha256sum /app/minerva/dns-update/lib/dns-update/validate.rb
+
+WORKDIR /app/highway
+RUN bundle config setup system true
+RUN bundle update --gemfile=/app/highway/Gemfile && \
+    bundle check
+
