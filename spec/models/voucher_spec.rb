@@ -47,8 +47,8 @@ RSpec.describe Voucher, type: :model do
       today  = '2017-01-01'.to_date
 
       v1.sign!(today: today)
-
-      expect(Chariwt.cmp_pkcs_file(Base64.strict_encode64(v1.as_issued), "almec_voucher")).to be true
+      expect(Chariwt.cmp_pkcs_file(v1.as_issued,
+                                   "almec_voucher")).to be true
     end
   end
 
