@@ -109,7 +109,7 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
       expect(response).to have_http_status(200)
     end
 
-    it "POST a constrained voucher request signed by the wrong key, and get a 406" do
+    it "POST a constrained voucher request signed by the wrong key, and get a 404" do
       token = IO::read("spec/files/parboiled_vr_00-D0-E5-F2-00-03.vrq")
       regfile= File.join("spec","files","jrc_prime256v1.crt")
       pubkey_pem = IO::read(regfile)
@@ -120,7 +120,7 @@ RSpec.describe 'BRSKI-MASA EST API', type: :request do
                'ACCEPT'       => 'application/voucher-cose+cbor',
                'SSL_CLIENT_CERT'=> pubkey_pem
              }
-        expect(response).to have_http_status(406)
+        expect(response).to have_http_status(404)
       }.to change { ActionMailer::Base.deliveries.count }.by(1)
     end
 
