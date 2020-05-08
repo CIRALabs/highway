@@ -8,7 +8,7 @@ class EstController < ApiController
   def requestvoucher
 
     @clientcert = nil
-    @replytype  = request.content_type 
+    @replytype  = request.content_type
     if @replytype.blank?
 	   @replytype = "application/voucher-cms+json"
     end
