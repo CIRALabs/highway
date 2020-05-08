@@ -83,6 +83,8 @@ class VoucherRequest < ApplicationRecord
   end
 
   def validate_prior!
+    return true unless prior_voucher_request
+
     if device.try(:certificate)
       if prior_voucher_request.verify_with_key(device.certificate)
         self.signing_key = device.pubkey
