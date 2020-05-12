@@ -64,16 +64,22 @@ COPY --from=builder /usr/lib/x86_64-linux-gnu/libssl.so* \
 
 ENV PATH="/usr/local/bundle/bin:${PATH}"
 
-# stupid COPY always explodes directories, so can not do this in one step.
 RUN ["busybox", "rm", "-rf", "/app/highway"]
-COPY app /app/highway/app/
-COPY bin /app/highway/bin/
-COPY config /app/highway/config/
-COPY db /app/highway/db/
-COPY lib /app/highway/lib/
-COPY public /app/highway/public/
-COPY turris_root /app/highway/turris_root
-COPY LICENSE.md Rakefile README.md config.ru /app/highway/
+
+# stupid COPY always explodes directories, so can not do this in one step.
+#  that is, COPY app bin /app/highway/  puts app/X into /app/highway/X, not
+#                                       into /app/highway/app/X
+COPY . /app/highway/
+RUN ["busybox", "rm", "-rf", "/app/highway/tmp", "/app/highway/run", "/app/highway/spec"]
+
+#COPY app         /app/highway/app/
+#COPY bin         /app/highway/bin/
+#COPY config      /app/highway/config/
+#COPY db          /app/highway/db/
+#COPY lib         /app/highway/lib/
+#COPY public      /app/highway/public/
+#COPY turris_root /app/highway/turris_root/
+#COPY LICENSE.md Rakefile README.md config.ru /app/highway/
 ADD ./docker/Gemfile /app/highway/Gemfile
 ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
 ENV GEM_HOME="/usr/local/bundle"
