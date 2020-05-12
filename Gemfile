@@ -6,7 +6,7 @@ gem 'cow_proxy', :git => 'https://github.com/mcr/cow_proxy.git'
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.15'
-#gem 'sqlite3'
+gem 'sqlite3'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -99,8 +99,6 @@ group :development do
   # Spring speeds up development by keeping your application running
   #  in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-
-  gem 'sprockets', "~> 3.7.2"
 
   # sometimes does not get installed by default
   gem 'rb-readline'
