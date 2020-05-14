@@ -148,6 +148,7 @@ class Device < ActiveRecord::Base
       logger.info "Processing CSR with LetsEncrypt"
       sign_from_csr_letsencrypt(csr)
       insert_ula_quad_ah
+      logger.info "device #{id} CSR processed"
     else
       logger.info "No certificate authority enabled"
     end
@@ -174,8 +175,11 @@ class Device < ActiveRecord::Base
     raise CSRFailed unless cert_bag
 
     certs = split_up_bag_of_certificates(cert_bag)
+    first = certs.shift
 
-    self.certificate = certs.shift
+    self.certificate = first
+    logger.info "device #{id} gets certificate #{first.subject.to_s}"
+
     self.othercerts = ""
     certs.each { |cert|
       if cert
