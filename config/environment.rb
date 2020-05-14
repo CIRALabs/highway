@@ -14,8 +14,8 @@ $TOFU_DEVICE_REGISTER = true
 #$INTERNAL_CA_SHG_DEVICE=false
 #$LETENCRYPT_CA_SHG_DEVICE=true
 
-$TGZ_FILE_LOCATION = Rails.root.join("tmp")
-$TURRIS_ROOT_LOCATION = Rails.root.join("turris_root")
+$TGZ_FILE_LOCATION    ||= Rails.root.join("tmp")
+$TURRIS_ROOT_LOCATION ||= Rails.root.join("turris_root")
 
 # version one, as Internet Draft has sailed, almost to RFC.
 $VERSION = "1.0.1"
