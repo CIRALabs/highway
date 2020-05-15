@@ -146,7 +146,8 @@ class Device < ActiveRecord::Base
       sign_from_csr_internal(csr)
     when $LETSENCRYPT_CA_SHG_DEVICE
       logger.info "Processing CSR with LetsEncrypt"
-      sign_from_csr_letsencrypt(csr)
+      result = sign_from_csr_letsencrypt(csr)
+      logger.info "device #{id} CSR created"
       insert_ula_quad_ah
       logger.info "device #{id} CSR processed"
     else
@@ -169,8 +170,10 @@ class Device < ActiveRecord::Base
     begin
       cert_bag = AcmeKeys.acme.cert_for(shg_basename, shg_zone, csr, logger)
     rescue Faraday::ConnectionFailed => e
-      return CSRFailed.new("LetsEncrypt/ACME failed to connect #{e.message}")
+      raise CSRFailed.new("LetsEncrypt/ACME failed to connect #{e.message}")
     end
+
+    logger.info "device #{id} received certificate"
 
     raise CSRFailed unless cert_bag
 

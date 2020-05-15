@@ -62,7 +62,8 @@ class SmarkaklinkController < ApiController
     # now create a private certificate from this CSR.
     begin
       @device.sign_from_base64_csr(@csr64)
-    rescue Device::CSRFailed
+    rescue Device::CSRFailed => e
+      params[:failed_message] = e.message
       capture_bad_request(msg: "CSR failed to be signed by CA in id\##{@device.id}",
                           params: params)
 
