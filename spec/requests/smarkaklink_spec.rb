@@ -133,6 +133,29 @@ RSpec.describe 'SmarKaKlink MASA API', type: :request do
       expect(cert.subject.to_a[0][1]).to eq("n9e7354.r.dasblinkenled.org")
     end
 
+    it "should get a previously acquired certificate, if it is not too old" do
+      pending "dns_update_options is not configured" unless AcmeKeys.acme.dns_update_options
+
+      # do the first time.
+      SystemVariable.setvalue(:shg_zone, "dasblinkenled.org")
+      $INTERNAL_CA_SHG_DEVICE=false
+      $LETSENCRYPT_CA_SHG_DEVICE=true
+      provision1 = IO::read("spec/files/hera.provision.json")
+
+      expect {
+        post "/shg-provision", params: provision1, headers: {
+               'CONTENT_TYPE' => 'application/json',
+               'ACCEPT'       => 'application/tgz',
+             }
+        expect(response).to have_http_status(200)
+        File.open("tmp/provision.tgz", "wb") { |f| f.write response.body }
+        cert=OpenSSL::X509::Certificate.new(IO::popen("tar -x -z -O -f tmp/provision.tgz ./etc/shg/idevid_cert.pem"))
+        expect(cert.subject.to_a[0][1]).to eq("n2e82a1.r.dasblinkenled.org")
+      }.to change{[AcmeKeys.attempt_count,AcmeKeys.success_count]}.by([1,1])
+
+
+    end
+
     it "should refuse a device when no mac address can be found" do
       $INTERNAL_CA_SHG_DEVICE=true
       $LETSENCRYPT_CA_SHG_DEVICE=false
