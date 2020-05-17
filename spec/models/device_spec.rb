@@ -148,6 +148,36 @@ RSpec.describe Device, type: :model do
         expect(dev.certificate).to_not be_nil
       end
     end
+
+    # this fixture is used for smarkaklink testing, and represents an owned key pair
+    # items are in spec/files/product/3C-97-1E-9B-AB-1D
+    # a created certificate request in spec/files/product/3C-97-1E-9B-AB-1D/device.csr
+    # was created with: spec/files/product/3C-97-1E-9B-AB-1D/generate.sh
+    it "should accept a CSR for an existing device, that has an old certificate, and still sign it with LetsEncrypt staging" do
+      SystemVariable.setbool!(:dns_update_debug, true)
+      SystemVariable.setvalue(:shg_zone, "dasblinkenled.org")
+      dev = Device.new
+      mac = dev.eui64 = "3c-97-1e-9b-ab-1d"
+      dev.serial_number = "3c-97-1e-9b-ab-1d"
+      smac = dev.second_eui64  = "3c-97-1e-9b-ab-1e"
+      expect(dev.certificate).to be_nil
+
+      # grab the CSR from the hera machine, but extract the CSR, use it.
+      csr1 = IO::read("spec/files/product/3C-97-1E-9B-AB-1D/request.csr")
+      atts = Hash.new
+      atts["csr"] = Base64.encode64(csr1)
+      atts["wan-mac"]= mac
+      atts["switch-mac"] = smac
+
+      if ENV['ACME_TESTING'] and AcmeKeys.acme.server
+        $INTERNAL_CA_SHG_DEVICE=false
+        $LETSENCRYPT_CA_SHG_DEVICE=true
+        dev.update_from_smarkaklink_provision(atts)
+        dev.sign_from_base64_csr(atts['csr'])
+
+        expect(dev.certificate).to_not be_nil
+      end
+    end
   end
 
   describe "provisioning" do

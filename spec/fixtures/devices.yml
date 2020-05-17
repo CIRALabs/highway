@@ -207,7 +207,14 @@ f21005:
   serial_number: 00-D0-E5-F2-00-05
 
 # this fixture is used for smarkaklink testing
-# the key pair are in fountain/spec/files/product/Smarkaklink-n3ce618
+# the key pair are in spec/files/product/Smarkaklink-n3ce618
+# the certificate has Validity
+#            Not Before: May  3 19:52:12 2019 GMT
+#            Not After : Dec 31 00:00:00 2999 GMT
+#
+# a created certificate request in spec/files/product/Smarkaklink-n3ce618/req.csr
+# was created with:
+#   openssl req -new -key key.pem -out req.csr -subj '/CN=n2e82a1.r.dasblinkenled.org'
 shgmudhighway31:
   id: 31
   eui64: 3c-97-0e-b9-cd-98
