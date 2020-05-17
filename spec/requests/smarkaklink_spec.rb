@@ -10,6 +10,8 @@ RSpec.describe 'SmarKaKlink MASA API', type: :request do
     HighwayKeys.ca.certdir = Rails.root.join('spec','files','cert')
     MasaKeys.masa.certdir = Rails.root.join('spec','files','cert')
     IDevIDKeys.ca.certdir = Rails.root.join('spec','files','cert')
+    SystemVariable.setnumber(:dns_update_attempt, 0)
+    SystemVariable.setnumber(:dns_update_success, 0)
   end
 
   describe "smarkaklink IDevID enrollment" do

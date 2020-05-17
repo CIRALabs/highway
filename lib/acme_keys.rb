@@ -1,6 +1,20 @@
 class AcmeKeys < HighwayKeys
   attr_accessor :server, :dns_update_options
 
+  def increment_attempt_counter
+    SystemVariable.increment_number(:dns_update_attempt)
+  end
+  def increment_success_counter
+    SystemVariable.increment_number(:dns_update_success)
+  end
+
+  def self.attempt_count
+    SystemVariable.number(:dns_update_attempt)
+  end
+  def self.success_count
+    SystemVariable.number(:dns_update_success)
+  end
+
   def acmekey
     @acmekey ||= load_acme_pub_key
   end
@@ -106,6 +120,9 @@ class AcmeKeys < HighwayKeys
     # make sure acme_account has been setup.
     return nil unless acme_account
 
+    # book-keeping stats
+    increment_attempt_counter
+
     logger.info "Getting certificates from ACME server #{server}"
     logger.info "Updating #{qnames.join(' ')}"
 
@@ -193,6 +210,9 @@ class AcmeKeys < HighwayKeys
       logger.fatal "CSR problems: #{$!.message}"
       return nil
     end
+
+    # book keeping success
+    increment_success_counter
 
     # returns the *PEM*
     return order.certificate
