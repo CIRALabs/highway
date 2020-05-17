@@ -134,6 +134,11 @@ class SystemVariable < ActiveRecord::Base
     end
   end
 
+  # increment a number in the database
+  def self.increment_number(thing)
+    nextval(thing)
+  end
+
   def self.masa_iauthority
     SystemVariable.string("masa_iauthority")
   end
