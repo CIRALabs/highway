@@ -160,30 +160,69 @@ RSpec.describe Device, type: :model do
 
       # grab the CSR that was generated, and then run it first time to generate
       # some data
-      csr1 = IO::read("spec/files/product/3C-97-1E-9B-AB-1D/request.csr")
+      csrio = IO::read("spec/files/product/3C-97-1E-9B-AB-1D/request.csr")
+      csr = OpenSSL::X509::Request.new(csrio)
       atts = Hash.new
-      atts["csr"] = Base64.encode64(csr1)
+      atts["csr"] = Base64.encode64(csrio)
       atts["wan-mac"]= mac
       atts["switch-mac"] = smac
       atts["ula"]    = "fd9e:7354:b359::/48"
       dev.update_from_smarkaklink_provision(atts)
 
-      return atts, dev
+      return atts, dev, csr
     end
 
-    it "should examine a device with the CSR and consider if it needs to be replaced" do
+    it "should examine a device with the CSR, noting that certificate is good" do
       SystemVariable.setbool!(:dns_update_debug, true)
       SystemVariable.setvalue(:shg_zone, "dasblinkenled.org")
       $INTERNAL_CA_SHG_DEVICE=true
       $LETSENCRYPT_CA_SHG_DEVICE=false
 
-      atts,dev = devAB1D_setup
+      atts,dev,csr = devAB1D_setup
 
       # sign it once
       dev.sign_from_base64_csr(atts['csr'])
-      csrio = Base64.decode64(atts['csr'])
-      csr = OpenSSL::X509::Request.new(csrio)
       expect(dev.certificate_already_satisfies_csr(csr)).to be_truthy
+    end
+
+    it "should examine a device with the CSR, needs new certificate if public key differs" do
+      SystemVariable.setbool!(:dns_update_debug, true)
+      SystemVariable.setvalue(:shg_zone, "dasblinkenled.org")
+      $INTERNAL_CA_SHG_DEVICE=true
+      $LETSENCRYPT_CA_SHG_DEVICE=false
+
+      atts,dev,csr0 = devAB1D_setup
+
+      # sign it once
+      dev.sign_from_base64_csr(atts['csr'])
+
+      csrbin = IO::read("spec/files/hera.csr")
+      csr    = OpenSSL::X509::Request.new(csrbin)
+
+      # but keep the DN the same
+      byebug
+      csr.subject = csr0.subject
+
+      expect(dev.certificate_already_satisfies_csr(csr)).to be_falsey
+    end
+
+    it "should examine a device with the CSR, needs new certificate if subject differs" do
+      SystemVariable.setbool!(:dns_update_debug, true)
+      SystemVariable.setvalue(:shg_zone, "dasblinkenled.org")
+      $INTERNAL_CA_SHG_DEVICE=true
+      $LETSENCRYPT_CA_SHG_DEVICE=false
+
+      atts,dev,csr0 = devAB1D_setup
+
+      # sign it once
+      dev.sign_from_base64_csr(atts['csr'])
+      csrbin = IO::read("spec/files/hera.csr")
+      csr    = OpenSSL::X509::Request.new(csrbin)
+
+      # but keep the public_key the same, change the subject
+      csr0.subject = csr.subject
+
+      expect(dev.certificate_already_satisfies_csr(csr0)).to be_falsey
     end
 
     # this fixture is used for smarkaklink testing, and represents an owned key pair
