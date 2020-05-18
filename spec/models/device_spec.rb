@@ -200,7 +200,6 @@ RSpec.describe Device, type: :model do
       csr    = OpenSSL::X509::Request.new(csrbin)
 
       # but keep the DN the same
-      byebug
       csr.subject = csr0.subject
 
       expect(dev.certificate_already_satisfies_csr(csr)).to be_falsey
@@ -223,6 +222,24 @@ RSpec.describe Device, type: :model do
       csr0.subject = csr.subject
 
       expect(dev.certificate_already_satisfies_csr(csr0)).to be_falsey
+    end
+
+    it "should examine a device with the CSR, needs new certificate if old one is expired" do
+      SystemVariable.setbool!(:dns_update_debug, true)
+      SystemVariable.setvalue(:shg_zone, "dasblinkenled.org")
+      $INTERNAL_CA_SHG_DEVICE=true
+      $LETSENCRYPT_CA_SHG_DEVICE=false
+
+      f46 = devices(:device_F46_expired)
+
+      # grab the CSR that was generated, and then run it first time to generate
+      # some data
+      csrio = IO::read("spec/files/product/3C-97-1E-9B-AB-46/request.csr")
+      csr = OpenSSL::X509::Request.new(csrio)
+
+      # it is already signed
+      # it should not satisfy the result because the certificate is expired
+      expect(f46.certificate_already_satisfies_csr(csr)).to be_falsey
     end
 
     # this fixture is used for smarkaklink testing, and represents an owned key pair

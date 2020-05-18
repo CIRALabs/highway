@@ -337,4 +337,45 @@ device_F3:
   extra_attrs:
   second_eui64:
   othercerts:
+
+device_F46_expired:
+  id: 46
+  eui64: 3C-97-1E-9B-AB-46
+  pub_key: MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEh9NxOEgi32RuP86agUYmb+e8BHfdFYzbJ5F5i23CxzbkIk9dUwwuZVpWcZ2DChTE+4X1V28AITOx9CcV+4+Uow==
+  serial_number: 00-D0-E5-03-00-03
+  idevid_cert: |
+    -----BEGIN CERTIFICATE-----
+    MIICPjCCAcOgAwIBAgIEepYdPzAKBggqhkjOPQQDAjBdMQ8wDQYDVQQGEwZDYW5h
+    ZGExEDAOBgNVBAgMB09udGFyaW8xEjAQBgNVBAsMCVNhbmRlbG1hbjEkMCIGA1UE
+    AwwbaGlnaHdheS10ZXN0LmV4YW1wbGUuY29tIENBMB4XDTIwMDUxODAyNDcyMloX
+    DTE4MDEwMTAwMDAwMFowHDEaMBgGA1UEBQwRMDAtRDAtRTUtMDMtMDAtMDMwWTAT
+    BgcqhkjOPQIBBggqhkjOPQMBBwNCAASH03E4SCLfZG4/zpqBRiZv57wEd90VjNsn
+    kXmLbcLHNuQiT11TDC5lWlZxnYMKFMT7hfVXbwAhM7H0JxX7j5Sjo4GxMIGuMB0G
+    A1UdDgQWBBSLhSmdKAgKokWloXBQc2u3e+m+FDAJBgNVHRMEAjAAMCsGCCsGAQUF
+    BwEgBB8MHWhpZ2h3YXktdGVzdC5leGFtcGxlLmNvbTo5NDQzMB0GA1UdDgQWBBSL
+    hSmdKAgKokWloXBQc2u3e+m+FDAJBgNVHRMEAjAAMCsGCCsGAQUFBwEgBB8MHWhp
+    Z2h3YXktdGVzdC5leGFtcGxlLmNvbTo5NDQzMAoGCCqGSM49BAMCA2kAMGYCMQDc
+    tcu9n2iBo2bU+19lfnaniEU7Hatk7aIo34Cy11pG9mExsxf2XF+FgU2yCbezii8C
+    MQDqAApkLoZz8LSh5JHPPa6u/mp7jLwFwfzR9LR7g+oClEIpezzgfqz5Sya9OdS9
+    bMI=
+    -----END CERTIFICATE-----
+  owner_id: 1
+  model_id:
+  notes:
+  created_at: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &1 2020-05-18 02:45:10.658302000 Z
+    zone: &2 !ruby/object:ActiveSupport::TimeZone
+      name: Etc/UTC
+    time: *1
+  updated_at: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &3 2020-05-18 02:47:22.289783384 Z
+    zone: *2
+    time: *3
+  obsolete: false
+  fqdn:
+  essid:
+  ula: "fd9e:7345:b539::/48"
+  extra_attrs:
+  second_eui64:
+  othercerts:
     

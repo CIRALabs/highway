@@ -139,6 +139,8 @@ class Device < ActiveRecord::Base
     return false unless self.public_key        # skip if no public key yet
     return false unless csr.public_key.to_der  == self.public_key.to_der
     return false unless csr.subject.to_s.downcase.include?(shg_basename.downcase)
+    return false if self.certificate.not_after  < Time.now.utc
+    return false if self.certificate.not_before > Time.now.utc
     return true
   end
 
@@ -556,14 +558,14 @@ class Device < ActiveRecord::Base
     @ef ||= OpenSSL::X509::ExtensionFactory.new
   end
 
-  def sign_setup_certificate
+  def sign_setup_certificate(not_after = Time.gm(2999,12,31))
     @idevid  = OpenSSL::X509::Certificate.new
     @idevid.version = 2
     @idevid.serial = SystemVariable.randomseq(:serialnumber)
     @idevid.issuer = HighwayKeys.ca.rootkey.issuer
     @idevid.public_key = self.public_key
     @idevid.not_before = Time.now
-    @idevid.not_after  = Time.gm(2999,12,31)
+    @idevid.not_after  = not_after
 
     self.serial_number ||= sanitized_eui64
   end
@@ -575,8 +577,8 @@ class Device < ActiveRecord::Base
     @idevid.add_extension(extension_factory.create_extension("basicConstraints","CA:FALSE",false))
   end
 
-  def sign_eui64
-    sign_setup_certificate
+  def sign_eui64(not_after = Time.gm(2999,12,31))
+    sign_setup_certificate(not_after)
     end_certificate_extensions
     @idevid.subject = OpenSSL::X509::Name.new([["serialNumber", serial_number,12]])
 
