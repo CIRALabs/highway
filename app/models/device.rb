@@ -135,6 +135,13 @@ class Device < ActiveRecord::Base
     sign_from_csr(csr)
   end
 
+  def certificate_already_satisfies_csr(csr)
+    return false unless self.public_key        # skip if no public key yet
+    return false unless csr.public_key.to_der  == self.public_key.to_der
+    return false unless csr.subject.to_s.downcase.include?(shg_basename.downcase)
+    return true
+  end
+
   def sign_from_csr(csr)
     unless csr.verify(csr.public_key)
       raise CSRNotVerified;
@@ -434,7 +441,7 @@ class Device < ActiveRecord::Base
     ula        # stored as string in DB for now.
   end
   def shg_basename
-    return nil unless ula_str
+    raise CSRFailed.new("ula not set") unless ula_str
     @shg_basename ||= ['n' + short_ula,
                        shg_suffix, shg_zone].join('.')
   end
