@@ -148,6 +148,10 @@ class Device < ActiveRecord::Base
     unless csr.verify(csr.public_key)
       raise CSRNotVerified;
     end
+
+    # skip everything if existing certificate is good
+    return true if certificate_already_satisfies_csr(csr)
+
     set_public_key(csr.public_key)
     case
     when $INTERNAL_CA_SHG_DEVICE
