@@ -11,13 +11,4 @@ check_error() {
     fi
 }
 
-KEY="/etc/shg/shg.key"
-CERTIF="/etc/shg/idevid_cert.pem"
-INTERMEDIATE="/etc/shg/intermediate_certs.pem"
-OUTPUT="/etc/shg/lighttpd.pem"
-
-cat ${KEY} ${CERTIF} > ${OUTPUT}
-cp ${KEY}    /srv/lxc/mud-supervisor/rootfs/app/certificates/jrc_prime256v1.key
-cat ${CERTIF} ${INTERMEDIATE} >/srv/lxc/mud-supervisor/rootfs/app/certificates/jrc_prime256v1.crt
-check_error "Failed to create certificate for lighttpd"
-chmod 600 ${OUTPUT}
+# does nothing right now.
