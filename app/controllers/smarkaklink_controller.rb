@@ -72,7 +72,7 @@ class SmarkaklinkController < ApiController
     end
 
     @device.save!
-    logger.info "Enrolled new device from #{ip}"
+    logger.info "Enrolled #{@device.name} from #{ip}"
 
     tgzfile = @device.generate_tgz_for_shg
     unless tgzfile
