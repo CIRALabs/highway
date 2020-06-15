@@ -358,7 +358,7 @@ class Device < ActiveRecord::Base
       f.puts "    ssl.ca-file = \"/etc/shg/intermediate_certs.pem\""
       f.puts "} else $HTTP[\"scheme\"] == \"http\" {"
       f.puts "    $HTTP[\"host\"] =~ \".*\" {"
-      f.puts "        url.redirect = (\".*\" => \"https://#{@device.shg_hostname}$0\")"
+      f.puts "        url.redirect = (\".*\" => \"https://#{shg_basename}$0\")"
       f.puts "  }"
       f.puts "}"
     }
