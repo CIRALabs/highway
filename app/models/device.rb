@@ -347,6 +347,22 @@ class Device < ActiveRecord::Base
       f.puts sprintf("%s %s mud", addr, host)
     }
 
+    # create /etc/lighttpd/conf.d/50-https.conf
+    httpsdir = tgz_name.join("etc", "lighttpd", "conf.d")
+    FileUtils.mkdir_p(httpsdir)
+    httpsconf= httpsdir.join("50-https.conf")
+    File.open(httpsconf, "w") { |f|
+      f.puts "$SERVER[\"socket\"] == \"[::]:443\" {"
+      f.puts "    ssl.engine  = \"enable\""
+      f.puts "    ssl.pemfile = \"/etc/shg/lighttpd.pem\""
+      f.puts "    ssl.ca-file = \"/etc/shg/intermediate_certs.pem\""
+      f.puts "} else $HTTP[\"scheme\"] == \"http\" {"
+      f.puts "    $HTTP[\"host\"] =~ \".*\" {"
+      f.puts "        url.redirect = (\".*\" => \"https://#{@device.shg_hostname}$0\")"
+      f.puts "  }"
+      f.puts "}"
+    }
+
     # invoke tar to collect it all, but avoid invoking a shell.
     #puts ["tar", "-C", tgz_name.to_s, "-c", "-z", "-f", tgz_filename, "."].join(' ')
     system("tar", "-C", tgz_name.to_s, "-c", "-z", "-f", tgz_filename, ".")
