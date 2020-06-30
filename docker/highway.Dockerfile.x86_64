@@ -40,13 +40,30 @@ COPY --from=builder /lib/x86_64-linux-gnu/libcom_err.so* \
                     /lib/x86_64-linux-gnu/libtinfo.so.6  \
                     /lib/x86_64-linux-gnu/libpthread.so* \
                     /lib/x86_64-linux-gnu/libkeyutils.so*\
+                    /lib/x86_64-linux-gnu/libcrypt.so* \
                     /lib/x86_64-linux-gnu/
 
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libssl.so* \
                     /usr/lib/x86_64-linux-gnu/liblwres.so* \
                     /usr/lib/x86_64-linux-gnu/libdns.so*   \
+                    /usr/lib/x86_64-linux-gnu/libpq.so*    \
+                    /usr/lib/x86_64-linux-gnu/liblber-2.4.so* \
                     /usr/lib/x86_64-linux-gnu/libgssapi_krb5.so* \
                     /usr/lib/x86_64-linux-gnu/libkrb5.so*  \
+                    /usr/lib/x86_64-linux-gnu/libheimntlm.so* \
+                    /usr/lib/x86_64-linux-gnu/libasn1.so* \
+                    /usr/lib/x86_64-linux-gnu/libroken.so* \
+                    /usr/lib/x86_64-linux-gnu/libidn2.so* \
+                    /usr/lib/x86_64-linux-gnu/libunistring.so* \
+                    /usr/lib/x86_64-linux-gnu/libtasn1.so* \
+                    /usr/lib/x86_64-linux-gnu/libnettle.so* \
+                    /usr/lib/x86_64-linux-gnu/libhogweed.so* \
+                    /usr/lib/x86_64-linux-gnu/libgmp.so* \
+                    /usr/lib/x86_64-linux-gnu/libwind.so* \
+                    /usr/lib/x86_64-linux-gnu/libheimbase.so* \
+                    /usr/lib/x86_64-linux-gnu/libhx509.so* \
+                    /usr/lib/x86_64-linux-gnu/libsqlite3.so* \
+                    /usr/lib/x86_64-linux-gnu/libffi.so* \
                     /usr/lib/x86_64-linux-gnu/libk5crypto.so* \
                     /usr/lib/x86_64-linux-gnu/libbind9.so* \
                     /usr/lib/x86_64-linux-gnu/libisccfg.so* \
@@ -78,6 +95,11 @@ COPY app         /app/highway/app/
 COPY bin         /app/highway/bin/
 COPY config      /app/highway/config/
 COPY db          /app/highway/db/
+RUN ["busybox", "rm", "-r", "/app/highway/db/cert" ]
+RUN ["busybox", "rm", "-r", "/app/highway/db/devices" ]
+RUN ["busybox", "ln", "-s", "/app/devices", "/app/highway/db/devices" ]
+RUN ["busybox", "ln", "-s", "/app/certificates", "/app/highway/db/cert" ]
+RUN ["busybox", "mkdir", "-p", "/app/certificates", "/app/devices" ]
 COPY lib         /app/highway/lib/
 COPY public      /app/highway/public/
 COPY turris_root /app/highway/turris_root/
