@@ -40,6 +40,28 @@ class Device < ActiveRecord::Base
     result
   end
 
+  def self.list_dev(output = $STDOUT)
+    output.puts sprintf("%22s  %26s %s",
+                 "PRODUCTID", "EUI64", "status")
+
+    count = 0
+    self.all.each { |dev|
+      if dev.owner
+        ownerstr = "owned by #{dev.owner.name}"
+      elsif dev.obsolete?
+        ownerstr = "obsolete"
+      else
+        ownerstr = "unowned"
+      end
+      output.puts sprintf("%22s: %26s %s",
+                   dev.serial_number,
+                   dev.eui64,
+                   ownerstr)
+      count += 1
+    }
+    count
+  end
+
   def self.find_by_number(number)
     active.where(fqdn: number.downcase).take || active.where(serial_number: number).take || active.where(eui64: canonicalize_eui64(number)).take
   end

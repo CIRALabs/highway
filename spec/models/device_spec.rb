@@ -389,6 +389,12 @@ RSpec.describe Device, type: :model do
       expect(Device.active.owned.count).to   be >= 3
       expect(Device.obsolete.count).to eq(1)
     end
+
+    it "should list devices" do
+      expect(Device.list_dev(open("/dev/null","w"))).to_not be_nil
+    end
+
+
   end
 
   describe "signed voucher requests" do
