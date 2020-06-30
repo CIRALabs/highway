@@ -487,7 +487,7 @@ RSpec.describe Device, type: :model do
       pending "needs AcmeKeys setup" unless ENV['ACME_TESTING']
       SystemVariable.setvalue(:shg_zone, "dasblinkenled.org")
       zeb = devices(:zeb)
-      #zeb.rfc1918 = '192.168.1.1'
+      zeb.rfc1918 = '192.168.1.1'
       expect(zeb.insert_ula_quad_ah).to_not be_nil
       resolver = Resolv::DNS.new
       (hostname,addr) = zeb.router_name_ip
@@ -495,6 +495,7 @@ RSpec.describe Device, type: :model do
       zebnames.each {|name|
         case name
         when Resolv::IPv4
+          expect(name.to_s.downcase).to eq("192.168.1.1")
         when Resolv::IPv6
           expect(name.to_s.downcase).to eq(addr.downcase)
         end

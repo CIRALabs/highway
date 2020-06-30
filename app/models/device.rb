@@ -247,6 +247,15 @@ class Device < ActiveRecord::Base
       logger.error "Failed to do DNS update #{hostname} -> #{addr}"
       return false
     end
+    unless rfc1918.blank?
+      worked = AcmeKeys.acme.acme_dns_updater.update { |m|
+        m.type = :record
+        m.zone = shg_zone
+        m.hostname = hostname
+        m.address  = rfc1918
+        logger.info "device #{id} A updating to #{hostname} to #{m.address}"
+      }
+    end
     return true
   end
 
