@@ -482,6 +482,25 @@ RSpec.describe Device, type: :model do
       expect(zeb.insert_ula_quad_ah).to_not be_nil
     end
 
+    # this will only work if AcmeKeys is setup.
+    it "should update device with a ULA ::1 and an IPv4" do
+      pending "needs AcmeKeys setup" unless ENV['ACME_TESTING']
+      SystemVariable.setvalue(:shg_zone, "dasblinkenled.org")
+      zeb = devices(:zeb)
+      #zeb.rfc1918 = '192.168.1.1'
+      expect(zeb.insert_ula_quad_ah).to_not be_nil
+      resolver = Resolv::DNS.new
+      (hostname,addr) = zeb.router_name_ip
+      zebnames = resolver.getaddresses(hostname)
+      zebnames.each {|name|
+        case name
+        when Resolv::IPv4
+        when Resolv::IPv6
+          expect(name.to_s.downcase).to eq(addr.downcase)
+        end
+      }
+    end
+
     it "should enroll a device from a base64 CSR" do
       SystemVariable.setvalue(:shg_zone, "dasblinkenled.org")
       b64="MIICLzCCAdYCAQAwJjEkMCIGA1UEAwwbbjQ5NDMzOS5yLmRhc2JsaW5rZW5sZWQub3JnMIIBSzCCAQMGByqGSM49AgEwgfcCAQEwLAYHKoZIzj0BAQIhAP////8AAAABAAAAAAAAAAAAAAAA////////////////MFsEIP////8AAAABAAAAAAAAAAAAAAAA///////////////8BCBaxjXYqjqT57PrvVV2mIa8ZR0GsMxTsPY7zjw+J9JgSwMVAMSdNgiG5wSTamZ44ROdJreBn36QBEEEaxfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpZP40Li/hp/m47n60p8D54WK84zV2sxXs7LtkBoN79R9QIhAP////8AAAAA//////////+85vqtpxeehPO5ysL8YyVRAgEBA0IABJSG0GnnubH/K65/07zNDCmau+ijV44TMktmJRPRzTTJUC7b6Jl/lVhzpnk/yG70Sqm9q2bT+TMAxzz/nQdkCRugWjBYBgkqhkiG9w0BCQ4xSzBJMEcGA1UdEQRAMD6CG240OTQzMzkuci5kYXNibGlua2VubGVkLm9yZ4IfbXVkLm40OTQzMzkuci5kYXNibGlua2VubGVkLm9yZzAKBggqhkjOPQQDAgNHADBEAiA8RNx349S003zUYo0IgfWLr0ZioTD8Z46X3VMepf6TDgIgXEOSyNHcNcGtMmCZz6N0rGKk70e6j2NarQ7TgvrwHzU="
