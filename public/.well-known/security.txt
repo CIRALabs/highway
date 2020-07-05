@@ -1,0 +1,18 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Contact: mcr@sandelman.ca
+Encryption: https://www.sandelman.ca/mcr/mcr.pgp
+Preferred-Languages: en
+Canonical: https://www.sandelman.ca/.well-known/security.txt
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEbsyLEzg/qUTA43uogItw+93Q3WUFAl8CWE8ACgkQgItw+93Q
+3WW//wf/ZnJvDW0dV/u0hCsAh6SigldNK5b7iPngW/PGpMQMvHODqhpn0V102spr
+rnvqHE04LWRVqFkcYw15+1MzVv1vdkzpiXXWYViaoaoOlc+x90qdUl6UXaSYAWgn
+tWF+bVdbiYyj69fJtr+ya5U2PyyDLzBhBeHVgVcfJUJYjlA+7uPoicO9ZnhIZ1+9
+axDkWylQxnJOKgsTXngI5XuHBwDVi4tS2tygAHN2PHpXNre1qSqu7TxK8Cbj0SoP
+wwJjXTh/7hsDas1EGQBGY2E9kxj17HpOFDv2LxLUQUd0NSqmQL28WrRH+t52fZc/
+3xQKR2LkBp9wp8LtfhGlCMKPEDgZpg==
+=mivv
+-----END PGP SIGNATURE-----

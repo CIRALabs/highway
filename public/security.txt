@@ -1,3 +1,1 @@
-Contact: mcr@sandelman.ca
-Encryption: https://www.sandelman.ca/mcr/mcr.pgp
-Preferred-Languages: en
+.well-known/security.txt
