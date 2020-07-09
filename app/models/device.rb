@@ -379,11 +379,16 @@ class Device < ActiveRecord::Base
     }
 
     # create /etc/lighttpd/conf.d/50-https.conf
+    # XXX this should be done with a templated .conf.erb file
     httpsdir = tgz_name.join("etc", "lighttpd", "conf.d")
     FileUtils.mkdir_p(httpsdir)
     httpsconf= httpsdir.join("50-https.conf")
     File.open(httpsconf, "w") { |f|
       f.puts "$SERVER[\"socket\"] == \"[::]:443\" {"
+      f.puts "    ssl.engine  = \"enable\""
+      f.puts "    ssl.pemfile = \"/etc/shg/lighttpd.pem\""
+      f.puts "    ssl.ca-file = \"/etc/shg/intermediate_certs.pem\""
+      f.puts "else $SERVER[\"socket\"] == \"0.0.0.0:443\" {"
       f.puts "    ssl.engine  = \"enable\""
       f.puts "    ssl.pemfile = \"/etc/shg/lighttpd.pem\""
       f.puts "    ssl.ca-file = \"/etc/shg/intermediate_certs.pem\""
