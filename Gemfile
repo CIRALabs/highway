@@ -76,6 +76,8 @@ gem 'jwt'
 
 gem 'thin'
 
+gem 'firebase'
+
 # just in case we need it.
 # Call 'byebug' anywhere in the code to stop execution and get a debugger console
 gem 'byebug'
