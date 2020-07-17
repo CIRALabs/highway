@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 5.2.4.3'
 gem 'cow_proxy', :git => 'https://github.com/mcr/cow_proxy.git'
 
 # Use postgresql as the database for Active Record
@@ -29,9 +29,6 @@ gem "sentry-raven"
 #gem 'uglifier'
 #gem 'therubyracer'
 
-gem 'warden', '~> 1.2.3'
-gem "devise", ">= 4.7.1"
-
 # need CMS code, but not DTLS code, so do not complicate life with
 # need for openssl 1.1.1 w/patches.
 #gem 'openssl', :git => 'https://github.com/CIRALabs/ruby-openssl.git', :branch => 'cms-added'
@@ -41,12 +38,14 @@ gem 'openssl', :path => '../minerva/ruby-openssl'
 gem 'rails-static-router'
 
 # for github warning
+gem 'warden', '~> 1.2.3'
+gem "devise", ">= 4.7.1"
 gem "loofah", ">= 2.3.1"
 gem "rake", ">= 12.3.3"
-gem "rack", ">= 2.0.8"
+gem "rack", ">= 2.2.3"
 gem "nokogiri", ">= 1.10.8"
 gem "netaddr", ">= 2.0.4"
-gem "actionview", ">= 5.2.4.2"
+gem "websocket-extensions", ">= 0.1.5"
 
 # for LetsEncrypt
 gem 'acme-client'

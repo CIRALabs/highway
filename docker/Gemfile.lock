@@ -121,7 +121,7 @@ GEM
     multipart-post (2.1.1)
     netaddr (2.0.4)
     nio4r (2.5.2)
-    nokogiri (1.10.9)
+    nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
     orm_adapter (0.5.0)
     pg (0.21.0)
@@ -154,7 +154,7 @@ GEM
       method_source
       rake (>= 0.8.7)
       thor (>= 0.19.0, < 2.0)
-    rake (12.3.3)
+    rake (13.0.1)
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -200,7 +200,7 @@ GEM
       thread_safe (~> 0.1)
     warden (1.2.8)
       rack (>= 2.0.6)
-    websocket-driver (0.7.2)
+    websocket-driver (0.7.3)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
 
@@ -209,7 +209,6 @@ PLATFORMS
 
 DEPENDENCIES
   acme-client
-  actionview (>= 5.2.4.2)
   chariwt!
   devise (>= 4.7.1)
   dns-update!
@@ -220,14 +219,16 @@ DEPENDENCIES
   jquery-rails
   jwt
   log4r
+  loofah (>= 2.3.1)
   multipart_body!
   netaddr (>= 2.0.4)
-  nokogiri (>= 1.10.4)
+  nokogiri (>= 1.10.8)
   openssl!
   pg (~> 0.15)
-  rails (~> 5.2.0)
+  rack (>= 2.2.3)
+  rails (~> 5.2.4.3)
   rails-static-router
-  rake (~> 12.3.3)
+  rake (>= 12.3.3)
   sass
   sass-rails
   sassc (~> 2.3.0)
@@ -236,6 +237,7 @@ DEPENDENCIES
   thin
   turbolinks
   warden (~> 1.2.3)
+  websocket-extensions (>= 0.1.5)
 
 BUNDLED WITH
    2.1.4

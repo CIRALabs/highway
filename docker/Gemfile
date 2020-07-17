@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 5.2.4.3'
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.15'
@@ -29,13 +29,15 @@ gem 'sass'
 gem 'sassc', "~> 2.3.0"    # because compiled extension
 gem 'sass-rails'
 
-# for github warnings
+# for github warning
 gem 'warden', '~> 1.2.3'
-gem 'rake', '~> 12.3.3'
 gem "devise", ">= 4.7.1"
-gem "nokogiri", ">= 1.10.4"
+gem "loofah", ">= 2.3.1"
+gem "rake", ">= 12.3.3"
+gem "rack", ">= 2.2.3"
+gem "nokogiri", ">= 1.10.8"
 gem "netaddr", ">= 2.0.4"
-gem "actionview", ">= 5.2.4.2"
+gem "websocket-extensions", ">= 0.1.5"
 
 # use this to get full decoding of HTTP Accept: headers, to be able to
 # split off smime-type=voucher in pkcs7-mime, and other parameters
