@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_30_195438) do
+ActiveRecord::Schema.define(version: 2020_07_24_004823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,13 @@ ActiveRecord::Schema.define(version: 2020_06_30_195438) do
     t.text "second_eui64"
     t.text "othercerts"
     t.text "rfc1918"
+  end
+
+  create_table "iot_devices", force: :cascade do |t|
+    t.integer "security_gateway_id"
+    t.text "mac_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "owners", id: :serial, force: :cascade do |t|

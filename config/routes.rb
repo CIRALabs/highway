@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :iot_devices
   root to: static("index.html")
   get '/favicon.ico', to: static("favicon.ico")
   get '/robots.txt',  to: static("robots.txt")
@@ -23,6 +24,10 @@ Rails.application.routes.draw do
   post '/smarkaklink/enroll',           to: 'smarkaklink#enroll'
   post '/shg-provision',                to: 'smarkaklink#provision'
   post '/.well-known/est/enrollstatus', to: 'smarkaklink#enrollstatus'
+
+  # COMET processing of notification systems
+  post '/send_new_device_notification',     to: 'iot_devices#new'
+  post '/send_done_analyzing_notification', to: 'iot_devices#analysis_complete'
 
   resources :status,  :only => [:index ]
   resources :version, :only => [:index ]

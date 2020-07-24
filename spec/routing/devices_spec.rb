@@ -7,4 +7,5 @@ RSpec.describe DevicesController, type: :routing do
       expect(:get => "/devices").to route_to("devices#index")
     end
   end
+
 end

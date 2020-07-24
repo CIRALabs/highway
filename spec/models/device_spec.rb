@@ -288,6 +288,13 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe "shg firebase notifier interface" do
+    it "should get invoked per device" do
+      zeb = devices(:zeb)
+      zeb.notify_message("hello")
+    end
+  end
+
   describe "certificate creation" do
     it "should create a certificate with a new issue " do
       almec = devices(:almec)

@@ -1,0 +1,2 @@
+class IotDevice < ApplicationRecord
+end
