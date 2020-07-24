@@ -18,3 +18,5 @@ run
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 /config/acme.yml
+firebase-debug.log
+database-debug.log
