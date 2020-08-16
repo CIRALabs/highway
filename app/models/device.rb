@@ -388,7 +388,7 @@ class Device < ActiveRecord::Base
       f.puts "    ssl.engine  = \"enable\""
       f.puts "    ssl.pemfile = \"/etc/shg/lighttpd.pem\""
       f.puts "    ssl.ca-file = \"/etc/shg/intermediate_certs.pem\""
-      f.puts "else $SERVER[\"socket\"] == \"0.0.0.0:443\" {"
+      f.puts "} else $SERVER[\"socket\"] == \"0.0.0.0:443\" {"
       f.puts "    ssl.engine  = \"enable\""
       f.puts "    ssl.pemfile = \"/etc/shg/lighttpd.pem\""
       f.puts "    ssl.ca-file = \"/etc/shg/intermediate_certs.pem\""
