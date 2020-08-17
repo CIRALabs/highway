@@ -109,12 +109,6 @@ class SmarkaklinkController < ApiController
 
   private
 
-  def capture_client_certificate
-    clientcert_pem = request.env["SSL_CLIENT_CERT"]
-    clientcert_pem ||= request.env["rack.peer_cert"]
-    clientcert_pem
-  end
-
   # not sure how/where to capture bad requests
   def capture_bad_request(msg: "", params: params)
     logger.info "Bad owner enrollment #{msg}: #{params}"

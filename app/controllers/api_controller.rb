@@ -7,6 +7,8 @@ class ApiController < ActionController::Metal
   include Rails.application.routes.url_helpers
   include Response
 
+  private
+
   def logger
     ActionController::Base.logger
   end
@@ -14,6 +16,12 @@ class ApiController < ActionController::Metal
   def log_client_certificate(cert)
     clientname = sprintf("DN: %s", cert.subject.to_s)
     logger.info "Connection from #{clientname}"
+  end
+
+  def capture_client_certificate
+    clientcert_pem = request.env["SSL_CLIENT_CERT"]
+    clientcert_pem ||= request.env["rack.peer_cert"]
+    clientcert_pem
   end
 
 end
