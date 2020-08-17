@@ -142,8 +142,14 @@ class Device < ActiveRecord::Base
   end
 
   def self.find_by_PKey(pkey)
+    return nil if pkey.blank?
     b64 = Base64::strict_encode64(pkey.to_der)
     find_by_pub_key(b64)
+  end
+
+  def self.get_router_by_identity(certpem)
+    # canonicalize into certificate, to get public key, and look it up
+    find_by_PKey(OpenSSL::X509::Certificate.new(certpem).try(:public_key))
   end
 
   # make sure extra_attrs is initialized as a hash.
@@ -432,7 +438,7 @@ class Device < ActiveRecord::Base
 
   def fill_in_pub_key
     if idevid_cert and !pub_key
-      self.pub_key = Base64::encode64(certificate.public_key.to_der)
+      self.pub_key = Base64::strict_encode64(certificate.public_key.to_der)
     end
     true
   end

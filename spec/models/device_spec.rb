@@ -293,6 +293,18 @@ RSpec.describe Device, type: :model do
       zeb = devices(:zeb)
       zeb.notify_message("hello")
     end
+
+    it "should fail to authenticate using a certificate for an unknwon device" do
+      pubkey_pem = File.read("spec/files/borgin/00-D0-E5-F3-00-02/device.crt")
+      expect(Device.get_router_by_identity(pubkey_pem)).to be_nil
+    end
+
+    it "should authenticate using a certificate for a device" do
+      pubkey_pem = devices(:zeb).certificate.to_pem
+      dev = Device.get_router_by_identity(pubkey_pem)
+      expect(dev).to_not be_nil
+      expect(dev).to     eq(devices(:zeb))
+    end
   end
 
   describe "certificate creation" do
