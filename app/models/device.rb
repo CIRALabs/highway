@@ -1,3 +1,5 @@
+require 'fcm'
+
 class Device < ActiveRecord::Base
   include FixtureSave
   has_many :vouchers
@@ -739,6 +741,27 @@ class Device < ActiveRecord::Base
       dpp_component("L") +
       dpp_component("S") +
       dpp_component("E")
+  end
+
+  def self.fcm_client
+    #@private_key_json_string ||= Rails.root.join('config','firebase-shg-comet.json').read
+    #@fcm_keys                ||= JSON.parse(@private_key_json_string)
+    @fcm_api_key_json         ||= Rails.root.join('config','fcm.json').read
+    @fcm_keys                 ||= JSON.parse(@fcm_api_key_json)
+    @fcm                      ||= FCM.new(@fcm_keys['api_key'])
+  end
+  def fcm_client
+    self.class.fcm_client
+  end
+
+  # now handle notifications outgoing from this device via firebase
+  def notify_new_device_message(tokens, device)
+
+    msg = { 'messageType'     => 'new_device',
+            'hardwareAddress' => device }
+    response = fcm_client.send(tokens, msg)
+    logger.info "Response: #{response}"
+    return response
   end
 
 end

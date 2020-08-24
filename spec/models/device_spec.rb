@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'fcm'
 
 RSpec.describe Device, type: :model do
   fixtures :all
@@ -290,8 +291,22 @@ RSpec.describe Device, type: :model do
 
   describe "shg firebase notifier interface" do
     it "should get invoked per device" do
+        stub_request(:post, "#{FCM::BASE_URI}/fcm/send").
+          with(
+           body: %q[{"registration_ids":["a","b"],"hardwareAdress":"00-D0-E5-F3-00-02","messageType":1}],
+           headers: {
+             'Accept'=>'*/*',
+             'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+             'Content-Type'=>'application/json',
+             'User-Agent'=>'Faraday v1.0.1'
+           }).
+         to_return(status: 200, body: "", headers: {})
+
       zeb = devices(:zeb)
-      zeb.notify_message("hello")
+      tokens = ["a", "b"]
+      zeb.notify_new_device_message(tokens,
+                                    { hardwareAdress: '00-D0-E5-F3-00-02',
+                                      messageType: 1 } )
     end
 
     it "should fail to authenticate using a certificate for an unknwon device" do
