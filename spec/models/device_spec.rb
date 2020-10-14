@@ -1,6 +1,14 @@
 require 'rails_helper'
 require 'fcm'
 
+require 'vcr'
+
+VCR.configure do |config|
+  allow_http_connections_when_no_cassette = true
+  config.cassette_library_dir = "fixtures/vcr_cassettes"
+  config.hook_into :webmock
+end
+
 RSpec.describe Device, type: :model do
   fixtures :all
 
@@ -304,9 +312,12 @@ RSpec.describe Device, type: :model do
 
       zeb = devices(:zeb)
       tokens = ["a", "b"]
-      zeb.notify_new_device_message(tokens,
-                                    { hardwareAdress: '00-D0-E5-F3-00-02',
-                                      messageType: 1 } )
+
+      VCR.use_cassette("notify_hardware_f3-00-02") do
+        zeb.notify_new_device_message(tokens,
+                                      { hardwareAdress: '00-D0-E5-F3-00-02',
+                                        messageType: 1 } )
+      end
     end
 
     it "should fail to authenticate using a certificate for an unknwon device" do

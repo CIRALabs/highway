@@ -53,3 +53,5 @@ Rails.application.configure do
 
 end
 
+# fake keys
+$FCM_KEYS    = { "api_key" => "46aea237fce7f504209c4bd51bab360fbe3cf2adf6cb0c4a24db45f0cfd6412d7068810772f1e84a8607d0250e36f7f9189a8eb706a1d8614689c3cb05dd378d" }

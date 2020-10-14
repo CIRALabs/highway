@@ -280,6 +280,7 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (1.2.7)
       thread_safe (~> 0.1)
+    vcr (6.0.0)
     warden (1.2.8)
       rack (>= 2.0.6)
     webmock (3.8.3)
@@ -336,6 +337,7 @@ DEPENDENCIES
   sqlite3
   thin
   turbolinks
+  vcr
   warden (~> 1.2.3)
   webmock
   websocket-extensions (>= 0.1.5)

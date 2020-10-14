@@ -744,11 +744,7 @@ class Device < ActiveRecord::Base
   end
 
   def self.fcm_client
-    #@private_key_json_string ||= Rails.root.join('config','firebase-shg-comet.json').read
-    #@fcm_keys                ||= JSON.parse(@private_key_json_string)
-    @fcm_api_key_json         ||= Rails.root.join('config','fcm.json').read
-    @fcm_keys                 ||= JSON.parse(@fcm_api_key_json)
-    @fcm                      ||= FCM.new(@fcm_keys['api_key'])
+    @fcm                      ||= FCM.new($FCM_KEYS['api_key'])
   end
   def fcm_client
     self.class.fcm_client

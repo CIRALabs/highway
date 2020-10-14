@@ -42,3 +42,4 @@ if File.exist?(acme_settings_file)
     end
   end
 end
+

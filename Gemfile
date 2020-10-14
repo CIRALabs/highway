@@ -87,6 +87,7 @@ group :development, :test do
   gem "shoulda"
   gem 'shoulda-matchers'
   gem 'rails-controller-testing'
+  gem 'vcr'
 end
 
 group :development do
