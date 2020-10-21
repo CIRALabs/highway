@@ -1,5 +1,11 @@
 require 'rails_helper'
 
+VCR.configure do |config|
+  allow_http_connections_when_no_cassette = true
+  config.cassette_library_dir = "fixtures/vcr_cassettes"
+  config.hook_into :webmock
+end
+
 RSpec.describe "IotDevices", type: :request do
   fixtures :all
 
@@ -28,7 +34,18 @@ RSpec.describe "IotDevices", type: :request do
       # use a certificate from our internal test devices
       pubkey_pem = devices(:zeb).certificate.to_pem
       token = {}
-      post "/send_new_device_notification", params: token, headers: {
+
+      stub_request(:post, "https://fcm.googleapis.com/fcm/send").
+         with(
+           headers: {
+          'Accept'=>'*/*',
+          'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'Authorization'=>'key=46aea237fce7f504209c4bd51bab360fbe3cf2adf6cb0c4a24db45f0cfd6412d7068810772f1e84a8607d0250e36f7f9189a8eb706a1d8614689c3cb05dd378d',
+          'Content-Type'=>'application/json',
+           }).
+         to_return(status: 200, body: "", headers: {})
+
+     post "/send_new_device_notification", params: token, headers: {
              'SSL_CLIENT_CERT'=> pubkey_pem
            }
       expect(response).to have_http_status(200)
