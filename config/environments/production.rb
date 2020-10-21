@@ -63,7 +63,7 @@ end
 $TGZ_FILE_LOCATION = Pathname.new("/var/tmp/tgz")
 $TURRIS_ROOT_LOCATION = Rails.root.join("turris_root")
 $ACME_SERVER = "https://acme-v02.api.letsencrypt.org/directory"
-$FCM_KEYS    = JSON.parse(Rails.root.join('config', 'fcm.json').read
+$FCM_KEYS    = JSON.parse(Rails.root.join('config', 'fcm.json').read)
 Raven.configure do |config|
   config.dsn = 'https://184818fffd53434eb0c7e555016558de:adfecbb2123b40c88df38f2bb9bd76fb@sentry.io/1488540'
 end
