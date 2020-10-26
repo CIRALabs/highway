@@ -19,6 +19,11 @@ class IotDevicesController < ApiController
     end
 
     tokens  = params[:registrationTokens]
+    if tokens.nil? or tokens.empty? or tokens.first.blank?
+      head 403, text: "No tokens included"
+      return
+    end
+
     device  = params[:hardwareAddress]
     @device.notify_new_device_message(tokens, device)
 
