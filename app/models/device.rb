@@ -1,4 +1,5 @@
-require 'fcm'
+require 'googleauth'
+require 'google/apis/fcm_v1'
 
 class Device < ActiveRecord::Base
   include FixtureSave
@@ -744,8 +745,17 @@ class Device < ActiveRecord::Base
   end
 
   def self.fcm_client
-    @fcm                      ||= FCM.new($FCM_KEYS['api_key'])
+    # The location of the google-service.json file is set by ENV['GOOGLE_APPLICATION_CREDENTIALS']
+    ENV['GOOGLE_APPLICATION_CREDENTIALS'] ||= $FCM_SERVICE_CREDENTIALS.to_s
+
+    # Get the environment configured authorization
+    scopes =  [     'https://www.googleapis.com/auth/cloud-platform',
+                    'https://www.googleapis.com/auth/firebase' ]
+    @fcm           ||= Google::Apis::FcmV1::FirebaseCloudMessagingService.new
+    @fcm.authorization = Google::Auth.get_application_default(scopes)
+    @fcm
   end
+
   def fcm_client
     self.class.fcm_client
   end
@@ -755,8 +765,20 @@ class Device < ActiveRecord::Base
 
     msg = { 'messageType'     => 'new_device',
             'hardwareAddress' => device }
-    response = fcm_client.send(tokens, msg)
-    logger.info "Response: #{response}"
+    parent = "projects/#{fcm_client.authorization.project_id}"
+
+    token1 = tokens.first
+    #logger.info "Posting to token #{token1}"
+    stufftosend = {
+        notification: msg,
+        token: token1
+    }
+
+    message = ::Google::Apis::FcmV1::SendMessageRequest.new
+    message.message = stufftosend
+    #logger.info "Sending #{stufftosend.to_json}"
+    response = fcm_client.send_message(parent, message)
+    #logger.info "Response: #{response}"
     return response
   end
 

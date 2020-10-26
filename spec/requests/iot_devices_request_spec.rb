@@ -33,7 +33,7 @@ RSpec.describe "IotDevices", type: :request do
       # /send_new_device_notification maps to IotDevicesController#new
       # use a certificate from our internal test devices
       pubkey_pem = devices(:zeb).certificate.to_pem
-      token = {}
+      token = { registrationTokens: [ "ezvwEVC9gO0:APA91bF_8SEkPYHY1fy0Ul-e61bWjrkp9KxnRSTiUJJBGp4Owwm67ryqBffXmqounNCNE3QlH0Y0PMuXcjY6eu0Cdu7RvnRFQzJdxGjUTx1UUGYEmIMdPEN5irn2L9LpFCXSiY509ynv" ] }
 
       stub_request(:post, "https://fcm.googleapis.com/fcm/send").
          with(
@@ -45,10 +45,34 @@ RSpec.describe "IotDevices", type: :request do
            }).
          to_return(status: 200, body: "", headers: {})
 
-     post "/send_new_device_notification", params: token, headers: {
+      post "/send_new_device_notification", params: token, headers: {
              'SSL_CLIENT_CERT'=> pubkey_pem
            }
       expect(response).to have_http_status(200)
+    end
+
+    it "should fail to POST /send_new_device_notification without tokens" do
+      # /send_new_device_notification maps to IotDevicesController#new
+      # use a certificate from our internal test devices
+      pubkey_pem = devices(:zeb).certificate.to_pem
+      token = { }
+
+      post "/send_new_device_notification", params: token, headers: {
+             'SSL_CLIENT_CERT'=> pubkey_pem
+           }
+      expect(response).to have_http_status(403)
+    end
+
+    it "should fail to POST /send_new_device_notification with empty set of tokens" do
+      # /send_new_device_notification maps to IotDevicesController#new
+      # use a certificate from our internal test devices
+      pubkey_pem = devices(:zeb).certificate.to_pem
+      token = { registrationTokens: [] }
+
+      post "/send_new_device_notification", params: token, headers: {
+             'SSL_CLIENT_CERT'=> pubkey_pem
+           }
+      expect(response).to have_http_status(403)
     end
 
     it "POST /send_done_analyzing_notification" do
