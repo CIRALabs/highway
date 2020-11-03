@@ -54,4 +54,4 @@ Rails.application.configure do
 end
 
 # fake keys
-$FCM_SERVICE_CREDENTIALS = Rails.root.join("spec", "files", "development-service-info.json")
+ENV['GOOGLE_APPLICATION_CREDENTIALS'] = Rails.root.join("spec", "files", "development-service-info.json").to_s

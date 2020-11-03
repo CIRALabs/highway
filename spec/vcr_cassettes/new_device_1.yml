@@ -1,0 +1,110 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://www.googleapis.com/oauth2/v4/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJmaXJlYmFzZS1hZG1pbnNkay1vaHkzZ0BzaGctY29tZXQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJhdWQiOiJodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS9vYXV0aDIvdjQvdG9rZW4iLCJleHAiOjE2MDQ0Mzg3NjAsImlhdCI6MTYwNDQzODY0MCwic2NvcGUiOiJodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS9hdXRoL2Nsb3VkLXBsYXRmb3JtIGh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL2F1dGgvZmlyZWJhc2UifQ.bLeeqLc6Q-CzMvMSyNaNEanTsamX8c4p9MnXFv3175DNp7Ri-uB_dzBNQG9Jyc7MaqK8TW_ApxuHXVYqQxXIrhP0LCnuwXrIPe4moBskRxDjfwlOHYZSeZoxgyGl3jXc_tOf2vkwnwT-EmGdj9kOmQNau7BlUWfYgCrffKhDOXhqJAFXFna2IGxwd2Dg8eGwoh7Jh5iLE3YipohL3yxssa0p7JAjlhACCPgfwFTV--2_7mGD222hB5HC-l_oK4YwPE0CzR3AH3D208ncovfa9K3PYAbWQvNxPvmWYPdCFrf2RCB1V95XGG9CoFKRPSeOIqHabJnmpQYsHExPy9AVvQ
+    headers:
+      User-Agent:
+      - Faraday v1.0.1
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Tue, 03 Nov 2020 21:25:00 GMT
+      Server:
+      - scaffolding on HTTPServer2
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - '0'
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - h3-Q050=":443"; ma=2592000,h3-29=":443"; ma=2592000,h3-T051=":443"; ma=2592000,h3-T050=":443";
+        ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443";
+        ma=2592000; v="46,43"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"access_token":"ya29.c.Kp8B4wfy5IuUg0OiaAF0zCVzasMLCRb-2GraPRToXVdT0jN_9fWwoV1_FbBWvNpTTwuXBarqCVgzq2aZbLTH-jdAndNlqFQSJzZfaDmYCKxg2LclDNW4f764IacyFnXSlt7dEJJ5f_SNLUonPZV21YP4s-dSZ0qIAAuGPqkWSQA6jhYnTI-6GHC0egZ8FfZvT8OVGL-339XdQ6lajP75yyxV","expires_in":3599,"token_type":"Bearer"}'
+  recorded_at: Tue, 03 Nov 2020 21:25:00 GMT
+- request:
+    method: post
+    uri: https://fcm.googleapis.com/v1/projects/shg-comet/messages:send
+    body:
+      encoding: UTF-8
+      string: '{"message":{"notification":{},"token":"ezvwEVC9gO0:APA91bF_8SEkPYHY1fy0Ul-e61bWjrkp9KxnRSTiUJJBGp4Owwm67ryqBffXmqounNCNE3QlH0Y0PMuXcjY6eu0Cdu7RvnRFQzJdxGjUTx1UUGYEmIMdPEN5irn2L9LpFCXSiY509ynv"}}'
+    headers:
+      User-Agent:
+      - unknown/0.0.0 google-api-ruby-client/0.46.2 Linux/5.7.0-0.bpo.2-amd64 (gzip)
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip,deflate
+      Date:
+      - Tue, 03 Nov 2020 21:25:00 GMT
+      X-Goog-Api-Client:
+      - gl-ruby/2.6.6 gdcl/0.46.2
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer ya29.c.Kp8B4wfy5IuUg0OiaAF0zCVzasMLCRb-2GraPRToXVdT0jN_9fWwoV1_FbBWvNpTTwuXBarqCVgzq2aZbLTH-jdAndNlqFQSJzZfaDmYCKxg2LclDNW4f764IacyFnXSlt7dEJJ5f_SNLUonPZV21YP4s-dSZ0qIAAuGPqkWSQA6jhYnTI-6GHC0egZ8FfZvT8OVGL-339XdQ6lajP75yyxV
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Content-Encoding:
+      - gzip
+      Date:
+      - Tue, 03 Nov 2020 21:25:01 GMT
+      Server:
+      - ESF
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - '0'
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - h3-Q050=":443"; ma=2592000,h3-29=":443"; ma=2592000,h3-T051=":443"; ma=2592000,h3-T050=":443";
+        ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443";
+        ma=2592000; v="46,43"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "name": "projects/shg-comet/messages/0:1604438701136447%d174a76ef9fd7ecd"
+        }
+  recorded_at: Tue, 03 Nov 2020 21:25:01 GMT
+recorded_with: VCR 6.0.0

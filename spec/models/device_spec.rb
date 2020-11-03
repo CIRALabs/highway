@@ -1,6 +1,4 @@
 require 'rails_helper'
-require 'fcm'
-
 require 'vcr'
 
 VCR.configure do |config|
