@@ -1,10 +1,7 @@
 require 'rails_helper'
-require 'vcr'
 
 VCR.configure do |config|
-  allow_http_connections_when_no_cassette = true
-  config.cassette_library_dir = "fixtures/vcr_cassettes"
-  config.hook_into :webmock
+  #config.debug_logger = $stderr
 end
 
 RSpec.describe Device, type: :model do
@@ -297,24 +294,12 @@ RSpec.describe Device, type: :model do
 
   describe "shg firebase notifier interface" do
     it "should get invoked per device" do
-        stub_request(:post, "#{FCM::BASE_URI}/fcm/send").
-          with(
-           body: %q[{"registration_ids":["a","b"],"hardwareAdress":"00-D0-E5-F3-00-02","messageType":1}],
-           headers: {
-             'Accept'=>'*/*',
-             'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-             'Content-Type'=>'application/json',
-             'User-Agent'=>'Faraday v1.0.1'
-           }).
-         to_return(status: 200, body: "", headers: {})
-
       zeb = devices(:zeb)
-      tokens = ["a", "b"]
+      tokens = ["ezvwEVC9gO0:APA91bF_8SEkPYHY1fy0Ul-e61bWjrkp9KxnRSTiUJJBGp4Owwm67ryqBffXmqounNCNE3QlH0Y0PMuXcjY6eu0Cdu7RvnRFQzJdxGjUTx1UUGYEmIMdPEN5irn2L9LpFCXSiY509ynv"]
 
       VCR.use_cassette("notify_hardware_f3-00-02") do
         zeb.notify_new_device_message(tokens,
-                                      { hardwareAdress: '00-D0-E5-F3-00-02',
-                                        messageType: 1 } )
+                                      '00-D0-E5-F3-00-02')
       end
     end
 

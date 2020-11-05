@@ -27,7 +27,10 @@ RSpec.describe "IotDevices", type: :request do
       # /send_new_device_notification maps to IotDevicesController#new
       # use a certificate from our internal test devices
       pubkey_pem = devices(:zeb).certificate.to_pem
-      token = { registrationTokens: [ "ezvwEVC9gO0:APA91bF_8SEkPYHY1fy0Ul-e61bWjrkp9KxnRSTiUJJBGp4Owwm67ryqBffXmqounNCNE3QlH0Y0PMuXcjY6eu0Cdu7RvnRFQzJdxGjUTx1UUGYEmIMdPEN5irn2L9LpFCXSiY509ynv" ] }
+      token = {
+        registrationTokens: [ "ezvwEVC9gO0:APA91bF_8SEkPYHY1fy0Ul-e61bWjrkp9KxnRSTiUJJBGp4Owwm67ryqBffXmqounNCNE3QlH0Y0PMuXcjY6eu0Cdu7RvnRFQzJdxGjUTx1UUGYEmIMdPEN5irn2L9LpFCXSiY509ynv" ],
+        hardwareAddress: '00-D0-E5-F3-00-02'
+              }
 
       VCR.use_cassette('new_device_1') {
         post "/send_new_device_notification", params: token, headers: {
