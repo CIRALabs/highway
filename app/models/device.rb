@@ -212,7 +212,7 @@ class Device < ActiveRecord::Base
     # a pem format certificate is returned, possibly with extra certificates
     # tagged on as well, as a "bag"
     begin
-      cert_bag = AcmeKeys.acme.cert_for(shg_basename, shg_zone, csr, logger)
+      cert_bag = AcmeKeys.acme.cert_for(shg_basename, shg_basezone, csr, logger)
     rescue Faraday::ConnectionFailed => e
       raise CSRFailed.new("LetsEncrypt/ACME failed to connect #{e.message}")
     end
@@ -241,13 +241,13 @@ class Device < ActiveRecord::Base
     if remove
       AcmeKeys.acme.acme_dns_updater.remove { |m|
         m.type = :aaaa
-        m.zone = shg_zone
+        m.zone = shg_basezone
         m.hostname = hostname
       }
     end
     worked = AcmeKeys.acme.acme_dns_updater.update { |m|
       m.type = :aaaa
-      m.zone = shg_zone
+      m.zone = shg_basezone
       m.hostname = hostname
       m.address  = addr
       logger.info "device #{id} ULA updating to #{hostname} to #{addr}"
@@ -512,6 +512,9 @@ class Device < ActiveRecord::Base
     raise CSRFailed.new("ula not set") unless ula_str
     @shg_basename ||= ['n' + short_ula,
                        shg_suffix, shg_zone].join('.')
+  end
+  def shg_basezone
+    [shg_suffix, shg_zone].join('.')
   end
 
   def fqdn
