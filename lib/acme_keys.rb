@@ -103,7 +103,7 @@ class AcmeKeys < HighwayKeys
   # specify the qname to update, and the parent "zone" that it is in.
   # the zone is needed to be able to tell nsupdate what it is trying to
   # update.
-  def cert_for(baseqname, zone, csr, logger = nil, sleeptime = 30)
+  def cert_for(baseqname, zone, csr, logger = nil, sleeptime = nil)
     logger ||= acme_logger
 
     mudqname = "mud." + baseqname
@@ -112,13 +112,19 @@ class AcmeKeys < HighwayKeys
     cert_for_names(qnames: qnames, zone: zone, csr: csr, logger: logger, sleeptime: sleeptime)
   end
 
-  def cert_for_names(qnames:, zone:, csr:, logger: nil, sleeptime: 30, extrazone: '')
+  def cert_for_names(qnames:, zone:, csr:, logger: nil, sleeptime: nil, extrazone: '')
     logger ||= acme_logger
 
     return nil unless dns_update_options
 
     # make sure acme_account has been setup.
     return nil unless acme_account
+
+    # set the sleeptime if necessary from configuration, if not set.
+    sleeptime ||= dns_update_options[:sleeptime]
+
+    # and set a sensible default if not set
+    sleeptime ||= 30
 
     # book-keeping stats
     increment_attempt_counter
