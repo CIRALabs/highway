@@ -24,14 +24,13 @@ RUN mkdir -p /app/minerva && cd /app/minerva && \
     cd /app/minerva/ruby-openssl && rake compile
 
 RUN mkdir -p /app/minerva && cd /app/minerva && \
-    git config --global http.sslVerify "false" && \
     git clone --single-branch --branch binary_http_multipart https://github.com/AnimaGUS-minerva/multipart_body.git && \
     git clone --single-branch --branch ecdsa_interface_openssl https://github.com/AnimaGUS-minerva/ruby_ecdsa.git && \
     git clone --single-branch --branch v0.8.0 https://github.com/mcr/ChariWTs.git chariwt && \
     git clone --single-branch --branch master https://github.com/AnimaGUS-minerva/david.git && \
-    git clone --single-branch --branch aaaa_rr https://github.com/CIRALabs/dns-update.git
+    git clone --single-branch --branch dns_update-mcr-20210104 https://github.com/CIRALabs/dns-update.git
 
-RUN touch /app/v202004
+RUN touch /app/v202101
 
 WORKDIR /app
 RUN gem install bundler --source=http://rubygems.org
