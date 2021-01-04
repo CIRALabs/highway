@@ -65,7 +65,7 @@ class SmarkaklinkController < ApiController
     rescue Device::CSRFailed => e
       params[:failed_message] = e.message
       capture_bad_request(msg: "CSR failed to be signed by CA in id\##{@device.id}",
-                          params: params)
+                          parms: params)
 
       @device.save!
       return
@@ -110,7 +110,8 @@ class SmarkaklinkController < ApiController
   private
 
   # not sure how/where to capture bad requests
-  def capture_bad_request(msg: "", parms: params)
+  def capture_bad_request(msg: "", parms: nil)
+    parms ||= params
     logger.info "Bad owner enrollment #{msg}: #{parms}"
     head 406
   end
