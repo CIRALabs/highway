@@ -56,7 +56,7 @@ gem 'dns-update', :git => 'https://github.com/CIRALabs/dns-update.git', :branch 
 gem 'ipaddress'
 
 #gem 'active_scaffold', :git => 'https://github.com/activescaffold/active_scaffold.git'
-gem 'sass'
+gem 'sassc'
 gem 'sass-rails'
 
 # use this to get full decoding of HTTP Accept: headers, to be able to

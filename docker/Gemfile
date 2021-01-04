@@ -25,7 +25,6 @@ gem 'jbuilder', '~> 2.0'
 gem "sentry-raven"
 
 gem 'openssl', :path => '/app/minerva/ruby-openssl'
-gem 'sass'
 gem 'sassc', "~> 2.3.0"    # because compiled extension
 gem 'sass-rails'
 
