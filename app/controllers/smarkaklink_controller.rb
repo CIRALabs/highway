@@ -110,8 +110,8 @@ class SmarkaklinkController < ApiController
   private
 
   # not sure how/where to capture bad requests
-  def capture_bad_request(msg: "", params: params)
-    logger.info "Bad owner enrollment #{msg}: #{params}"
+  def capture_bad_request(msg: "", parms: params)
+    logger.info "Bad owner enrollment #{msg}: #{parms}"
     head 406
   end
 
