@@ -217,7 +217,7 @@ class Device < ActiveRecord::Base
       raise CSRFailed.new("LetsEncrypt/ACME failed to connect #{e.message}")
     end
 
-    logger.info "device #{id} received certificate"
+    logger.info "device #{id} received certificate, populating to #{shg_basezone}"
 
     raise CSRFailed unless cert_bag
 
