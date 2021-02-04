@@ -109,6 +109,8 @@ ADD ./docker/Gemfile /app/highway/Gemfile
 ADD ./docker/Gemfile.lock /app/highway/Gemfile.lock
 ENV GEM_HOME="/usr/local/bundle"
 
+RUN ["busybox", "chown", "-R", "nonroot", "/app"]
+
 WORKDIR /app/highway
 
 EXPOSE 9443
