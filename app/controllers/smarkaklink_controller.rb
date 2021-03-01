@@ -59,7 +59,7 @@ class SmarkaklinkController < ApiController
     @device.update_from_smarkaklink_provision(params)
     @csr64 = params['csr']
 
-    # now create a private certificate from this CSR.
+    # now create a certificate from this CSR.
     begin
       @device.sign_from_base64_csr(@csr64)
     rescue Device::CSRFailed => e

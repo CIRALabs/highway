@@ -43,7 +43,7 @@ class Device < ActiveRecord::Base
     result
   end
 
-  def self.list_dev(output = $STDOUT)
+  def self.list_dev(output = $stdout)
     output.puts sprintf("%22s  %26s %s",
                  "PRODUCTID", "EUI64", "status")
 
@@ -170,6 +170,7 @@ class Device < ActiveRecord::Base
     return false unless self.public_key        # skip if no public key yet
     return false unless csr.public_key.to_der  == self.public_key.to_der
     return false unless csr.subject.to_s.downcase.include?(shg_basename.downcase)
+    return false unless self.certificate
     return false if self.certificate.not_after  < Time.now.utc
     return false if self.certificate.not_before > Time.now.utc
     return true
@@ -219,7 +220,7 @@ class Device < ActiveRecord::Base
 
     logger.info "device #{id} received certificate, populating to #{shg_basezone}"
 
-    raise CSRFailed unless cert_bag
+    raise CSRFailed.new("cert bag broken") unless cert_bag
 
     certs = split_up_bag_of_certificates(cert_bag)
     first = certs.shift
