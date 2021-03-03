@@ -774,7 +774,7 @@ class Device < ActiveRecord::Base
     token1 = tokens.first
     #logger.info "Posting to token #{token1}"
     stufftosend = {
-        notification: msg,
+        data: msg,
         token: token1
     }
 
