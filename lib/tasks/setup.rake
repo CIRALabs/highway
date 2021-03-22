@@ -105,6 +105,11 @@ namespace :highway do
     dn = sprintf("CN=%s", hostname)
     dnobj = OpenSSL::X509::Name.parse dn
 
+    extraextra = "."
+    unless ENV['EXTRA'].blank?
+      extraextra = ENV['EXTRA']
+    end
+
     if !File.exist?(outfile) or ENV['RESIGN']
       FileUtils.mkpath(HighwayKeys.ca.certdir)
 
@@ -131,7 +136,7 @@ namespace :highway do
                                                  zone: SystemVariable.string(:shg_zone),
                                                  logger: mylog,
                                                  csr: csr,
-                                                 extrazone: "." + SystemVariable.string(:shg_zone))
+                                                 extrazone: extraextra + SystemVariable.string(:shg_zone))
 
       if server_cert
         puts "MASA SERVER certificate writtten to: #{outfile}"
